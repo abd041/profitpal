@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProfitPal - Sign In or Register</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1e3a5f 50%, #2c5f2d 100%);
+      min-height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* BACK TO HOME BUTTON - RIGHT TOP */
+    .back-link {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: #32cd32;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 24px;
+      border: 2px solid rgba(50, 205, 50, 0.3);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, rgba(15, 35, 65, 0.8), rgba(30, 58, 95, 0.7));
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      font-size: 15px;
+    }
+
+    .back-link:hover {
+      background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(34, 139, 34, 0.1));
+      border-color: #32cd32;
+      transform: translateX(3px);
+      box-shadow: 0 6px 20px rgba(50, 205, 50, 0.3);
+    }
+
+    .login-container {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      width: 90%;
+      max-width: 500px;
+      margin-bottom: 30px;
+      margin-top: 80px;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid rgba(50, 205, 50, 0.2);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px;
+      background: transparent;
+      border: none;
+      color: #87ceeb;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      color: #32cd32;
+      border-bottom-color: #32cd32;
+    }
+
+    .tab:hover {
+      background: rgba(50, 205, 50, 0.05);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .login-title {
+      color: #32cd32;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .login-subtitle {
+      color: #95a5a6;
+      font-size: 16px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      color: #32cd32;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-label-optional {
+      color: #87ceeb;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 15px;
+      background: rgba(44, 62, 80, 0.3);
+      border: 2px solid rgba(34, 139, 34, 0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #32cd32;
+      box-shadow: 0 0 0 3px rgba(50, 205, 50, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: #87ceeb;
+    }
+
+    .form-input[readonly] {
+      background: rgba(50, 205, 50, 0.1);
+      border-color: rgba(50, 205, 50, 0.3);
+      color: #32cd32;
+      font-weight: 600;
+    }
+
+    .license-input {
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
+    }
+
+    .referral-input {
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(50, 205, 50, 0.3);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .register-btn {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: #fff;
+    }
+
+    .register-btn:hover:not(:disabled) {
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+    }
+
+    .error-message {
+      background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(139, 0, 0, 0.1));
+      border: 2px solid #e74c3c;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: #e74c3c;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(34, 139, 34, 0.1));
+      border: 2px solid #32cd32;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: #32cd32;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .loading {
+      display: none;
+      color: #32cd32;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .spinner {
+      border: 2px solid rgba(50, 205, 50, 0.3);
+      border-top: 2px solid #32cd32;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .admin-mode-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(44, 62, 80, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .admin-mode-box:hover {
+      background: rgba(44, 62, 80, 0.4);
+      border-color: rgba(255, 107, 53, 0.5);
+    }
+
+    .admin-mode-box input[type="checkbox"] {
+      transform: scale(1.5);
+      accent-color: #ff6b35;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+
+    .admin-mode-box label {
+      color: #ff6b35;
+      font-weight: 600;
+      flex: 1;
+      cursor: pointer;
+      pointer-events: none;
+    }
+
+    .info-box {
+      background: rgba(50, 205, 50, 0.1);
+      border: 2px solid rgba(50, 205, 50, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #87ceeb;
+      line-height: 1.8;
+    }
+
+    .info-box strong {
+      color: #32cd32;
+    }
+
+    .referral-info-box {
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #ffd700;
+      line-height: 1.6;
+    }
+
+    .referral-info-box strong {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      color: #95a5a6;
+      font-size: 14px;
+      margin-top: 20px;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .back-link {
+        top: 15px;
+        right: 15px;
+        font-size: 13px;
+        padding: 10px 18px;
+      }
+
+      .login-container {
+        margin: 80px 20px 20px;
+        padding: 30px 20px;
+      }
+
+      .tab {
+        font-size: 14px;
+        padding: 12px;
+      }
+
+      .login-title {
+        font-size: 20px;
+      }
+
+      .login-subtitle {
+        font-size: 14px;
+      }
+    }
+  </style>
+
+<link rel="stylesheet" href="/static/css/pp-role-badge.css">
+  <link rel="stylesheet" href="/static/css/logo.css">
+</head>
+<body>
+<header class="pp-public-topbar">
+  <a href="/" aria-label="ProfitPal Home">
+    <span class="logo-container" id="pp-logo" data-pp-logo="1"></span>
+  </a>
+</header>
+<!-- BACK TO HOME BUTTON -->
+  <a href="/" class="back-link">Back to Home →</a>
+
+  <div class="login-container">
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('signin')">🔑 Sign In</button>
+      <button class="tab" onclick="switchTab('register')">🚀 Register FREE</button>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <!-- ========================================== -->
+    <!-- SIGN IN TAB -->
+    <!-- ========================================== -->
+    <div id="signinTab" class="tab-content active">
+      <h1 class="login-title">🔑 Sign In to ProfitPal</h1>
+      <p class="login-subtitle">
+        Enter your email and license key to access your dashboard.
+      </p>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            class="form-input" 
+            placeholder="your@email.com" 
+            autocomplete="email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginName">Full Name (Auto-filled)</label>
+          <input 
+            type="text" 
+            id="loginName" 
+            class="form-input" 
+            placeholder="Will appear when credentials match"
+            readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginCredential">
+            <span id="credentialLabel">License Key</span>
+          </label>
+          <input 
+            type="text" 
+            id="loginCredential" 
+            class="form-input license-input" 
+            placeholder="PP-XXXX-XXXX-XXXX or PP-TEMP-..."
+            autocomplete="off"
+            maxlength="100"
+            required>
+        </div>
+
+        <div class="form-group">
+          <div class="admin-mode-box" id="adminModeBox">
+            <input type="checkbox" id="adminMode">
+            <label for="adminMode">👑 Staff Mode (Use password instead)</label>
+          </div>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          Access Dashboard →
+        </button>
+
+        <div id="loginLoading" class="loading">
+          <div class="spinner"></div>
+          Authenticating...
+        </div>
+      </form>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- REGISTER TAB -->
+    <!-- ========================================== -->
+    <div id="registerTab" class="tab-content">
+      <h1 class="login-title">🚀 Create FREE Account</h1>
+      <p class="login-subtitle">
+        Get 5 FREE stock analyses instantly. No credit card required!
+      </p>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address</label>
+          <input 
+            type="email" 
+            id="regEmail" 
+            class="form-input" 
+            placeholder="your@email.com" 
+            autocomplete="email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name</label>
+          <input 
+            type="text" 
+            id="regName" 
+            class="form-input" 
+            placeholder="John Doe"
+            autocomplete="name"
+            required>
+        </div>
+
+        <!-- REFERRAL CODE INPUT -->
+        <div class="form-group">
+          <label class="form-label" for="regReferralCode">
+            Friend's Referral Code 
+            <span class="form-label-optional">(Optional)</span>
+          </label>
+          <input 
+            type="text" 
+            id="regReferralCode" 
+            class="form-input referral-input" 
+            placeholder="PP-REF-XXXXX"
+            maxlength="20"
+            autocomplete="off">
+
+          <div class="referral-info-box">
+            💎 <strong>Got invited by a friend?</strong><br>
+            Paste their referral code here! When you upgrade to paid, they'll get <strong>+1 FREE month</strong> automatically! 🎁
+          </div>
+        </div>
+
+        <div class="info-box">
+          💎 <strong>What you get:</strong><br>
+          ✅ 5 FREE stock analyses<br>
+          ✅ Instant PP-TEMP license key via email<br>
+          ✅ 90 days to try the platform<br>
+          ⚡ Upgrade anytime for unlimited access
+        </div>
+
+        <button type="submit" class="login-btn register-btn" id="registerBtn">
+          🚀 Create FREE Account
+        </button>
+
+        <div id="registerLoading" class="loading">
+          <div class="spinner"></div>
+          Creating your account...
+        </div>
+      </form>
+    </div>
+  </div>
+<script>
+    // ============================================================================
+    // TAB SWITCHING
+    // ============================================================================
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      if (tab === 'signin') {
+        document.querySelector('.tab:nth-child(1)').classList.add('active');
+        document.getElementById('signinTab').classList.add('active');
+      } else {
+        document.querySelector('.tab:nth-child(2)').classList.add('active');
+        document.getElementById('registerTab').classList.add('active');
+      }
+
+      clearError();
+      clearSuccess();
+    }
+
+    // ============================================================================
+    // UTILITY FUNCTIONS
+    // ============================================================================
+    function showError(msg) {
+      const errorBox = document.getElementById('errorMessage');
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function showSuccess(msg) {
+      const successBox = document.getElementById('successMessage');
+      successBox.textContent = msg;
+      successBox.style.display = 'block';
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function clearError() {
+      document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function clearSuccess() {
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function setLoading(form, loading) {
+      const loadingId = form === 'login' ? 'loginLoading' : 'registerLoading';
+      const btnId = form === 'login' ? 'loginBtn' : 'registerBtn';
+
+      document.getElementById(loadingId).style.display = loading ? 'block' : 'none';
+      document.getElementById(btnId).disabled = loading;
+    }
+
+    // ============================================================================
+    // URL PARAMS PARSING
+    // ============================================================================
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // ============================================================================
+    // SIGN IN LOGIC
+    // ============================================================================
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginName = document.getElementById('loginName');
+    const loginCredential = document.getElementById('loginCredential');
+    const credentialLabel = document.getElementById('credentialLabel');
+    const adminToggle = document.getElementById('adminMode');
+    const adminModeBox = document.getElementById('adminModeBox');
+
+    function handleStaffModeToggle(isStaffMode) {
+      if (isStaffMode) {
+        loginCredential.type = 'password';
+        loginCredential.placeholder = 'Enter your password';
+        loginCredential.maxLength = 100;
+        loginCredential.classList.remove('license-input');
+        credentialLabel.textContent = 'Password';
+        loginCredential.value = '';
+      } else {
+        loginCredential.type = 'text';
+        loginCredential.placeholder = 'PP-XXXX-XXXX-XXXX or PP-TEMP-...';
+        loginCredential.maxLength = 100;
+        loginCredential.classList.add('license-input');
+        credentialLabel.textContent = 'License Key';
+        loginCredential.value = '';
+      }
+      loginName.value = '';
+      clearError();
+    }
+
+    adminModeBox.addEventListener('click', function(e) {
+      adminToggle.checked = !adminToggle.checked;
+      handleStaffModeToggle(adminToggle.checked);
+    });
+
+    let autofillTimer = null;
+    async function tryAutofillName() {
+      clearTimeout(autofillTimer);
+      autofillTimer = setTimeout(async () => {
+        const email = loginEmail.value.trim().toLowerCase();
+        const credential = loginCredential.value.trim();
+
+        if (!email || !credential) {
+          loginName.value = '';
+          return;
+        }
+
+        // Простая проверка: должно начинаться с PP-
+        if (!adminToggle.checked && !credential.startsWith('PP-')) {
+          loginName.value = '';
+          return;
+        }
+
+        try {
+          const response = await fetch('/validate-credentials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: email,
+              license_key: credential,
+              password: credential
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.show_name && data.full_name) {
+            loginName.value = data.full_name;
+            loginName.style.color = '#32cd32';
+          } else {
+            loginName.value = '';
+            loginName.style.color = '';
+          }
+        } catch (error) {
+          console.debug('Autofill error:', error);
+        }
+      }, 400);
+    }
+
+    loginEmail.addEventListener('blur', tryAutofillName);
+    loginCredential.addEventListener('blur', tryAutofillName);
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+
+      const email = loginEmail.value.trim().toLowerCase();
+      const credential = loginCredential.value.trim();
+      const isStaffMode = adminToggle.checked;
+
+      if (!email) {
+        return showError('Please enter your email address.');
+      }
+
+      if (!credential) {
+        return showError(isStaffMode ? 'Please enter your password.' : 'Please enter your license key.');
+      }
+
+      // Простая валидация для license key
+      if (!isStaffMode && !credential.startsWith('PP-')) {
+        return showError('License key must start with PP-');
+      }
+
+      setLoading('login', true);
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            email: email,
+            password: credential,
+            license_key: credential
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === 'success') {
+          console.log('✅ Login successful, redirecting...');
+          window.location.href = data.redirect || '/dashboard';
+        } else {
+          const errorMsg = data.detail || data.error || 'Authentication failed.';
+          showError(errorMsg);
+        }
+
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Network error. Please check your connection.');
+      } finally {
+        setLoading('login', false);
+      }
+    });
+
+    // ============================================================================
+    // REGISTER LOGIC
+    // ============================================================================
+    const registerForm = document.getElementById('registerForm');
+    const regEmail = document.getElementById('regEmail');
+    const regName = document.getElementById('regName');
+    const regReferralCode = document.getElementById('regReferralCode');
+
+    // Auto-uppercase referral code input
+    regReferralCode.addEventListener('input', function(e) {
+      this.value = this.value.toUpperCase();
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+      clearSuccess();
+
+      const email = regEmail.value.trim().toLowerCase();
+      const full_name = regName.value.trim();
+      const referral_code = regReferralCode.value.trim().toUpperCase();
+
+      if (!email || !full_name) {
+        return showError('Please fill in all required fields.');
+      }
+
+      if (!email.includes('@')) {
+        return showError('Please enter a valid email address.');
+      }
+
+      // Optional: validate referral code format if provided
+      if (referral_code && !referral_code.startsWith('PP-REF-')) {
+        return showError('Invalid referral code format. Should start with PP-REF-');
+      }
+
+      setLoading('register', true);
+
+      try {
+        const requestBody = {
+          email: email,
+          full_name: full_name,
+          fingerprint: 'browser_' + Date.now()
+        };
+
+        // Only add referral code if it was provided
+        if (referral_code) {
+          requestBody.referred_by_code = referral_code;
+        }
+
+        const response = await fetch('/api/register-trial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          let successMsg = `✅ Account created successfully!\n\n🔑 Your License Key: ${data.license_key}\n\n📧 Check your email for details.`;
+
+          // Show referral bonus message if code was used
+          if (referral_code) {
+            successMsg += `\n\n💎 Referral code accepted! Your friend will get a bonus when you upgrade! 🎁`;
+          }
+
+          successMsg += `\n\nRedirecting to Sign In in 3 seconds...`;
+
+          showSuccess(successMsg);
+
+          setTimeout(() => {
+            switchTab('signin');
+            loginEmail.value = email;
+            loginCredential.value = data.license_key;
+            clearSuccess();
+          }, 3000);
+        } else {
+          const errorMsg = data.detail || data.error || 'Registration failed.';
+          showError(errorMsg);
+        }
+
+      } catch (error) {
+        console.error('Registration error:', error);
+        showError('Network error. Please check your connection.');
+      } finally {
+        setLoading('register', false);
+      }
+    });
+
+    // ============================================================================
+    // INITIALIZATION
+    // ============================================================================
+
+    // Check for referral code in URL (?ref=XXXXX)
+    const urlReferralCode = getUrlParameter('ref');
+    if (urlReferralCode) {
+      // Auto-fill referral code and switch to register tab
+      regReferralCode.value = urlReferralCode.toUpperCase();
+      switchTab('register');
+      console.log('🎁 Referral code detected:', urlReferralCode);
+    } else {
+      // Default focus on signin
+      loginEmail.focus();
+    }
+
+    // Check if already logged in
+    fetch('/api/session/me', { credentials: 'include' })
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.email) {
+          console.log('Already logged in, redirecting...');
+          window.location.href = '/dashboard';
+        }
+      })
+      .catch(() => {});
+
+  </script>
+
+<div id="pp-footer"></div>
+
+<script src="/static/js/pp-layout.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProfitPal - Diamond Analysis</title>
+
+    <!-- ЕДИНЫЙ CSS (все стили в одном файле) -->
+    <link rel="stylesheet" href="/static/css/profitpal_reunion_styles.css">
+
+    <!-- ProfitPal AI Assistant -->
+    <link rel="stylesheet" href="/static/css/profitpal-assistant.css">
+
+    <!-- Роли и логотип -->
+    <link rel="stylesheet" href="/static/css/pp-role-badge.css">
+    <link rel="stylesheet" href="/static/css/logo.css">
+</head>
+
+<body data-pp-page="private">
+
+  <div class="portfolio-bg"></div>
+
+  <!-- НАЧАЛО КОНТЕЙНЕРА -->
+  <div class="container">
+
+    <!-- Header -->
+    <header class="nav-header">
+      <div class="logo" id="pp-logo" data-pp-logo="1"></div>
+
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-item active">Dashboard</a>
+        <a href="/stock-analysis" class="nav-item">Analysis</a>
+        <a href="/portfolio" class="nav-item">Portfolio</a>
+        <a href="/settings" class="nav-item">Settings</a>
+        <a href="/trading-journal" class="nav-item-special">📊 Trading Journal</a>
+      </div>
+
+      <div class="user-info">
+        <button class="upgrade-btn">⭐ Upgrade to Paid</button>
+        <div id="role-badge-container"></div>
+        <div class="user-avatar" id="user-avatar">U</div>
+        <span id="user-greeting">Welcome!</span>
+      </div>
+    </header>
+
+    <!-- TICKER INPUT -->
+    <div class="ticker-input-section">
+      <div class="ticker-input-group">
+        <input type="text" class="ticker-input" id="tickerInput" placeholder="Enter Ticker (e.g. AAPL)" maxlength="10">
+        <button class="analyze-btn" id="analyzeBtn">Analyze</button>
+      </div>
+    </div>
+
+    <!-- ANALYSIS RESULTS -->
+    <div id="analysisResults">
+
+      <!-- COMPANY HEADER -->
+      <div class="company-header" id="companyPanel" style="display: none;">
+        <h1 class="company-name" id="companyName">--</h1>
+        <p class="company-meta" id="companyMeta">--</p>
+      </div>
+
+      <!-- DIAMOND SCORE -->
+      <div class="score-hero" id="diamondSection" style="display: none;">
+        <div class="score-display">--/50</div>
+        <div class="score-verdict">Investment Grade</div>
+
+        <div class="score-scale">
+          <div class="score-scale-title">Diamond Rating Scale</div>
+          <div class="score-scale-item">💎💎💎💎💎 ABSOLUTE DIAMOND (45-50 pts)</div>
+          <div class="score-scale-item">💎💎💎💎⭐ STRONG DIAMOND (40-44 pts)</div>
+          <div class="score-scale-item">💎💎💎⭐⭐ QUALITY STOCK (35-39 pts)</div>
+          <div class="score-scale-item">💎💎⭐⭐⭐ MIXED SIGNALS (25-34 pts)</div>
+          <div class="score-scale-item">💎⭐⭐⭐⭐ CAUTION (15-24 pts)</div>
+          <div class="score-scale-item">⭐⭐⭐⭐⭐ AVOID (0-14 pts)</div>
+        </div>
+      </div>
+
+      <!-- QUICK SUMMARY -->
+      <div class="quick-summary">
+
+        <!-- Current Price Card -->
+        <div class="summary-card current-price-card">
+          <div class="cp-header">
+            <div class="summary-label">Current Price</div>
+            <div class="cp-ticker" id="cpTicker"></div>
+          </div>
+
+          <div class="cp-main">
+            <div class="cp-price" id="currentPrice">N/A</div>
+            <div class="cp-change" id="priceChange">--</div>
+          </div>
+
+          <div class="cp-rows">
+            <div class="cp-row">
+              <span>Open</span>
+              <span id="cpOpen">--</span>
+            </div>
+            <div class="cp-row">
+              <span>Previous close</span>
+              <span id="cpPrevClose">--</span>
+            </div>
+          </div>
+
+          <div class="cp-range-block">
+            <div class="cp-range-title">Day range</div>
+            <div class="cp-range-bar">
+              <div class="cp-range-fill" id="cpDayRangeFill"></div>
+              <div class="cp-range-indicator" id="cpDayRangeIndicator"></div>
+            </div>
+            <div class="cp-range-labels">
+              <span id="cpDayLow">--</span>
+              <span>Low</span>
+              <span>Now</span>
+              <span>High</span>
+              <span id="cpDayHigh">--</span>
+            </div>
+          </div>
+
+          <div class="cp-range-block" id="cp52Block">
+            <div class="cp-range-title">52 week range</div>
+            <div class="cp-range-bar">
+              <div class="cp-range-fill" id="cp52RangeFill"></div>
+              <div class="cp-range-indicator" id="cp52RangeIndicator"></div>
+            </div>
+            <div class="cp-range-labels">
+              <span id="cp52Low">--</span>
+              <span>Low</span>
+              <span>Now</span>
+              <span>High</span>
+              <span id="cp52High">--</span>
+            </div>
+          </div>
+
+          <div class="cp-meta">
+            <span class="cp-meta-delay">⚠️ Delayed ~15 min</span>
+            <span class="cp-meta-updated" id="cpUpdated">Updated: --</span>
+          </div>
+        </div>
+
+        <!-- Fair Value Card -->
+        <div class="summary-card highlight">
+          <div class="summary-label">Fair Value (Blended)</div>
+          <div class="summary-value" id="fairValue">--</div>
+          <div class="summary-change positive" id="valuationGap">--</div>
+        </div>
+
+        <!-- PE Ownership -->
+        <div class="summary-card">
+          <div class="summary-label">PE Ownership Risk</div>
+          <div class="summary-value" id="peOwnership">--</div>
+          <div class="summary-status safe" id="peStatus">✅ Safe</div>
+        </div>
+
+        <!-- Free Cash Flow -->
+        <div class="summary-card">
+          <div class="summary-label">Free Cash Flow</div>
+          <div class="summary-value" id="freeCashFlow">--</div>
+        </div>
+
+      </div><!-- /quick-summary -->
+
+
+      <!-- DETAILED SCORING BREAKDOWN — coming soon -->
+      <div class="collapsible-section coming-soon-section">
+        <div class="section-header" onclick="toggleSection('scoring')">
+          <div class="section-title">
+            <span class="section-icon">⭐</span>
+            <span>DETAILED SCORING BREAKDOWN</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="scoring-content">
+          <div class="section-inner">
+            <div class="coming-soon-overlay">
+              <div class="coming-soon-message">
+                <h3>🔮 Coming Soon</h3>
+                <p>Advanced AI-powered scoring system in development</p>
+              </div>
+            </div>
+            <div class="scoring-grid blurred">
+              <div class="score-category-card">
+                <div class="score-category-icon">💰</div>
+                <div class="score-category-label">Financial Health</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">📈</div>
+                <div class="score-category-label">Growth Potential</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">💎</div>
+                <div class="score-category-label">Value Score</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">⚠️</div>
+                <div class="score-category-label">Risk Assessment</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">👔</div>
+                <div class="score-category-label">Management Quality</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">🎯</div>
+                <div class="score-category-label">Market Position</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">🏆</div>
+                <div class="score-category-label">Competitive Advantage</div>
+                <div class="score-category-value">--</div>
+              </div>
+              <div class="score-category-card">
+                <div class="score-category-icon">🔮</div>
+                <div class="score-category-label">Future Outlook</div>
+                <div class="score-category-value">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="collapsible-section" id="chartsSection">
+        <div class="section-header" onclick="toggleSection('charts')">
+          <div class="section-title">
+            <span class="section-icon">📈</span>
+            <span>CHARTS</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+
+        <div class="section-content" id="charts-content">
+          <div class="section-inner">
+
+            <!-- Chart 1 -->
+            <div class="pp-chart-card">
+              <div class="pp-chart-head">
+                <div>
+                  <div class="pp-chart-title">Price vs Fair Value</div>
+                  <div class="pp-chart-subtitle">Market price + blended intrinsic band</div>
+                </div>
+              </div>
+              <div class="pp-chart-stage">
+                <div id="ppChartPriceIntrinsic" class="pp-chart-canvas"></div>
+              </div>
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="pp-chart-card">
+              <div class="pp-chart-head">
+                <div>
+                  <div class="pp-chart-title">Fundamentals</div>
+                </div>
+
+                <!-- tabs only for charts -->
+                <div class="mini-tabs" id="ppFundTabs">
+                  <button class="mini-tab active" data-kind="revenue" type="button">Revenue</button>
+                  <button class="mini-tab" data-kind="net_income" type="button">Net Income</button>
+                  <button class="mini-tab" data-kind="fcf" type="button">FCF</button>
+                </div>
+              </div>
+
+              <div class="pp-chart-stage">
+                <div id="ppChartFundamentals" class="pp-chart-canvas"></div>
+              </div>
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="pp-chart-card">
+              <div class="pp-chart-head">
+                <div>
+                  <div class="pp-chart-title">Valuation Breakdown</div>
+                  <div class="pp-chart-subtitle">Methods → Blended</div>
+                </div>
+              </div>
+              <div class="pp-chart-stage">
+                <div id="ppChartBreakdown" class="pp-chart-canvas"></div>
+              </div>
+            </div>
+
+            <div class="data-source" id="ds-charts"></div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- FINANCIAL OVERVIEW -->
+      <div class="collapsible-section" id="financialSection">
+        <div class="section-header" onclick="toggleSection('financial')">
+          <div class="section-title">
+            <span class="section-icon">📊</span>
+            <span>FINANCIAL OVERVIEW</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="financial-content">
+          <div class="section-inner">
+            <div class="mini-tabs">
+              <button class="mini-tab active" onclick="showMetric('revenue', event)">Revenue</button>
+              <button class="mini-tab" onclick="showMetric('netincome', event)">Net Income</button>
+              <button class="mini-tab" onclick="showMetric('assets', event)">Total Assets</button>
+              <button class="mini-tab" onclick="showMetric('equity', event)">Total Equity</button>
+              <button class="mini-tab" onclick="showMetric('debt', event)">Total Debt</button>
+              <button class="mini-tab" onclick="showMetric('shares', event)">Outstanding Shares</button>
+            </div>
+            <div id="revenue-metric" class="metric-content">
+              <div class="metric-title" id="revenue-metric-title">REVENUE</div>
+              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="year-data" id="revenue-year-data"></div>
+              <div class="data-source" id="ds-1"></div>
+            </div>
+            <div id="netincome-metric" class="metric-content" style="display:none;">
+              <div class="metric-title" id="netincome-metric-title">NET INCOME</div>
+              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="year-data" id="netincome-year-data"></div>
+              <div class="data-source" id="ds-2"></div>
+            </div>
+            <div id="assets-metric" class="metric-content" style="display:none;">
+              <div class="metric-title" id="assets-metric-title">TOTAL ASSETS</div>
+              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="year-data" id="assets-year-data"></div>
+              <div class="data-source" id="ds-3"></div>
+            </div>
+            <div id="equity-metric" class="metric-content" style="display:none;">
+              <div class="metric-title" id="equity-metric-title">TOTAL EQUITY</div>
+              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="year-data" id="equity-year-data"></div>
+              <div class="data-source" id="ds-4"></div>
+            </div>
+            <div id="debt-metric" class="metric-content" style="display:none;">
+              <div class="metric-title" id="debt-metric-title">TOTAL DEBT</div>
+              <div class="valuation-grid" id="debt-cards" style="margin-bottom:30px;"></div>
+              <div class="chart-container"><div class="chart-placeholder">[Debt chart will be rendered here]</div></div>
+              <div class="year-data" id="debt-year-data"></div>
+              <div class="data-source" id="ds-5"></div>
+            </div>
+            <div id="shares-metric" class="metric-content" style="display:none;">
+              <div class="metric-title" id="shares-metric-title">OUTSTANDING SHARES</div>
+              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="year-data" id="shares-year-data"></div>
+              <div class="data-source" id="ds-6"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- KEY METRICS -->
+      <div class="collapsible-section" id="metricsSection">
+        <div class="section-header" onclick="toggleSection('keymetrics')">
+          <div class="section-title">
+            <span class="section-icon">📈</span>
+            <span>KEY METRICS</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="keymetrics-content">
+          <div class="section-inner">
+            <div class="valuation-grid">
+              <div class="valuation-card">
+                <div class="valuation-method">P/E Ratio</div>
+                <div class="valuation-price" id="peRatio">—</div>
+                <div class="valuation-detail">Price / Earnings</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">EPS</div>
+                <div class="valuation-price" id="eps">—</div>
+                <div class="valuation-detail">Earnings Per Share</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">ROE</div>
+                <div class="valuation-price" id="roe">—</div>
+                <div class="valuation-detail">Return on Equity</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Debt/Equity</div>
+                <div class="valuation-price" id="debtEquity">—</div>
+                <div class="valuation-detail">Leverage Ratio</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Revenue Growth</div>
+                <div class="valuation-price" id="revenueGrowth">—</div>
+                <div class="valuation-detail">YoY Growth Rate</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Free Cash Flow</div>
+                <div class="valuation-price" id="freeCashFlowCard">—</div>
+                <div class="valuation-detail">Operating CF - CapEx</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Operating Margin</div>
+                <div class="valuation-price" id="operatingMargin">—</div>
+                <div class="valuation-detail">Operating Income / Revenue</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Current Ratio</div>
+                <div class="valuation-price" id="currentRatio">—</div>
+                <div class="valuation-detail">Current Assets / Liabilities</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Quick Ratio</div>
+                <div class="valuation-price" id="quickRatio">—</div>
+                <div class="valuation-detail">Liquidity Measure</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Dividend Yield</div>
+                <div class="valuation-price" id="dividendYield">—</div>
+                <div class="valuation-detail">Annual Dividend / Price</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Payout Ratio</div>
+                <div class="valuation-price" id="payoutRatio">—</div>
+                <div class="valuation-detail">Dividends / Earnings</div>
+              </div>
+              <div class="valuation-card">
+                <div class="valuation-method">Market Cap</div>
+                <div class="valuation-price" id="marketCap">—</div>
+                <div class="valuation-detail">Total Market Value</div>
+              </div>
+            </div>
+            <div class="data-source" id="ds-7"></div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- WACC BREAKDOWN -->
+      <div class="collapsible-section" id="waccSection">
+        <div class="section-header" onclick="toggleSection('wacc')">
+          <div class="section-title">
+            <span class="section-icon">📐</span>
+            <span>WACC BREAKDOWN</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="wacc-content">
+          <div class="section-inner">
+
+            <div class="mini-tabs">
+              <button class="mini-tab active" onclick="showWaccMetric('costofequity', event)">Cost of Equity (Re)</button>
+              <button class="mini-tab" onclick="showWaccMetric('costofdebt', event)">Cost of Debt (Rd)</button>
+              <button class="mini-tab" onclick="showWaccMetric('taxrate', event)">Tax Rate</button>
+              <button class="mini-tab" onclick="showWaccMetric('weights', event)">Equity/Debt Weights</button>
+              <button class="mini-tab" onclick="showWaccMetric('finalwacc', event)">Final WACC</button>
+            </div>
+
+            <!-- Cost of Equity -->
+            <div id="costofequity-wacc" class="metric-content">
+              <div class="metric-title">COST OF EQUITY (Re)</div>
+              <div class="valuation-grid">
+                <div class="valuation-card">
+                  <div class="valuation-method">Risk-Free Rate (Rf)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">10-Year Treasury Yield</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Beta (β)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">5-Year Beta</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Market Risk Premium</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Rm - Rf</div>
+                </div>
+                <div class="valuation-card highlight">
+                  <div class="valuation-method">Cost of Equity (Re)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Rf + β(Rm - Rf)</div>
+                </div>
+              </div>
+              <div class="data-source" id="ds-8"></div>
+            </div>
+
+            <!-- Cost of Debt -->
+            <div id="costofdebt-wacc" class="metric-content" style="display:none;">
+              <div class="metric-title">COST OF DEBT (Rd)</div>
+              <div class="valuation-grid">
+                <div class="valuation-card">
+                  <div class="valuation-method">Total Debt</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Short + Long Term</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Interest Expense</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Annual Interest</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Pre-Tax Rd</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Interest / Total Debt</div>
+                </div>
+                <div class="valuation-card highlight">
+                  <div class="valuation-method">After-Tax Rd</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Rd × (1 - Tax Rate)</div>
+                </div>
+              </div>
+              <div class="data-source" id="ds-9"></div>
+            </div>
+
+            <!-- Tax Rate -->
+            <div id="taxrate-wacc" class="metric-content" style="display:none;">
+              <div class="metric-title">TAX RATE</div>
+              <div class="valuation-grid">
+                <div class="valuation-card">
+                  <div class="valuation-method">Income Before Tax</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">From Income Statement</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Income Tax Expense</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Actual Tax Paid</div>
+                </div>
+                <div class="valuation-card highlight">
+                  <div class="valuation-method">Effective Tax Rate</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Tax / Pre-Tax Income</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Sector Avg Tax Rate</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Industry Average</div>
+                </div>
+              </div>
+              <div class="data-source" id="ds-10"></div>
+            </div>
+
+            <!-- Equity/Debt Weights -->
+            <div id="weights-wacc" class="metric-content" style="display:none;">
+              <div class="metric-title">CAPITAL STRUCTURE WEIGHTS</div>
+              <div class="valuation-grid">
+                <div class="valuation-card">
+                  <div class="valuation-method">Market Cap (Equity)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Market Value of Equity</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Total Debt</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Book Value of Debt</div>
+                </div>
+                <div class="valuation-card highlight">
+                  <div class="valuation-method">Equity Weight (We)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">E / (E + D)</div>
+                </div>
+                <div class="valuation-card highlight">
+                  <div class="valuation-method">Debt Weight (Wd)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">D / (E + D)</div>
+                </div>
+              </div>
+              <div class="year-data">
+                <div class="year-row">
+                  <span class="year-label">Total Capital</span>
+                  <span class="year-value" id="waccTotalCapital">—</span>
+                  <span class="year-change">Equity + Debt</span>
+                </div>
+                <div class="year-row">
+                  <span class="year-label">Debt/Equity Ratio</span>
+                  <span class="year-value" id="waccDeRatio">—</span>
+                  <span class="year-change">Moderately Leveraged</span>
+                </div>
+              </div>
+              <div class="data-source" id="ds-11"></div>
+            </div>
+
+            <!-- Final WACC -->
+            <div id="finalwacc-wacc" class="metric-content" style="display:none;">
+              <div class="metric-title">WEIGHTED AVERAGE COST OF CAPITAL</div>
+              <div class="valuation-grid">
+                <div class="valuation-card">
+                  <div class="valuation-method">Cost of Equity (Re)</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">CAPM Model</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">After-Tax Rd</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Rd × (1 - Tax)</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Equity Weight</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">We</div>
+                </div>
+                <div class="valuation-card">
+                  <div class="valuation-method">Debt Weight</div>
+                  <div class="valuation-price">—</div>
+                  <div class="valuation-detail">Wd</div>
+                </div>
+              </div>
+              <div class="verdict-box">
+                <div class="verdict-text" id="waccVerdict">—</div>
+                <div style="font-size:14px; color:var(--pp-text-muted); margin-top:10px;">
+                  <span id="waccFormula">—</span>
+                </div>
+              </div>
+              <div class="data-source" id="ds-12"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- INTRINSIC VALUE ANALYSIS -->
+      <div class="collapsible-section" id="intrinsicSection">
+        <div class="section-header" onclick="toggleSection('intrinsic')">
+          <div class="section-title">
+            <span class="section-icon">💎</span>
+            <span>INTRINSIC VALUE ANALYSIS</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="intrinsic-content">
+          <div class="section-inner">
+
+            <!-- Valuation Cards Grid -->
+            <div class="valuation-grid">
+
+              <div class="valuation-card">
+                <div class="valuation-method">Current Price</div>
+                <div class="valuation-price" id="currentPriceIV">—</div>
+                <div class="valuation-detail">Market Valuation</div>
+              </div>
+
+              <!-- DCF -->
+              <div class="valuation-card">
+                <div class="valuation-method">DCF Simple</div>
+                <div class="valuation-price" id="dcfSimple">—</div>
+                <div class="valuation-detail" id="w_dcf">Weight: —</div>
+              </div>
+
+              <div class="valuation-card">
+                <div class="valuation-method">DCF Two-Stage</div>
+                <div class="valuation-price" id="dcfTwoStage">—</div>
+                <div class="valuation-detail">vs current price</div>
+              </div>
+
+              <!-- Graham Number -->
+              <div class="valuation-card">
+                <div class="valuation-method">Graham Number</div>
+                <div class="valuation-price" id="grahamValue">—</div>
+                <div class="valuation-detail" id="w_graham">Weight: —</div>
+              </div>
+
+              <!-- DDM -->
+              <div class="valuation-card">
+                <div class="valuation-method">DDM (Gordon)</div>
+                <div class="valuation-price" id="ddmGordon">—</div>
+                <div class="valuation-detail" id="w_ddm">Weight: —</div>
+              </div>
+
+              <div class="valuation-card">
+                <div class="valuation-method">DDM Two-Stage</div>
+                <div class="valuation-price" id="ddmTwoStage">—</div>
+                <div class="valuation-detail">vs current price</div>
+              </div>
+
+              <!-- EV/EBITDA -->
+              <div class="valuation-card">
+                <div class="valuation-method">EV Multiple</div>
+                <div class="valuation-price" id="evEbitdaValue">—</div>
+                <div class="valuation-detail" id="w_ev">Weight: —</div>
+              </div>
+
+              <!-- P/E Based — id синхронизирован с JS (peBasedValue) -->
+              <div class="valuation-card">
+                <div class="valuation-method">P/E Based</div>
+                <div class="valuation-price" id="peBasedValue">—</div>
+                <div class="valuation-detail" id="w_pe">Weight: —</div>
+              </div>
+
+              <!-- Blended Result -->
+              <div class="valuation-card highlight">
+                <div class="valuation-method">Blended Fair Value</div>
+                <div class="valuation-price" id="intrinsicBase">—</div>
+                <div class="valuation-detail">Weighted blend</div>
+              </div>
+
+            </div><!-- /valuation-grid -->
+
+            <!-- Multi-Method Breakdown Table -->
+            <div class="section-card mm-section">
+              <div class="mm-section-header">
+                <span class="mm-section-title">📊 Multi-Method Breakdown</span>
+                <span class="mm-section-subtitle">5 methods · normalized weights</span>
+              </div>
+              <div id="multiMethodPanel">
+                <p class="mm-placeholder">Run analysis to see valuation breakdown...</p>
+              </div>
+            </div>
+
+            <!-- Verdict -->
+            <div class="verdict-box" style="margin-top:16px;">
+              <div class="verdict-text" id="valueAssessment">—</div>
+            </div>
+
+            <div class="data-source" id="ds-13"></div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================
+           OWNERSHIP STRUCTURE — HTML SKELETON
+           Заменяет блок <!-- OWNERSHIP STRUCTURE 
+        ============================================================ -->
+
+      <!-- OWNERSHIP STRUCTURE -->
+      <div class="collapsible-section" id="ownershipSection">
+        <div class="section-header" onclick="toggleSection('ownership')">
+          <div class="section-title">
+            <span class="section-icon">👥</span>
+            <span>OWNERSHIP STRUCTURE</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="ownership-content">
+          <div class="section-inner">
+
+            <!-- PE RISK BANNER -->
+            <div id="peRiskBanner" class="pe-risk-banner pe-risk-low">
+              <div class="pe-risk-left">
+                <span id="peRiskBadge" class="pe-risk-badge">LOW RISK</span>
+                <span id="peRiskMessage" class="pe-risk-msg">Loading ownership data...</span>
+              </div>
+              <div id="peRiskPct" class="pe-risk-pct">—</div>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="quick-summary ownership-summary-grid">
+              <div class="summary-card">
+                <div class="summary-label">Known Ownership</div>
+                <div class="summary-value" id="knownOwnershipPct">N/A</div>
+                <div class="summary-sub">of total shares</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">PE Ownership</div>
+                <div class="summary-value" id="peTotalPct">N/A</div>
+                <div class="summary-sub" id="peOwnerName">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Major Holders</div>
+                <div class="summary-value" id="majorHoldersCount">N/A</div>
+                <div class="summary-sub">≥5% stake reported</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Activist Investors</div>
+                <div class="summary-value" id="activistCount">N/A</div>
+                <div class="summary-sub">SC 13D filings</div>
+              </div>
+            </div>
+
+            <!-- MAJOR HOLDERS TABLE -->
+            <div class="ownership-table-header">
+              <span class="ownership-table-title">Major Holders</span>
+              <span class="ownership-table-sub">Latest filing per investor · Source: SEC EDGAR SC 13D/G</span>
+            </div>
+            <div class="ownership-table-wrap">
+              <table class="ownership-table" id="majorHoldersTable">
+                <thead>
+                  <tr>
+                    <th>Investor</th>
+                    <th>Type</th>
+                    <th>Ownership</th>
+                    <th>Change</th>
+                    <th>Prev %</th>
+                    <th>Filing Date</th>
+                  </tr>
+                </thead>
+                <tbody id="majorHoldersBody">
+                  <tr><td colspan="6" class="ownership-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- LBO EXPLAINER (collapsible, shows only if PE detected) -->
+            <div id="lboExplainerWrap" class="lbo-explainer-wrap" style="display:none">
+              <div class="lbo-explainer-toggle" onclick="toggleLboExplainer()">
+                <span>⚠️ What PE ownership has historically meant for investors</span>
+                <span id="lboToggleArrow" class="lbo-toggle-arrow">▼</span>
+              </div>
+              <div id="lboExplainerBody" class="lbo-explainer-body">
+
+                <p class="lbo-disclaimer-top">
+                  The following is based on <strong>publicly documented historical cases</strong> and publicly available research.
+                  This is educational information only and does not constitute investment advice
+                  or characterise the intentions of any specific fund.
+                </p>
+
+                <!-- HOW IT WORKS - steps -->
+                <div class="lbo-steps-row">
+                  <div class="lbo-step">
+                    <div class="lbo-step-dot lbo-step-1">1</div>
+                    <div class="lbo-step-title">Acquisition</div>
+                    <div class="lbo-step-desc">PE fund acquires a significant or controlling stake, often using leveraged (borrowed) capital.</div>
+                  </div>
+                  <div class="lbo-step-arrow">→</div>
+                  <div class="lbo-step">
+                    <div class="lbo-step-dot lbo-step-2">2</div>
+                    <div class="lbo-step-title">Debt transfer</div>
+                    <div class="lbo-step-desc">In a number of documented cases, acquisition debt has been transferred onto the target company's balance sheet.</div>
+                  </div>
+                  <div class="lbo-step-arrow">→</div>
+                  <div class="lbo-step">
+                    <div class="lbo-step-dot lbo-step-3">3</div>
+                    <div class="lbo-step-title">Fee extraction</div>
+                    <div class="lbo-step-desc">Management fees, monitoring fees and dividends to the PE fund have been observed throughout holding periods.</div>
+                  </div>
+                  <div class="lbo-step-arrow">→</div>
+                  <div class="lbo-step">
+                    <div class="lbo-step-dot lbo-step-4">4</div>
+                    <div class="lbo-step-title">Cost cuts</div>
+                    <div class="lbo-step-desc">Operational restructuring, layoffs and capex reductions are commonly reported strategies during PE ownership.</div>
+                  </div>
+                  <div class="lbo-step-arrow">→</div>
+                  <div class="lbo-step">
+                    <div class="lbo-step-dot lbo-step-5">5</div>
+                    <div class="lbo-step-title">Exit event</div>
+                    <div class="lbo-step-desc">Exit via sale, IPO — or in a material number of documented cases, Chapter 11 restructuring.</div>
+                  </div>
+                </div>
+
+                <!-- REAL CASES GRID -->
+                <div class="lbo-cases-label">Publicly Documented Historical Cases</div>
+                <div class="lbo-cases-grid" id="lboCasesGrid">
+                  <!-- populated by JS from lboHistoryCases array -->
+                </div>
+
+                <!-- INVESTOR NOTE -->
+                <div class="lbo-investor-note">
+                  <strong>Note for investors:</strong>
+                  Not all PE-backed companies follow this trajectory — many PE investments have resulted in
+                  operational improvement and value creation. However, it is historically observable that companies
+                  carrying significant LBO-related debt face elevated financial risk compared to peers.
+                  When reviewing PE ownership, investors may wish to examine the company's
+                  <strong>debt-to-equity ratio, interest coverage and free cash flow trends</strong>
+                  alongside ownership data.
+                  <br><br>
+                  <em>ProfitPal does not provide investment advice. All information is sourced from public SEC filings
+                  and publicly available news sources. Historical patterns do not guarantee future outcomes.</em>
+                </div>
+
+              </div><!-- /lboExplainerBody -->
+            </div><!-- /lboExplainerWrap -->
+
+            <div class="data-source" id="ds-14"></div>
+          </div><!-- /section-inner -->
+        </div><!-- /section-content -->
+      </div><!-- /ownershipSection -->
+
+
+      <!-- ============================================================
+           INSIDER ACTIVITY — новый скелет
+           API: /api/ownership/{ticker}/insiders
+           Данные: insider_holdings, insider_activity, recent_trades
+      ============================================================ -->
+      <div class="collapsible-section" id="insiderSection">
+        <div class="section-header" onclick="toggleSection('insider')">
+          <div class="section-title">
+            <span class="section-icon">🔒</span>
+            <span>INSIDER ACTIVITY</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="insider-content">
+          <div class="section-inner">
+
+            <!-- SUMMARY ROW: 3 карточки с реальным смыслом -->
+            <div class="quick-summary insider-summary-grid">
+              <div class="summary-card">
+                <div class="summary-label">RSU Vested (6M)</div>
+                <div class="summary-value positive" id="insiderRsuVested">N/A</div>
+                <div class="summary-sub" id="insiderRsuVestedShares">shares received</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Shares Sold (6M)</div>
+                <div class="summary-value negative" id="insiderSharesSold">N/A</div>
+                <div class="summary-sub" id="insiderSharesSoldAmt">—</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Net Position Change</div>
+                <div class="summary-value" id="insiderNetChange">N/A</div>
+                <div class="summary-sub">acquired minus disposed</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Insider Signal</div>
+                <div class="summary-value" id="insiderSentiment">N/A</div>
+                <div class="summary-sub" id="insiderSignalSub">based on 6M activity</div>
+              </div>
+            </div>
+
+            <!-- TRANSACTION TYPE LEGEND -->
+            <div class="insider-type-legend" id="insiderTypeLegend">
+              <div class="insider-legend-title">Transaction types in this report</div>
+              <div class="insider-legend-grid" id="insiderLegendGrid">
+                <!-- populated by JS -->
+              </div>
+            </div>
+
+            <!-- RECENT TRANSACTIONS TABLE -->
+            <div class="insider-trades-header">
+              <span class="insider-trades-title">Recent Insider Transactions</span>
+              <span class="insider-trades-sub">Last 20 · Source: SEC EDGAR Form 4</span>
+            </div>
+            <div class="ownership-table-wrap">
+              <table class="ownership-table insider-trades-table" id="insiderTradesTable">
+                <thead>
+                  <tr>
+                    <th>Insider</th>
+                    <th>Role</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Value</th>
+                    <th>Held After</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody id="insiderTradesBody">
+                  <tr><td colspan="9" class="ownership-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- HOLDINGS TABLE -->
+            <div class="insider-trades-header" style="margin-top:20px">
+              <span class="insider-trades-title">Current Insider Holdings</span>
+              <span class="insider-trades-sub">Latest known position per insider</span>
+            </div>
+            <div class="ownership-table-wrap">
+              <table class="ownership-table" id="insiderHoldingsTable">
+                <thead>
+                  <tr>
+                    <th>Insider</th>
+                    <th>Role</th>
+                    <th>Shares Held</th>
+                    <th>As of</th>
+                  </tr>
+                </thead>
+                <tbody id="insiderHoldingsBody">
+                  <tr><td colspan="4" class="ownership-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="data-source" id="ds-15"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           INSTITUTIONAL HOLDINGS — 13F Data
+           Вставить: ПОСЛЕ insiderSection, ПЕРЕД cashFlowSection
+           API: /api/ownership/{ticker}/institutional
+           Данные: institutional_summary, holdings_by_fund, quarterly_trend
+           ============================================================ -->
+      <div class="collapsible-section" id="institutionalSection">
+        <div class="section-header" onclick="toggleSection('institutional')">
+          <div class="section-title">
+            <span class="section-icon">🏛</span>
+            <span>INSTITUTIONAL HOLDINGS</span>
+            <span class="inst-badge-quarter" id="instQuarterBadge"></span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="institutional-content">
+          <div class="section-inner">
+
+            <!-- SUMMARY: 4 карточки -->
+            <div class="quick-summary inst-summary-grid">
+              <div class="summary-card">
+                <div class="summary-label">Total Institutional %</div>
+                <div class="summary-value inst-gold" id="instTotalPct">N/A</div>
+                <div class="summary-sub">of shares outstanding</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Total Value Held</div>
+                <div class="summary-value inst-gold" id="instTotalValue">N/A</div>
+                <div class="summary-sub" id="instTotalValueSub">across all funds</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Funds Reporting</div>
+                <div class="summary-value" id="instFundsCount">N/A</div>
+                <div class="summary-sub">in our coverage</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Last Updated</div>
+                <div class="summary-value inst-period" id="instLastUpdated">N/A</div>
+                <div class="summary-sub" id="instLastUpdatedSub">filing date</div>
+              </div>
+            </div>
+
+            <!-- HOLDINGS TABLE: по фонду -->
+            <div class="ownership-table-header">
+              <span class="ownership-table-title">Holdings by Institution</span>
+              <span class="ownership-table-sub">Source: SEC EDGAR Form 13F · Quarterly</span>
+            </div>
+            <div class="ownership-table-wrap">
+              <table class="ownership-table inst-holdings-table" id="instHoldingsTable">
+                <thead>
+                  <tr>
+                    <th>Institution</th>
+                    <th class="num">Shares Held</th>
+                    <th class="num">Value (USD)</th>
+                    <th class="num">Chg QoQ</th>
+                    <th>Period</th>
+                    <th>Discretion</th>
+                  </tr>
+                </thead>
+                <tbody id="instHoldingsBody">
+                  <tr><td colspan="6" class="ownership-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- QUARTERLY TREND: мини-таблица по кварталам -->
+            <div class="ownership-table-header" style="margin-top:20px">
+              <span class="ownership-table-title">Quarterly Trend — Top Institutions</span>
+              <span class="ownership-table-sub">Shares held per quarter (000s)</span>
+            </div>
+            <div class="ownership-table-wrap" id="instTrendWrap">
+              <table class="ownership-table inst-trend-table" id="instTrendTable">
+                <thead>
+                  <tr id="instTrendHead">
+                    <th>Institution</th>
+                    <!-- кварталы добавляются динамически -->
+                  </tr>
+                </thead>
+                <tbody id="instTrendBody">
+                  <tr><td colspan="5" class="ownership-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="data-source" id="ds-inst">Source: SEC EDGAR Form 13F</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- CASH FLOW ANALYSIS -->
+      <div class="collapsible-section" id="cashFlowSection">
+        <div class="section-header" onclick="toggleSection('cashflow')">
+          <div class="section-title">
+            <span class="section-icon">💵</span>
+            <span>CASH FLOW ANALYSIS</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="cashflow-content">
+          <div class="section-inner">
+            <div class="mini-tabs">
+              <button class="mini-tab active">Operating CF</button>
+              <button class="mini-tab">Free Cash Flow</button>
+              <button class="mini-tab">Dividends Paid</button>
+            </div>
+            <div class="metric-content">
+              <div class="metric-title">OPERATING CASH FLOW (2020-2025)</div>
+              <div class="chart-container">
+                <div class="chart-placeholder">[Chart will be rendered here]</div>
+              </div>
+              <div class="year-data"></div>
+              <div class="data-source" id="ds-16"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- DIVIDEND ANALYSIS -->
+      <div class="collapsible-section" id="dividendsSection">
+        <div class="section-header" onclick="toggleSection('dividends')">
+          <div class="section-title">
+            <span class="section-icon">💰</span>
+            <span>DIVIDEND ANALYSIS</span>
+          </div>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-content" id="dividends-content">
+          <div class="section-inner">
+            <div class="mini-tabs">
+              <button class="mini-tab active">Annual</button>
+              <button class="mini-tab">Q1</button>
+              <button class="mini-tab">Q2</button>
+              <button class="mini-tab">Q3</button>
+              <button class="mini-tab">Q4</button>
+            </div>
+            <div class="metric-content">
+              <div class="metric-title">DIVIDEND PER SHARE (2016-2025)</div>
+              <div class="year-data"></div>
+              <div class="data-source" id="ds-17"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /analysisResults -->
+
+  </div><!-- /container -->
+
+
+  <!-- Analyze button handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const b = document.getElementById('analyzeBtn');
+      if (b) b.addEventListener('click', () => window.analyzeStock && window.analyzeStock());
+    });
+  </script>
+
+  <!-- Fallback и debug -->
+  <div id="pp-fallback" class="hidden" style="max-width:1200px;margin:24px auto;color:#eaeaea"></div>
+  <div id="provenance"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Автозапуск при ?ticker=CAT
+      const t = new URLSearchParams(location.search).get('ticker');
+      if (t && typeof window.analyzeStock === 'function') analyzeStock();
+
+      // Debug режим ?debug=1
+      window.ppShowDebug = location.search.includes('debug=1')
+        ? (data) => console.log('[pp-debug]', data)
+        : () => {};
+
+      // Fallback если API сломался
+      window.ppRenderFallback = (data) => {
+        const c = document.getElementById('pp-fallback');
+        if (!c) return;
+        const s = (data && data.sec_snapshot) || {};
+        const fmt = x => (x == null || Number.isNaN(x))
+          ? 'N/A'
+          : (typeof x === 'number'
+              ? x.toLocaleString('en-US', { maximumFractionDigits: 2 })
+              : String(x));
+
+        c.classList.remove('hidden');
+        c.innerHTML = `
+          <div style="padding:16px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);">
+            <h3 style="margin:0 0 10px;">Quick Snapshot (fallback)</h3>
+            <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse">
+                <tbody style="font-size:14px;line-height:1.45">
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Ticker</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(data?.ticker)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Current Price</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(data?.current_price)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Period</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.fiscal_year)} / ${fmt(s.quarter)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.revenue)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Net Income</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.net_income)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">OCF</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.operating_cash_flow)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">FCF</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.free_cash_flow)}</td></tr>
+                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">CapEx</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.capex)}</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top:8px;color:#888;">Fallback view shown due to data error. Try reloading later.</div>
+          </div>`;
+      };
+    });
+  </script>
+
+  <!-- Year/Quarter Controls -->
+  <script>
+  (function() {
+    'use strict';
+
+    console.log('[ProfitPal] Initializing year/quarter controls...');
+
+    // ===== COLLAPSIBLE SECTIONS =====
+    window.toggleSection = function(sectionId) {
+      const content = document.getElementById(sectionId + '-content');
+      if (!content) return;
+      const header = content.previousElementSibling;
+
+      const isOpen = content.classList.contains('expanded');
+      if (isOpen) {
+        content.classList.remove('expanded');
+        if (header) header.classList.remove('active');
+      } else {
+        content.classList.add('expanded');
+        if (header) header.classList.add('active');
+
+        if (sectionId === 'charts') {
+          setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+        }
+      }
+    };
+
+    // ===== MINI TABS =====
+    window.showMetric = function(metricName, ev) {
+      const root = document.getElementById('financial-content');
+      if (!root) return;
+
+      // active tabs ONLY inside Financial Overview
+      root.querySelectorAll('.mini-tab').forEach(tab => tab.classList.remove('active'));
+      const e = ev || window.event;
+      if (e && e.target) e.target.classList.add('active');
+
+      // hide/show ONLY financial metric blocks
+      root.querySelectorAll('[id$="-metric"]').forEach(content => content.style.display = 'none');
+      const metricContent = document.getElementById(metricName + '-metric');
+      if (metricContent) metricContent.style.display = 'block';
+    };
+
+    // ===== WACC TABS =====
+    window.showWaccMetric = function(metricName, ev) {
+      const root = document.getElementById('wacc-content');
+      if (!root) return;
+
+      root.querySelectorAll('.mini-tab').forEach(tab => tab.classList.remove('active'));
+      const e = ev || window.event;
+      if (e && e.target) e.target.classList.add('active');
+
+      root.querySelectorAll('[id$="-wacc"]').forEach(content => content.style.display = 'none');
+      const metricContent = document.getElementById(metricName + '-wacc');
+      if (metricContent) metricContent.style.display = 'block';
+    };
+
+    // ===== selectYear =====
+    window.selectYear = function(section, yearValue) {
+      window.PP = window.PP || {};
+      window.PP.year = (yearValue === '' || yearValue === 'null' || yearValue === null)
+        ? null
+        : Number(yearValue);
+      const ticker = window.currentTicker || window.PP.ticker;
+      if (!ticker) return;
+      if (typeof window.analyzeStock === 'function') window.analyzeStock();
+    };
+
+    // ===== selectQuarter =====
+    window.selectQuarter = function(section, quarterValue) {
+      window.PP = window.PP || {};
+      window.PP.quarter = quarterValue || 'FY';
+      const ticker = window.currentTicker || window.PP.ticker;
+      if (!ticker) return;
+      if (typeof window.analyzeStock === 'function') window.analyzeStock();
+    };
+
+    // ===== fmtMoneyOrNA =====
+    window.fmtMoneyOrNA = function(value) {
+      if (value === null || value === undefined || value === '' || Number.isNaN(Number(value))) {
+        return '<span style="color:#888;font-style:italic;">No Data Available</span>';
+      }
+      const n = Number(value);
+      const a = Math.abs(n);
+      if (a >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
+      if (a >= 1e9)  return '$' + (n / 1e9).toFixed(2) + 'B';
+      if (a >= 1e6)  return '$' + (n / 1e6).toFixed(2) + 'M';
+      if (a >= 1e3)  return '$' + (n / 1e3).toFixed(2) + 'K';
+      return '$' + n.toFixed(2);
+    };
+
+    console.log('[ProfitPal] ✅ Year/quarter controls loaded');
+  })();
+  </script>
+
+  <!-- CDN libs (no build) -->
+  <script defer src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+  <!-- External JS -->
+  <script src="/static/js/pp-contract.js"></script>
+  <script src="/static/js/pp-analysis.js"></script>
+  <script defer src="/static/js/pp-charts.js"></script>
+
+  <div id="pp-footer"></div>
+  <script src="/static/js/pp-layout.js" defer></script>
+  <script src="/static/js/profitpal-assistant.js"></script>
+  <script src="/static/vendor/html2pdf.bundle.min.js" defer></script>
+  <script src="/static/js/profitpal_integration.js"></script>
+  <script src="/static/js/ai_assistant_snippet.js"></script>
+
+</body>
+</html>
+

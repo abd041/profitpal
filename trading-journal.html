@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Journal - ProfitPal</title>
+
+  <!-- ProfitPal AI Assistant CSS -->
+  <link rel="stylesheet" href="/static/css/profitpal-assistant.css">
+  <!-- Early Bird Banner -->
+  <link rel="stylesheet" href="/static/css/early_bird_banner.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1e3a5f 50%, #2c5f2d 100%);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+      padding-top: 60px;
+    }
+
+    /* Animated background */
+    .background-animation {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1;
+    }
+
+    .floating-shape {
+      position: absolute;
+      background: linear-gradient(135deg, rgba(50, 205, 50, 0.1), rgba(255, 215, 0, 0.05));
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(100px, -100px) rotate(90deg); }
+      50% { transform: translate(-50px, -200px) rotate(180deg); }
+      75% { transform: translate(-150px, -50px) rotate(270deg); }
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, rgba(15, 35, 65, 0.9), rgba(30, 58, 95, 0.8));
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(34, 139, 34, 0.3);
+      padding: 0 30px;
+      position: sticky; 
+      top: 60px;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #87ceeb;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      background: rgba(50, 205, 50, 0.1);
+      color: #32cd32;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1600px;
+      margin: 40px auto;
+      padding: 0 30px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .page-title {
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff, #32cd32);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: #bdc3c7;
+      margin-bottom: 30px;
+    }
+
+    /* 📊 SOCIAL PROOF BADGE */
+    .social-proof {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(50, 205, 50, 0.1);
+      border: 1px solid rgba(50, 205, 50, 0.3);
+      padding: 8px 15px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #32cd32;
+    }
+
+    /* 💱 CURRENCY TABS */
+    .currency-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .currency-tab {
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .currency-tab:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .currency-tab.active {
+      background: linear-gradient(135deg, #32cd32, #27ae60);
+      border-color: #32cd32;
+      box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+    }
+
+    /* ⭐ MAIN SUMMARY TAB - ЗОЛОТОЙ */
+    .currency-tab.tab-main-summary {
+      background: linear-gradient(135deg, #ffd700, #ff6b35);
+      border-color: #ffd700;
+      color: #000;
+      font-weight: 900;
+    }
+
+    .currency-tab.tab-main-summary:hover {
+      background: linear-gradient(135deg, #ffdd00, #ff7b45);
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .currency-tab.tab-main-summary.active {
+      background: linear-gradient(135deg, #ffd700, #ff6b35);
+      border-color: #ffd700;
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+      transform: scale(1.05);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(50, 205, 50, 0.15);
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: #95a5a6;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .profit { color: #32cd32; }
+    .loss { color: #e74c3c; }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #32cd32, #27ae60);
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* 🔒 LOCKED BUTTON */
+    .btn-locked {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-locked:hover {
+      background: rgba(231, 76, 60, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Table */
+    .table-section {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #32cd32;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #95a5a6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 15px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      white-space: nowrap;
+    }
+
+    tr:hover {
+      background: rgba(50, 205, 50, 0.05);
+    }
+
+    .type-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .type-stock {
+      background: rgba(52, 152, 219, 0.2);
+      color: #3498db;
+      border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
+    .type-option {
+      background: rgba(155, 89, 182, 0.2);
+      color: #9b59b6;
+      border: 1px solid rgba(155, 89, 182, 0.3);
+    }
+
+    /* 🎨 PUT/CALL COLORS */
+    .type-option-put {
+      background: rgba(155, 89, 182, 0.2);
+      color: #9b59b6;
+      border: 1px solid rgba(155, 89, 182, 0.3);
+    }
+
+    .type-option-call {
+      background: rgba(230, 126, 34, 0.2);
+      color: #e67e22;
+      border: 1px solid rgba(230, 126, 34, 0.3);
+    }
+
+    .type-future {
+      background: rgba(230, 126, 34, 0.2);
+      color: #e67e22;
+      border: 1px solid rgba(230, 126, 34, 0.3);
+    }
+
+    .action-buy { color: #e74c3c; font-weight: 700; }
+    .action-sell { color: #32cd32; font-weight: 700; }
+
+    /* ⭐ MAIN SUMMARY - COMPANY CARDS */
+    .company-card {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .company-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(50, 205, 50, 0.15);
+    }
+
+    .company-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    .company-info h3 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #32cd32;
+      margin-bottom: 5px;
+    }
+
+    .company-meta {
+      font-size: 14px;
+      color: #95a5a6;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .company-period {
+      font-size: 13px;
+      color: #87ceeb;
+      margin-top: 5px;
+    }
+
+    .expand-icon {
+      font-size: 20px;
+      color: #32cd32;
+      transition: transform 0.3s ease;
+    }
+
+    .company-card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .currency-breakdown {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .company-card.expanded .currency-breakdown {
+      display: block;
+    }
+
+    .currency-block {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .currency-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #ffd700;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #95a5a6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .status-badge-open {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .status-badge-closed {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(50, 205, 50, 0.2);
+      color: #32cd32;
+      border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 14, 39, 0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.95), rgba(15, 35, 65, 0.95));
+      backdrop-filter: blur(30px);
+      border: 2px solid rgba(50, 205, 50, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      width: 600px;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #32cd32;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #95a5a6;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #32cd32;
+      box-shadow: 0 0 0 3px rgba(50, 205, 50, 0.2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #95a5a6;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    /* 🎉 MILESTONE MODAL */
+    .milestone-modal .modal-content {
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .milestone-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .milestone-title {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffd700, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .milestone-message {
+      font-size: 16px;
+      color: #bdc3c7;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .feature-comparison {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .feature-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-name {
+      color: #bdc3c7;
+      font-size: 14px;
+    }
+
+    .feature-status {
+      font-weight: 700;
+    }
+
+    .feature-locked { color: #e74c3c; }
+    .feature-unlocked { color: #32cd32; }
+
+    /* 💬 SMART NUDGE */
+    .smart-nudge {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #32cd32, #27ae60);
+      color: #fff;
+      padding: 20px 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(50, 205, 50, 0.4);
+      max-width: 350px;
+      z-index: 999;
+      animation: slideInRight 0.5s ease;
+      display: none;
+    }
+
+    .smart-nudge.active {
+      display: block;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .nudge-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border: none;
+      color: #fff;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .nudge-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .nudge-message {
+      font-size: 14px;
+      margin-bottom: 15px;
+      opacity: 0.9;
+    }
+
+    .nudge-cta {
+      background: #fff;
+      color: #27ae60;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .nudge-cta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding-top: 110px; }
+      .early-bird-banner { flex-direction: column; padding: 15px 10px; }
+      .main-container { padding: 20px 15px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .controls { flex-direction: column; width: 100%; }
+      .btn { width: 100%; justify-content: center; }
+      .smart-nudge { bottom: 15px; right: 15px; left: 15px; max-width: none; }
+      .currency-tabs { justify-content: center; }
+    }
+
+    /* ===== 💡 CASH FLOW GUIDE (small "raisin", no breaking UI) ===== */
+    .pp-cashflow-guide{
+      margin-top: 18px;
+      padding: 18px 18px;
+      border-radius: 20px;
+      border: 2px solid rgba(34, 139, 34, 0.25);
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.35), rgba(15, 35, 65, 0.55));
+      backdrop-filter: blur(20px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+
+    .pp-cashflow-head{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .pp-cashflow-icon{
+      width:42px;height:42px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      font-size:18px;
+    }
+
+    .pp-cashflow-title{
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: .2px;
+      color: rgba(255,255,255,0.96);
+    }
+    .pp-cashflow-subtitle{
+      margin-top: 2px;
+      font-size: 12.5px;
+      color: #bdc3c7;
+      line-height: 1.25;
+    }
+
+    .pp-cashflow-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .pp-cashflow-card{
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .pp-cashflow-card.wide{ grid-column: 1 / -1; }
+
+    .pp-cashflow-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .2px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 10px;
+    }
+
+    .pp-cashflow-text{
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.35;
+    }
+
+    .pp-cashflow-example{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.3;
+      border-top: 1px dashed rgba(255,255,255,0.14);
+      padding-top: 10px;
+    }
+
+    .pp-cashflow-minus .pp-cashflow-badge{
+      background: rgba(231,76,60,0.18);
+      color: rgba(231,76,60,0.98);
+      border-color: rgba(231,76,60,0.30);
+    }
+
+    .pp-cashflow-plus .pp-cashflow-badge{
+      background: rgba(50,205,50,0.18);
+      color: rgba(50,205,50,0.98);
+      border-color: rgba(50,205,50,0.30);
+    }
+
+    .pp-cashflow-neutral .pp-cashflow-badge{
+      background: rgba(135,206,235,0.16);
+      color: rgba(135,206,235,0.98);
+      border-color: rgba(135,206,235,0.30);
+    }
+
+    @media (max-width: 900px){
+      .pp-cashflow-grid{ grid-template-columns: 1fr; }
+      .pp-cashflow-card.wide{ grid-column: auto; }
+    }
+  </style>
+
+  <!-- ✅ ПАТЧ 1: Session Check с устойчивостью к {success,data} -->
+  <script>
+    (async function checkSession() {
+      try {
+        const res = await fetch('/api/session/me', { credentials: 'include' });
+        if (!res.ok || res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        const raw = await res.json();
+        const me = raw?.data ?? raw;   // ✅ устойчиво к {success,data}
+
+        if (!me || !me.id) {
+          window.location.href = '/login';
+          return;
+        }
+        window.PP_USER = me;
+        console.log('✅ Trading Journal loaded for:', me.email);
+      } catch (error) {
+        console.error('Session check error:', error);
+        window.location.href = '/login';
+      }
+    })();
+  </script>
+
+
+<link rel="stylesheet" href="/static/css/pp-role-badge.css">
+  <link rel="stylesheet" href="/static/css/logo.css">
+</head>
+
+<body data-pp-page="private">
+
+  <!-- Background Animation -->
+  <div class="background-animation">
+    <div class="floating-shape" style="width: 100px; height: 100px; top: 10%; left: 80%; animation-delay: 0s;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; top: 60%; left: 10%; animation-delay: 5s;"></div>
+    <div class="floating-shape" style="width: 80px; height: 80px; top: 30%; left: 60%; animation-delay: 10s;"></div>
+  </div>
+
+  <!-- 🔥 STICKY EARLY BIRD BANNER -->
+  <div class="early-bird-banner">
+    <span class="banner-text">⚡ EARLY BIRD SPECIAL: Lock in $9.99/month!</span>
+    <div class="countdown-timer" id="countdown">Loading...</div>
+    <a href="/analysis" class="banner-cta">UPGRADE NOW</a>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="logo" id="pp-logo" data-pp-logo="1"></div>
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+      <div class="user-info" style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
+        <div id="role-badge-container"></div>
+        <div class="user-avatar" id="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #32cd32, #228b22); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px;">...</div>
+        <span id="user-greeting" style="color: #ecf0f1; font-weight: 500;">Welcome!</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <h1 class="page-title">📝 Trading Journal</h1>
+    <p class="page-subtitle">Aggregate. Analyze. Advance. Your free-forever tracker for all brokers and currencies. Get the complete picture to grow your portfolio.</p>
+
+    <!-- 📊 SOCIAL PROOF -->
+    <div class="social-proof">
+      <span>🔥</span>
+      <span><strong id="socialProofCount">847</strong> users upgraded to PRO this week</span>
+    </div>
+
+    <!-- 💱 CURRENCY TABS -->
+    <div class="currency-tabs" id="currencyTabs"></div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-value" id="totalTrades">0</div>
+        <div class="stat-label">Total Trades</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value profit" id="realizedPL">$0.00</div>
+        <div class="stat-label">Realized P&L</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="winRate">0%</div>
+        <div class="stat-label">Win Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="winningTrades">0</div>
+        <div class="stat-label">Winning Trades</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="losingTrades">0</div>
+        <div class="stat-label">Losing Trades</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value profit" id="avgWin">$0.00</div>
+        <div class="stat-label">Avg Win</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn btn-primary" onclick="showAddTradeModal()">➕ Add Trade</button>
+      <button class="btn btn-secondary" onclick="exportJournal()">📥 Export to CSV</button>
+      <button class="btn btn-secondary" onclick="refreshData()">🔄 Refresh</button>
+    </div>
+
+    <!-- Trade Tables (Dynamic by Currency) -->
+    <div id="tradeTablesContainer"></div>
+
+    <!-- 💡 Cash Flow vs P&L (MVP English) -->
+    <div class="pp-cashflow-guide" id="ppCashflowGuide" style="display:none;">
+      <div class="pp-cashflow-head">
+        <div class="pp-cashflow-icon">💡</div>
+        <div>
+          <div class="pp-cashflow-title">Cash Flow vs P&L</div>
+          <div class="pp-cashflow-subtitle">
+            Totals in your journal represent <b>cash flow</b>. Profit or Loss is shown after the position is <b>closed</b>.
+          </div>
+        </div>
+      </div>
+
+      <div class="pp-cashflow-grid">
+        <div class="pp-cashflow-card pp-cashflow-minus">
+          <div class="pp-cashflow-badge">BOUGHT → −</div>
+          <div class="pp-cashflow-text"><b>Cash outflow:</b> money left your pocket.</div>
+          <div class="pp-cashflow-example">Example: 100 × $150 + $2.50 fee = <b>−$15002.50</b></div>
+        </div>
+
+        <div class="pp-cashflow-card pp-cashflow-plus">
+          <div class="pp-cashflow-badge">SOLD → +</div>
+          <div class="pp-cashflow-text"><b>Cash inflow:</b> money entered your pocket.</div>
+          <div class="pp-cashflow-example">Example: 100 × $160 − $2.50 fee = <b>+$15997.50</b></div>
+        </div>
+
+        <div class="pp-cashflow-card pp-cashflow-neutral wide">
+          <div class="pp-cashflow-badge">Realized P&L</div>
+          <div class="pp-cashflow-text">
+            <b>Calculated only after the position is closed.</b><br>
+            Until then, totals show cash flow — not profit.
+          </div>
+          <div class="pp-cashflow-example">Tip: a BUY may look negative even if the trade becomes profitable later.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📝</div>
+      <h3 style="margin-bottom: 10px;">No Trades Yet</h3>
+      <p>Start tracking your trading journey by adding your first trade!</p>
+      <br>
+      <button class="btn btn-primary" onclick="showAddTradeModal()">➕ Add Your First Trade</button>
+    </div>
+  </div>
+
+  <!-- Add Trade Modal -->
+  <div id="addTradeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Add Trade</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">💱 Currency</label>
+          <select class="form-select" id="currency">
+            <option value="USD">🇺🇸 USD</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="GBP">🇬🇧 GBP</option>
+            <option value="JPY">🇯🇵 JPY</option>
+            <option value="CHF">🇨🇭 CHF</option>
+            <option value="AUD">🇦🇺 AUD</option>
+            <option value="CAD">🇨🇦 CAD</option>
+            <option value="CNY">🇨🇳 CNY</option>
+            <option value="RUB">🇷🇺 RUB</option>
+            <option value="BRL">🇧🇷 BRL</option>
+            <option value="INR">🇮🇳 INR</option>
+            <option value="KRW">🇰🇷 KRW</option>
+            <option value="MXN">🇲🇽 MXN</option>
+            <option value="SEK">🇸🇪 SEK</option>
+            <option value="NOK">🇳🇴 NOK</option>
+            <option value="DKK">🇩🇰 DKK</option>
+            <option value="SGD">🇸🇬 SGD</option>
+            <option value="HKD">🇭🇰 HKD</option>
+            <option value="NZD">🇳🇿 NZD</option>
+            <option value="TRY">🇹🇷 TRY</option>
+            <option value="ZAR">🇿🇦 ZAR</option>
+            <option value="PLN">🇵🇱 PLN</option>
+            <option value="THB">🇹🇭 THB</option>
+            <option value="MYR">🇲🇾 MYR</option>
+            <option value="IDR">🇮🇩 IDR</option>
+            <option value="PHP">🇵🇭 PHP</option>
+            <option value="CZK">🇨🇿 CZK</option>
+            <option value="HUF">🇭🇺 HUF</option>
+            <option value="ILS">🇮🇱 ILS</option>
+            <option value="AED">🇦🇪 AED</option>
+            <option value="SAR">🇸🇦 SAR</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Instrument Type</label>
+          <select class="form-select" id="instrumentType" onchange="updateFormFields()">
+            <option value="stock">Stock</option>
+            <option value="option">Option</option>
+            <option value="future">Future</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="tradeDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ticker</label>
+          <input type="text" class="form-input" id="ticker" placeholder="AAPL">
+        </div>
+      </div>
+
+      <!-- 💵 DIVIDEND CHECKBOX (только для stock) -->
+      <div class="form-group" id="dividendCheckboxContainer" style="display:none;">
+        <label style="display:flex; gap:10px; align-items:center; color:#bdc3c7; font-size:14px; cursor:pointer;">
+          <input type="checkbox" id="isDividend" onchange="updateFormFields()" style="cursor:pointer;">
+          💵 This is a dividend (cash received from shares)
+        </label>
+      </div>
+
+      <!-- 💰 DIVIDEND FIELDS (показываются при чекбоксе) -->
+      <div id="dividendFields" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">💵 Gross Dividend Amount</label>
+            <input type="number" step="0.01" class="form-input" id="dividendAmount" placeholder="125.50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">🧾 Withholding Tax</label>
+            <input type="number" step="0.01" class="form-input" id="dividendTax" placeholder="18.75" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Action</label>
+          <select class="form-select" id="action">
+            <option value="BOUGHT">BOUGHT</option>
+            <option value="SOLD">SOLD</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+          <input type="number" class="form-input" id="quantity" placeholder="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Price</label>
+          <input type="number" step="0.01" class="form-input" id="price" placeholder="150.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Commission</label>
+          <input type="number" step="0.01" class="form-input" id="commission" placeholder="0.00" value="0">
+        </div>
+      </div>
+
+      <!-- Options Fields -->
+      <div id="optionsFields" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Option Type</label>
+            <select class="form-select" id="optionType">
+              <option value="CALL">CALL</option>
+              <option value="PUT">PUT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Strike Price</label>
+            <input type="number" step="0.01" class="form-input" id="strikePrice" placeholder="150.00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiration Date</label>
+          <input type="date" class="form-input" id="expirationDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes (Optional)</label>
+        <input type="text" class="form-input" id="notes" placeholder="Trade notes...">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveTrade()">💾 Save Trade</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ПАТЧ 2.1: Edit Trade Modal -->
+  <div id="editTradeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Edit Trade</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">💱 Currency</label>
+          <select class="form-select" id="edit_currency">
+            <option value="USD">🇺🇸 USD</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="GBP">🇬🇧 GBP</option>
+            <option value="JPY">🇯🇵 JPY</option>
+            <option value="CHF">🇨🇭 CHF</option>
+            <option value="AUD">🇦🇺 AUD</option>
+            <option value="CAD">🇨🇦 CAD</option>
+            <option value="CNY">🇨🇳 CNY</option>
+            <option value="RUB">🇷🇺 RUB</option>
+            <option value="BRL">🇧🇷 BRL</option>
+            <option value="INR">🇮🇳 INR</option>
+            <option value="KRW">🇰🇷 KRW</option>
+            <option value="MXN">🇲🇽 MXN</option>
+            <option value="SEK">🇸🇪 SEK</option>
+            <option value="NOK">🇳🇴 NOK</option>
+            <option value="DKK">🇩🇰 DKK</option>
+            <option value="SGD">🇸🇬 SGD</option>
+            <option value="HKD">🇭🇰 HKD</option>
+            <option value="NZD">🇳🇿 NZD</option>
+            <option value="TRY">🇹🇷 TRY</option>
+            <option value="ZAR">🇿🇦 ZAR</option>
+            <option value="PLN">🇵🇱 PLN</option>
+            <option value="THB">🇹🇭 THB</option>
+            <option value="MYR">🇲🇾 MYR</option>
+            <option value="IDR">🇮🇩 IDR</option>
+            <option value="PHP">🇵🇭 PHP</option>
+            <option value="CZK">🇨🇿 CZK</option>
+            <option value="HUF">🇭🇺 HUF</option>
+            <option value="ILS">🇮🇱 ILS</option>
+            <option value="AED">🇦🇪 AED</option>
+            <option value="SAR">🇸🇦 SAR</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Instrument Type</label>
+          <select class="form-select" id="edit_instrumentType" onchange="updateEditFormFields()">
+            <option value="stock">Stock</option>
+            <option value="option">Option</option>
+            <option value="future">Future</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="edit_tradeDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ticker</label>
+          <input type="text" class="form-input" id="edit_ticker" placeholder="AAPL">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Action</label>
+          <select class="form-select" id="edit_action">
+            <option value="BOUGHT">BOUGHT</option>
+            <option value="SOLD">SOLD</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+          <input type="number" class="form-input" id="edit_quantity" placeholder="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Price</label>
+          <input type="number" step="0.01" class="form-input" id="edit_price" placeholder="150.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Commission</label>
+          <input type="number" step="0.01" class="form-input" id="edit_commission" placeholder="0.00">
+        </div>
+      </div>
+
+      <!-- Options Fields -->
+      <div id="edit_optionsFields" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Option Type</label>
+            <select class="form-select" id="edit_optionType">
+              <option value="CALL">CALL</option>
+              <option value="PUT">PUT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Strike Price</label>
+            <input type="number" step="0.01" class="form-input" id="edit_strikePrice" placeholder="150.00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiration Date</label>
+          <input type="date" class="form-input" id="edit_expirationDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes (Optional)</label>
+        <input type="text" class="form-input" id="edit_notes" placeholder="Trade notes...">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveTradeEdit()">💾 Save Changes</button>
+        <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ПАТЧ 2.2: Assign Option Modal -->
+  <div id="assignModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Assign Option</div>
+
+      <div style="margin:-10px 0 20px; color:#bdc3c7; font-size:13px; line-height:1.35;">
+        <span id="assignInfoLine"></span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Assignment Date</label>
+          <input type="date" class="form-input" id="assign_date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shares Qty</label>
+          <input type="number" class="form-input" id="assign_shares" placeholder="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stock Commission</label>
+          <input type="number" step="0.01" class="form-input" id="assign_stock_commission" placeholder="0.00" value="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">&nbsp;</label>
+          <div style="color:#95a5a6; font-size:12px; padding-top:8px;">
+            (PUT → BOUGHT at strike, CALL → SOLD at strike)
+          </div>
+        </div>
+      </div>
+
+      <!-- CALL cover buy -->
+      <div id="assign_cover_box" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Cover Buy Price (CALL only)</label>
+            <input type="number" step="0.01" class="form-input" id="assign_cover_buy_price" placeholder="44.67">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cover Buy Commission</label>
+            <input type="number" step="0.01" class="form-input" id="assign_cover_buy_commission" placeholder="0.00" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="submitAssign()">✅ Confirm Assignment</button>
+        <button class="btn btn-secondary" onclick="closeAssignModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎉 MILESTONE MODAL -->
+  <div id="milestoneModal" class="modal milestone-modal">
+    <div class="modal-content">
+      <div class="milestone-icon" id="milestoneIcon">🎉</div>
+      <div class="milestone-title" id="milestoneTitle">Congratulations!</div>
+      <div class="milestone-message" id="milestoneMessage">
+        You've reached a milestone in your trading journey!
+      </div>
+
+      <div class="feature-comparison">
+        <div style="font-weight:700; margin-bottom:15px; color:#32cd32;">Unlock More with PRO:</div>
+        <div class="feature-row">
+          <span class="feature-name">📝 Trading Journal</span>
+          <span class="feature-status feature-unlocked">✓ TRIAL</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-name">📊 Real-time Analysis</span>
+          <span class="feature-status feature-locked">🔒 Early Bird / Standard / PRO Only</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-name">💎 Diamond Ratings</span>
+          <span class="feature-status feature-locked">🔒 Early Bird / Standard / PRO Only</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-name">🎯 Options Analytics</span>
+          <span class="feature-status feature-locked">🔒 Early Bird / Standard / PRO Only</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-name">📈 Portfolio Tracking</span>
+          <span class="feature-status feature-locked">🔒 Early Bird / Standard / PRO Only</span>
+        </div>
+        <div class="feature-row">
+          <span class="feature-name">🚨 Price Alerts</span>
+          <span class="feature-status feature-locked">🔒 Early Bird / Standard / PRO Only</span>
+        </div>
+      </div>
+
+      <a href="/analysis" class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:10px;">
+        🚀 Upgrade to Early Bird - $9.99/month
+      </a>
+      <button class="btn btn-secondary" onclick="closeMilestoneModal()" style="width:100%; justify-content:center;">
+        Maybe Later
+      </button>
+    </div>
+  </div>
+
+  <!-- 💬 SMART NUDGE -->
+  <div id="smartNudge" class="smart-nudge">
+    <button class="nudge-close" onclick="closeNudge()">×</button>
+    <div class="nudge-title" id="nudgeTitle"></div>
+    <div class="nudge-message" id="nudgeMessage"></div>
+    <a href="/analysis" class="nudge-cta" id="nudgeCTA">Learn More</a>
+  </div>
+
+  <script>
+    'use strict';
+
+    let CURRENT_CURRENCY = 'USD';
+    let ALL_DATA = null;
+
+    /* ✅ ПАТЧ 4.1: Глобальные переменные для Edit/Assign + XSS защита */
+    let EDIT_TRADE_ID = null;
+    let ASSIGN_TRADE_ID = null;
+
+    /* ✅ XSS ЗАЩИТА: HTML-экранирование для innerHTML */
+    function escHtml(x) {
+      return String(x ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    /* ✅ XSS ЗАЩИТА: URL-кодирование для onclick параметров */
+    function encJS(x) {
+      return encodeURIComponent(String(x ?? ''));
+    }
+
+    /* ✅ XSS ЗАЩИТА: Безопасное приведение ID к числу */
+    function safeInt(x, fallback = 0) {
+      const n = Number(x);
+      return Number.isFinite(n) ? Math.trunc(n) : fallback;
+    }
+
+    /* ✅ БАГ-ФИХ: Локальная дата вместо UTC (исправляет баг "вчера" на границе суток) */
+    function todayLocalISO() {
+      const d = new Date();
+      const tz = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - tz).toISOString().slice(0, 10);
+    }
+
+    function toISODate(val) {
+      if (!val) return '';
+      const s = String(val).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+      const d = new Date(s);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toISOString().split('T')[0];
+    }
+
+    /* ========= CURRENCY SYMBOLS ========= */
+    const CURRENCY_SYMBOLS = {
+      USD: '$', EUR: '€', GBP: '£', JPY: '¥', CHF: 'CHF', AUD: 'A$',
+      CAD: 'C$', CNY: '¥', RUB: '₽', BRL: 'R$', INR: '₹', KRW: '₩',
+      MXN: '$', SEK: 'kr', NOK: 'kr', DKK: 'kr', SGD: 'S$', HKD: 'HK$',
+      NZD: 'NZ$', TRY: '₺', ZAR: 'R', PLN: 'zł', THB: '฿', MYR: 'RM',
+      IDR: 'Rp', PHP: '₱', CZK: 'Kč', HUF: 'Ft', ILS: '₪', AED: 'د.إ',
+      SAR: '﷼'
+    };
+
+    /* ========= COUNTDOWN TIMER ========= */
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date('2026-12-31T23:59:59');
+      const diff = target - now;
+
+      const el = document.getElementById('countdown');
+      if (!el) return;
+
+      if (diff <= 0) {
+        el.textContent = 'EXPIRED';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ========= SOCIAL PROOF ========= */
+    function updateSocialProof() {
+      const base = 847;
+      const variance = Math.floor(Math.random() * 20) - 10;
+      const el = document.getElementById('socialProofCount');
+      if (el) el.textContent = String(base + variance);
+    }
+
+    setInterval(updateSocialProof, 30000);
+    updateSocialProof();
+
+    /* ========= API HELPERS ========= */
+    async function apiGet(url) {
+      const r = await fetch(url, { credentials: 'include' });
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      return r.json();
+    }
+
+    async function apiPost(url, data) {
+      const r = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!r.ok) {
+        const text = await r.text();
+        let msg = '';
+        try {
+          const j = JSON.parse(text);
+          const d = j.detail;
+          if (typeof d === 'string') msg = d;
+          else if (Array.isArray(d)) msg = d.map(x => x.msg || JSON.stringify(x)).join('; ');
+          else if (d && typeof d === 'object') msg = JSON.stringify(d);
+        } catch {}
+        throw new Error(msg || `${r.status} ${r.statusText}`);
+      }
+
+      return r.json();
+    }
+
+    async function apiPut(url, data) {
+      const r = await fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!r.ok) {
+        const text = await r.text();
+        let msg = '';
+        try {
+          const j = JSON.parse(text);
+          const d = j.detail;
+          if (typeof d === 'string') msg = d;
+          else if (Array.isArray(d)) msg = d.map(x => x.msg || JSON.stringify(x)).join('; ');
+          else if (d && typeof d === 'object') msg = JSON.stringify(d);
+        } catch {}
+        throw new Error(msg || `${r.status} ${r.statusText}`);
+      }
+
+      return r.json();
+    }
+
+    async function apiDelete(url) {
+      const r = await fetch(url, { method: 'DELETE', credentials: 'include' });
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      const text = await r.text();  // ✅ Обрабатываем пустой body (204 No Content)
+      return text ? JSON.parse(text) : { success: true };
+    }
+
+    /* ========= JOURNAL INDEX (for editing fee) ========= */
+    let TRADE_BY_ID = {};
+
+    function buildTradeIndex() {
+      TRADE_BY_ID = {};
+      const g = ALL_DATA?.grouped || {};
+      for (const cur of Object.keys(g)) {
+        const bucket = g[cur] || {};
+        for (const key of ['stocks', 'options', 'futures', 'bonds']) {
+          const arr = bucket[key] || [];
+          for (const t of arr) {
+            if (t && t.id != null) TRADE_BY_ID[t.id] = t;
+          }
+        }
+      }
+    }
+
+    function promptNumber(label, defVal = 0) {
+      const raw = prompt(label, String(defVal ?? 0));
+      if (raw === null) return null;
+
+      const s = String(raw).trim().replace(',', '.');
+      if (s === '') return null;
+
+      const n = Number(s);
+      if (!Number.isFinite(n) || n < 0) {
+        alert('❌ Please enter a valid number (>= 0)');
+        return null;
+      }
+      return n;
+    }
+
+    /* ✅ ПАТЧ 4.2: Обновленные обработчики actions с Edit/Expire/Assign */
+    async function onOptionAction(tradeId, el) {
+      const action = el.value;
+      el.value = '';
+      if (!action) return;
+
+      if (action === 'edit') return openEditTradeModal(tradeId);
+      if (action === 'expire') return await expireTrade(tradeId);
+      if (action === 'assign') return openAssignModal(tradeId);
+
+      if (action === 'edit_fee') return await editFeeFlow(tradeId);
+      if (action === 'delete') return await deleteTrade(tradeId);
+
+      alert('Unknown action');
+    }
+
+    async function onStockAction(tradeId, el) {
+      const action = el.value;
+      el.value = '';
+      if (!action) return;
+
+      if (action === 'edit') return openEditTradeModal(tradeId);
+
+      if (action === 'edit_fee') return await editFeeFlow(tradeId);
+      if (action === 'delete') return await deleteTrade(tradeId);
+
+      alert('Unknown action');
+    }
+
+    /* ========= FEE EDITOR ========= */
+    async function editFeeFlow(tradeId) {
+      const cur = Number(TRADE_BY_ID[tradeId]?.commission ?? 0);
+      const fee = promptNumber('New commission (e.g. 2.05)', cur);
+      if (fee === null) return;
+
+      await apiPut(`/api/journal/trade/${tradeId}`, { commission: fee });
+      await loadJournalData();
+      alert('✅ Commission updated');
+    }
+
+    /* ✅ ПАТЧ 4.3: Функции Expire/Edit/Assign */
+    async function expireTrade(tradeId) {
+      if (!confirm('Mark this option as Expired?')) return;
+
+      try {
+        await apiPost(`/api/journal/trade/${tradeId}/expire`, {});
+        await loadJournalData();
+        alert('✅ Marked as EXPIRED');
+      } catch (e) {
+        console.error(e);
+        alert(`Failed to expire: ${e.message}`);
+      }
+    }
+
+    /* ===== Edit Modal ===== */
+    function updateEditFormFields() {
+      const type = document.getElementById('edit_instrumentType')?.value;
+      const box = document.getElementById('edit_optionsFields');
+      if (box) box.style.display = (type === 'option') ? 'block' : 'none';
+    }
+
+    function openEditTradeModal(tradeId) {
+      const t = TRADE_BY_ID[tradeId];
+      if (!t) return alert('Trade not found');
+
+      EDIT_TRADE_ID = tradeId;
+
+      const itRaw = String(t.instrument_type || t.instrumentType || '').toLowerCase();
+      const isOptionLike = !!(t.option_type || t.strike_price != null || t.expiration_date);
+      const inferredType = itRaw || (isOptionLike ? 'option' : 'stock');
+
+      document.getElementById('edit_currency').value = (t.currency || CURRENT_CURRENCY || 'USD');
+      document.getElementById('edit_instrumentType').value = inferredType;
+      document.getElementById('edit_tradeDate').value = toISODate(t.trade_date);
+      document.getElementById('edit_ticker').value = String(t.ticker || '').toUpperCase();
+      document.getElementById('edit_action').value = (t.action || 'BOUGHT');
+      document.getElementById('edit_quantity').value = (t.quantity ?? '');
+      document.getElementById('edit_price').value = (t.price ?? '');
+      document.getElementById('edit_commission').value = (t.commission ?? 0);
+      document.getElementById('edit_notes').value = (t.notes ?? '');
+
+      document.getElementById('edit_optionType').value = (t.option_type || 'CALL');
+      document.getElementById('edit_strikePrice').value = (t.strike_price ?? '');
+      document.getElementById('edit_expirationDate').value = toISODate(t.expiration_date);
+
+      updateEditFormFields();
+      document.getElementById('editTradeModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editTradeModal').classList.remove('active');
+      EDIT_TRADE_ID = null;
+    }
+
+    async function saveTradeEdit() {
+      if (!EDIT_TRADE_ID) return;
+
+      try {
+        const instrumentType = document.getElementById('edit_instrumentType').value;
+
+        const trade_date = document.getElementById('edit_tradeDate').value;
+        const tickerRaw = document.getElementById('edit_ticker').value;
+        const currency = document.getElementById('edit_currency').value;
+        const action = document.getElementById('edit_action').value;
+
+        const quantity = Number(document.getElementById('edit_quantity').value);
+        const price = Number(document.getElementById('edit_price').value);
+        const commission = Number(document.getElementById('edit_commission').value || 0);
+        const notes = document.getElementById('edit_notes').value || null;
+
+        const ticker = (tickerRaw || '').trim().toUpperCase();
+
+        if (!trade_date) return alert('❌ Please select date');
+        if (!ticker) return alert('❌ Please enter ticker');
+        if (!Number.isFinite(quantity) || quantity <= 0) return alert('❌ Quantity must be > 0');
+        if (!Number.isFinite(price) || price <= 0) return alert('❌ Price must be > 0');
+        if (!Number.isFinite(commission) || commission < 0) return alert('❌ Commission must be >= 0');
+
+        const payload = {
+          trade_date,
+          ticker,
+          currency,
+          instrument_type: instrumentType,
+          action,
+          quantity: Math.trunc(quantity),
+          price,
+          commission,
+          notes
+        };
+
+        if (instrumentType === 'option') {
+          const strike = Number(document.getElementById('edit_strikePrice').value);
+          const exp = document.getElementById('edit_expirationDate').value;
+          const optType = document.getElementById('edit_optionType').value;
+
+          if (!Number.isFinite(strike) || strike <= 0) return alert('❌ Strike price must be > 0');
+          if (!exp) return alert('❌ Please select expiration date');
+
+          payload.option_type = optType;
+          payload.strike_price = strike;
+          payload.expiration_date = exp;
+        }
+
+        await apiPut(`/api/journal/trade/${EDIT_TRADE_ID}`, payload);
+        closeEditModal();
+        await loadJournalData();
+        alert('✅ Trade updated');
+      } catch (e) {
+        console.error(e);
+        alert(`Failed to update trade: ${e.message}`);
+      }
+    }
+
+    /* ===== Assign Modal ===== */
+    function openAssignModal(tradeId) {
+      const t = TRADE_BY_ID[tradeId];
+      if (!t) return alert('Trade not found');
+
+      ASSIGN_TRADE_ID = tradeId;
+
+      const optType = String(t.option_type || '').toUpperCase();
+      const contracts = Number(t.quantity || 0);
+      const defaultShares = Number.isFinite(contracts) && contracts > 0 ? Math.trunc(contracts * 100) : 100;
+
+      document.getElementById('assign_date').value = toISODate(t.expiration_date || t.trade_date);
+      document.getElementById('assign_shares').value = defaultShares;
+      document.getElementById('assign_stock_commission').value = 0;
+
+      const info = `${String(t.ticker || '').toUpperCase()} ${optType || ''} • strike ${t.strike_price ?? '—'} • contracts ${contracts || '—'}`;
+      document.getElementById('assignInfoLine').textContent = info;
+
+      const coverBox = document.getElementById('assign_cover_box');
+      if (coverBox) coverBox.style.display = (optType === 'CALL') ? 'block' : 'none';
+
+      const cbp = document.getElementById('assign_cover_buy_price');
+      const cbc = document.getElementById('assign_cover_buy_commission');
+      if (cbp) cbp.value = '';
+      if (cbc) cbc.value = 0;
+
+      document.getElementById('assignModal').classList.add('active');
+    }
+
+    function closeAssignModal() {
+      document.getElementById('assignModal').classList.remove('active');
+      ASSIGN_TRADE_ID = null;
+    }
+
+    async function submitAssign() {
+      if (!ASSIGN_TRADE_ID) return;
+
+      try {
+        const t = TRADE_BY_ID[ASSIGN_TRADE_ID];
+        const optType = String(t?.option_type || '').toUpperCase();
+
+        const assignment_date = document.getElementById('assign_date').value || null;
+        const shares_qty = Number(document.getElementById('assign_shares').value);
+        const stock_commission = Number(document.getElementById('assign_stock_commission').value || 0);
+
+        if (!Number.isFinite(shares_qty) || shares_qty <= 0) return alert('❌ Shares Qty must be > 0');
+        if (!Number.isFinite(stock_commission) || stock_commission < 0) return alert('❌ Stock commission must be >= 0');
+
+        const payload = {
+          assignment_date,
+          shares_qty: Math.trunc(shares_qty),
+          stock_commission
+        };
+
+        if (optType === 'CALL') {
+          const cover_buy_price_raw = document.getElementById('assign_cover_buy_price').value;
+          const cover_buy_commission = Number(document.getElementById('assign_cover_buy_commission').value || 0);
+
+          if (!Number.isFinite(cover_buy_commission) || cover_buy_commission < 0) {
+            return alert('❌ Cover buy commission must be >= 0');
+          }
+
+          if (String(cover_buy_price_raw || '').trim() !== '') {
+            const cover_buy_price = Number(cover_buy_price_raw);
+            if (!Number.isFinite(cover_buy_price) || cover_buy_price <= 0) {
+              return alert('❌ Cover buy price must be > 0');
+            }
+            payload.cover_buy_price = cover_buy_price;
+            payload.cover_buy_commission = cover_buy_commission;
+          }
+        }
+
+        await apiPost(`/api/journal/trade/${ASSIGN_TRADE_ID}/assign`, payload);
+        closeAssignModal();
+        await loadJournalData();
+        alert('✅ Assigned');
+      } catch (e) {
+        console.error(e);
+        alert(`Failed to assign: ${e.message}`);
+      }
+    }
+
+    /* ========= NUDGE TRACKING ========= */
+    async function trackNudge(nudgeType) {
+      try {
+        await apiPost('/api/journal/nudge-track', { nudge_type: nudgeType });
+        console.log('✅ Nudge tracked:', nudgeType);
+      } catch (error) {
+        console.error('Nudge tracking error:', error);
+      }
+    }
+
+    /* ========= LOAD DATA ========= */
+    async function loadJournalData() {
+      try {
+        const [statsResp, groupedResp] = await Promise.all([
+          apiGet('/api/journal/stats'),
+          apiGet('/api/journal/trades/grouped')
+        ]);
+
+        const stats = statsResp?.data ?? statsResp;
+        const grouped = groupedResp?.data ?? groupedResp;
+
+        ALL_DATA = { stats, grouped };
+        buildTradeIndex();
+
+        const currencies = stats?.currencies || [];
+        renderCurrencyTabs(currencies);
+
+        if (currencies.length > 0) {
+          if (!currencies.includes(CURRENT_CURRENCY)) CURRENT_CURRENCY = currencies[0];
+          switchCurrency(CURRENT_CURRENCY);
+        } else {
+          document.getElementById('emptyState').style.display = 'block';
+          document.getElementById('statsGrid').style.display = 'none';
+          document.getElementById('tradeTablesContainer').style.display = 'none';
+          const g = document.getElementById('ppCashflowGuide');
+          if (g) g.style.display = 'none';
+        }
+
+        await checkMilestones();
+
+      } catch (error) {
+        console.error('Error loading journal:', error);
+        alert('Failed to load trading journal');
+      }
+    }
+
+
+    /* ✅ ПАТЧ 6: Безопасный renderCurrencyTabs с XSS защитой + MAIN SUMMARY */
+    function renderCurrencyTabs(currencies) {
+      const container = document.getElementById('currencyTabs');
+      if (!container) return;
+
+      if (!currencies || currencies.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'flex';
+
+      // ⭐ Main Summary Tab (золотой) - всегда первый
+      let html = `
+        <div class="currency-tab tab-main-summary ${CURRENT_CURRENCY === 'MAIN_SUMMARY' ? 'active' : ''}"
+             onclick="switchCurrency('MAIN_SUMMARY')">
+          ⭐ MAIN SUMMARY
+        </div>
+      `;
+
+      // Обычные валютные табы
+      html += currencies.map(curr => `
+        <div class="currency-tab ${curr === CURRENT_CURRENCY ? 'active' : ''}"
+             onclick="switchCurrency('${encJS(curr)}')">
+          ${escHtml(curr)}
+        </div>
+      `).join('');
+
+      container.innerHTML = html;
+    }
+
+    function switchCurrency(currency) {
+      // Декодируем currency из URL-кодировки
+      try { 
+        currency = decodeURIComponent(currency); 
+      } catch (e) {
+        console.error('Failed to decode currency:', e);
+      }
+
+      CURRENT_CURRENCY = currency;
+
+      document.querySelectorAll('.currency-tab').forEach(tab => {
+        const isMainSummary = tab.classList.contains('tab-main-summary');
+        if (isMainSummary) {
+          tab.classList.toggle('active', currency === 'MAIN_SUMMARY');
+        } else {
+          tab.classList.toggle('active', tab.textContent.trim() === currency);
+        }
+      });
+
+      // ⭐ Main Summary режим
+      if (currency === 'MAIN_SUMMARY') {
+        displayMainSummary();
+      } else {
+        updateStatsForCurrency(currency);
+        displayTradesForCurrency(currency);
+      }
+    }
+
+    /* ========= STATS UPDATE ========= */
+    function updateStatsForCurrency(currency) {
+      if (!ALL_DATA || !ALL_DATA.stats) return;
+
+      const stats = ALL_DATA.stats.by_currency?.[currency] || {
+        total_trades: 0,
+        realized_pl: 0,
+        win_rate_percent: 0,
+        winning_trades: 0,
+        losing_trades: 0,
+        avg_win: 0
+      };
+
+      const symbol = CURRENCY_SYMBOLS[currency] || currency;
+
+      document.getElementById('totalTrades').textContent = stats.total_trades || 0;
+
+      const realizedPL = Number(stats.realized_pl || 0);
+      const plEl = document.getElementById('realizedPL');
+      plEl.textContent = `${realizedPL >= 0 ? '+' : ''}${symbol}${Math.abs(realizedPL).toFixed(2)}`;
+      plEl.className = realizedPL >= 0 ? 'stat-value profit' : 'stat-value loss';
+
+      document.getElementById('winRate').textContent = `${Number(stats.win_rate_percent || 0).toFixed(1)}%`;
+      document.getElementById('winningTrades').textContent = stats.winning_trades || 0;
+      document.getElementById('losingTrades').textContent = stats.losing_trades || 0;
+
+      const avgWin = Number(stats.avg_win || 0);
+      document.getElementById('avgWin').textContent = `+${symbol}${Math.abs(avgWin).toFixed(2)}`;
+
+      document.getElementById('statsGrid').style.display = 'grid';
+    }
+
+    /* ⭐ MAIN SUMMARY - DISPLAY FUNCTION */
+    async function displayMainSummary() {
+      try {
+        // Скрываем обычную статистику и таблицы
+        document.getElementById('statsGrid').style.display = 'none';
+        document.getElementById('tradeTablesContainer').style.display = 'none';
+        const guide = document.getElementById('ppCashflowGuide');
+        if (guide) guide.style.display = 'none';
+
+        // Показываем Main Summary контейнер
+        let summaryContainer = document.getElementById('mainSummaryContainer');
+        if (!summaryContainer) {
+          summaryContainer = document.createElement('div');
+          summaryContainer.id = 'mainSummaryContainer';
+          summaryContainer.style.marginTop = '20px';
+          document.querySelector('.main-container').appendChild(summaryContainer);
+        }
+        summaryContainer.style.display = 'block';
+        summaryContainer.innerHTML = '<div style="text-align:center;padding:40px;color:#95a5a6;">⏳ Loading companies...</div>';
+
+        // Загружаем данные
+        const response = await apiGet('/api/journal/main-summary');
+        const data = response?.data ?? response;
+        const companies = data?.companies || [];
+
+        if (companies.length === 0) {
+          summaryContainer.innerHTML = `
+            <div class="table-section" style="text-align:center;padding:60px;">
+              <h2 style="font-size:48px;margin-bottom:20px;">📊</h2>
+              <h3 style="font-size:24px;color:#32cd32;margin-bottom:10px;">No Companies Yet</h3>
+              <p style="color:#95a5a6;">Start trading and your portfolio will appear here</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Рендерим карточки компаний
+        summaryContainer.innerHTML = companies.map(company => {
+          const ticker = escHtml(company.ticker || '');
+          const name = escHtml(company.name || 'Unknown Company');
+          const sector = escHtml(company.sector || '—');
+          const industry = escHtml(company.industry || '—');
+          const exchange = escHtml(company.exchange || '—');
+          const periodStart = company.period_start || '—';
+          const periodEnd = company.period_end || '—';
+          const hasOpenPositions = company.has_open_positions;
+          const statusBadge = hasOpenPositions 
+            ? '<span class="status-badge-open">OPEN</span>' 
+            : '<span class="status-badge-closed">ALL CLOSED</span>';
+
+          // По каждой валюте
+          const currenciesHtml = Object.keys(company.by_currency || {}).map(curr => {
+            const metrics = company.by_currency[curr];
+            const symbol = CURRENCY_SYMBOLS[curr] || curr;
+            const invested = Number(metrics.total_invested || 0);
+            const returned = Number(metrics.total_returned || 0);
+            const profit = Number(metrics.net_profit || 0);
+            const roi = Number(metrics.roi_percent || 0);
+            const trades = metrics.trades_count || 0;
+
+            // ✅ NEW: Shares held and avg cost
+            const sharesHeld = metrics.shares_held || 0;
+            const avgCost = metrics.avg_cost_per_share;
+
+            const profitClass = profit >= 0 ? 'profit' : 'loss';
+            const roiClass = roi >= 0 ? 'profit' : 'loss';
+            const profitSign = profit >= 0 ? '+' : '';
+            const roiSign = roi >= 0 ? '+' : '';
+
+            return `
+              <div class="currency-block">
+                <div class="currency-title">${escHtml(curr)}</div>
+                <div class="metrics-grid">
+                  <div class="metric-item">
+                    <span class="metric-label">Invested</span>
+                    <span class="metric-value">${symbol}${invested.toFixed(2)}</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-label">Returned</span>
+                    <span class="metric-value">${symbol}${returned.toFixed(2)}</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-label">Profit</span>
+                    <span class="metric-value ${profitClass}">${profitSign}${symbol}${Math.abs(profit).toFixed(2)}</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-label">ROI</span>
+                    <span class="metric-value ${roiClass}">${roiSign}${roi.toFixed(1)}%</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-label">Trades</span>
+                    <span class="metric-value">${trades}</span>
+                  </div>
+                  ${sharesHeld > 0 ? `
+                    <div class="metric-item">
+                      <span class="metric-label">📦 Shares Held</span>
+                      <span class="metric-value">${sharesHeld}</span>
+                    </div>
+                  ` : ''}
+                  ${avgCost != null ? `
+                    <div class="metric-item">
+                      <span class="metric-label">💵 Avg Cost/Share</span>
+                      <span class="metric-value">${symbol}${avgCost.toFixed(2)}</span>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="company-card" id="company-${ticker}">
+              <div class="company-header" onclick="toggleCompanyCard('${ticker}')">
+                <div class="company-info">
+                  <h3>📊 ${ticker} - ${name}</h3>
+                  <div class="company-meta">
+                    <span>🏢 ${sector} • ${industry}</span>
+                    <span>📍 ${exchange}</span>
+                    ${statusBadge}
+                  </div>
+                  <div class="company-period">📅 ${periodStart} → ${periodEnd}</div>
+                </div>
+                <div class="expand-icon">▼</div>
+              </div>
+              <div class="currency-breakdown">
+                ${currenciesHtml}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (error) {
+        console.error('Error loading main summary:', error);
+        const summaryContainer = document.getElementById('mainSummaryContainer');
+        if (summaryContainer) {
+          summaryContainer.innerHTML = `
+            <div class="table-section" style="text-align:center;padding:40px;">
+              <h3 style="color:#e74c3c;margin-bottom:10px;">❌ Failed to load Main Summary</h3>
+              <p style="color:#95a5a6;">${escHtml(error.message || 'Unknown error')}</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    /* Toggle company card expansion */
+    function toggleCompanyCard(ticker) {
+      const card = document.getElementById(`company-${ticker}`);
+      if (card) {
+        card.classList.toggle('expanded');
+      }
+    }
+
+    /* ========= DISPLAY TRADES ========= */
+    function displayTradesForCurrency(currency) {
+      if (!ALL_DATA || !ALL_DATA.grouped) return;
+
+      // Скрываем Main Summary когда переключаемся на обычную валюту
+      const summaryContainer = document.getElementById('mainSummaryContainer');
+      if (summaryContainer) {
+        summaryContainer.style.display = 'none';
+      }
+
+      const currencyData = ALL_DATA.grouped[currency];
+      const guide = document.getElementById('ppCashflowGuide');
+      const container = document.getElementById('tradeTablesContainer');
+
+      if (!container) return;
+
+      if (!currencyData) {
+        container.innerHTML = '';
+        if (guide) guide.style.display = 'none';
+        return;
+      }
+
+      container.innerHTML = '';
+      container.style.display = 'block';
+      document.getElementById('emptyState').style.display = 'none';
+
+      const symbol = CURRENCY_SYMBOLS[currency] || currency;
+
+      const hasAny =
+        (currencyData.stocks && currencyData.stocks.length > 0) ||
+        (currencyData.options && currencyData.options.length > 0) ||
+        (currencyData.futures && currencyData.futures.length > 0) ||
+        (currencyData.bonds && currencyData.bonds.length > 0);
+
+      if (guide) guide.style.display = hasAny ? 'block' : 'none';
+
+      if (currencyData.stocks?.length) {
+        container.innerHTML += createTable('stocks', currencyData.stocks, symbol, '📈 Stocks');
+      }
+      if (currencyData.options?.length) {
+        container.innerHTML += createTable('options', currencyData.options, symbol, '📊 Options');
+      }
+      if (currencyData.futures?.length) {
+        container.innerHTML += createTable('futures', currencyData.futures, symbol, '⚡ Futures');
+      }
+    }
+
+    /* ✅ ПАТЧ 3, 5, 6, 7: createTable с группировкой по компаниям */
+    function createTable(type, trades, symbol, title) {
+      if (!trades || trades.length === 0) return '';
+
+      const safeNum = (v, fallback = 0) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : fallback;
+      };
+
+      // ✅ ГРУППИРОВКА ПО ТИКЕРУ
+      const byTicker = {};
+      for (const t of trades) {
+        const ticker = String(t.ticker || 'UNKNOWN').toUpperCase();
+        if (!byTicker[ticker]) {
+          byTicker[ticker] = {
+            companyName: t.official_name || ticker,
+            trades: []
+          };
+        }
+        byTicker[ticker].trades.push(t);
+      }
+
+      // Сортируем тикеры алфавитно
+      const tickers = Object.keys(byTicker).sort();
+
+      let allRowsHtml = '';
+
+      for (const ticker of tickers) {
+        const group = byTicker[ticker];
+        const companyName = escHtml(group.companyName);
+
+        // ✅ ЗАГОЛОВОК КОМПАНИИ
+        const companyHeaderHtml = `
+          <tr style="background: rgba(50, 205, 50, 0.08); border-top: 2px solid rgba(50, 205, 50, 0.3); border-bottom: 1px solid rgba(50, 205, 50, 0.2);">
+            <td colspan="20" style="padding: 12px 20px; font-weight: 700; font-size: 15px; color: #32cd32;">
+              📊 ${escHtml(ticker)} - ${companyName}
+            </td>
+          </tr>
+        `;
+
+        // Сортируем трейды внутри группы по дате (новые сверху)
+        const sortedTrades = group.trades.sort((a, b) => {
+          const dateA = new Date(a.trade_date || 0);
+          const dateB = new Date(b.trade_date || 0);
+          return dateB - dateA;
+        });
+
+        // Генерируем строки для этой компании
+        let companyRowsHtml = '';
+
+        if (type === 'stocks') {
+          companyRowsHtml = sortedTrades.map(t => {
+            const isDividend = String(t.action || '').toUpperCase() === 'DIVIDEND';
+            const total = safeNum(t.total_sum, 0);
+            const totalClass = total >= 0 ? 'profit' : 'loss';
+            const totalSign = total >= 0 ? '+' : '';
+            const price = safeNum(t.price, 0);
+            const fee = safeNum(t.commission, 0);
+            const id = safeInt(t.id);
+
+            const actionClass = isDividend ? 'profit' : (t.action === 'BOUGHT' ? 'action-buy' : 'action-sell');
+            const actionLabel = isDividend ? '💵 DIVIDEND' : escHtml(t.action || '');
+            const qtyDisplay = isDividend ? '—' : safeNum(t.quantity, 0);
+
+            return `
+              <tr ${isDividend ? 'style="background: rgba(50, 205, 50, 0.03);"' : ''}>
+                <td>${escHtml(t.trade_date || '')}</td>
+                <td><strong>${escHtml(t.ticker || '')}</strong></td>
+                <td>${escHtml(t.official_name || '—')}</td>
+                <td class="${actionClass}">${actionLabel}</td>
+                <td>${qtyDisplay}</td>
+                <td>${symbol}${price.toFixed(2)}</td>
+                <td>${symbol}${fee.toFixed(2)}</td>
+                <td class="${totalClass}">${totalSign}${symbol}${Math.abs(total).toFixed(2)}</td>
+                <td><button class="btn-locked" onclick="showLockedFeature('${encJS(t.ticker || '')}')">🔒 Analyze</button></td>
+                <td>
+                  <select class="form-select" style="padding:6px 10px; width:auto; min-width:140px;"
+                          onchange="onStockAction(${id}, this)">
+                    <option value="">Manage…</option>
+                    <option value="edit">Edit</option>
+                    <option value="edit_fee">Edit ${isDividend ? 'tax' : 'fee'}</option>
+                    <option value="delete">Delete</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+        } else if (type === 'options') {
+          companyRowsHtml = sortedTrades.map(t => {
+            const total = safeNum(t.total_sum, 0);
+            const totalClass = total >= 0 ? 'profit' : 'loss';
+            const totalSign = total >= 0 ? '+' : '';
+            const actionClass = t.action === 'BOUGHT' ? 'action-buy' : 'action-sell';
+            const premium = safeNum(t.price, 0);
+            const fee = safeNum(t.commission, 0);
+            const strike = t.strike_price != null ? safeNum(t.strike_price, 0).toFixed(2) : '—';
+            const id = safeInt(t.id);
+
+            const status = (t.position_status || '').toUpperCase();
+            const isClosed = status === 'CLOSED';
+            const statusBadge = isClosed 
+              ? '<span style="padding:3px 8px; border-radius:8px; background:rgba(50,205,50,0.2); color:#32cd32; font-size:11px; font-weight:600;">CLOSED</span>'
+              : '<span style="padding:3px 8px; border-radius:8px; background:rgba(255,215,0,0.2); color:#ffd700; font-size:11px; font-weight:600;">OPEN</span>';
+
+            const optType = (t.option_type || '').toUpperCase();
+            const optionBadgeClass = optType === 'PUT' ? 'type-option-put' : optType === 'CALL' ? 'type-option-call' : 'type-option';
+
+            return `
+              <tr>
+                <td>${escHtml(t.trade_date || '')}</td>
+                <td><strong>${escHtml(t.ticker || '')}</strong></td>
+                <td><span class="type-badge ${optionBadgeClass}">${escHtml(t.option_type || 'N/A')}</span></td>
+                <td>${t.strike_price != null ? (symbol + strike) : '—'}</td>
+                <td>${escHtml(t.expiration_date || '—')}</td>
+                <td class="${actionClass}">${escHtml(t.action || '')}</td>
+                <td>${safeNum(t.quantity, 0)}</td>
+                <td>${symbol}${premium.toFixed(2)}</td>
+                <td>${symbol}${fee.toFixed(2)}</td>
+                <td class="${totalClass}">${totalSign}${symbol}${Math.abs(total).toFixed(2)}</td>
+                <td>${statusBadge}</td>
+                <td><button class="btn-locked" onclick="showLockedFeature('${encJS(t.ticker || '')}')">🔒 Analyze</button></td>
+                <td>
+                  <select class="form-select" style="padding:6px 10px; width:auto; min-width:140px;"
+                          onchange="onOptionAction(${id}, this)">
+                    <option value="">Manage…</option>
+                    <option value="edit">Edit</option>
+                    <option value="expire">Expired</option>
+                    <option value="assign">Assigned</option>
+                    <option value="edit_fee">Edit fee</option>
+                    <option value="delete">Delete</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+        } else {
+          // futures
+          companyRowsHtml = sortedTrades.map(t => {
+            const total = safeNum(t.total_sum, 0);
+            const totalClass = total >= 0 ? 'profit' : 'loss';
+            const totalSign = total >= 0 ? '+' : '';
+            const actionClass = t.action === 'BOUGHT' ? 'action-buy' : 'action-sell';
+            const price = safeNum(t.price, 0);
+            const fee = safeNum(t.commission, 0);
+            const id = safeInt(t.id);
+            return `
+              <tr>
+                <td>${escHtml(t.trade_date || '')}</td>
+                <td><strong>${escHtml(t.ticker || '')}</strong></td>
+                <td class="${actionClass}">${escHtml(t.action || '')}</td>
+                <td>${safeNum(t.quantity, 0)}</td>
+                <td>${symbol}${price.toFixed(2)}</td>
+                <td>${symbol}${fee.toFixed(2)}</td>
+                <td class="${totalClass}">${totalSign}${symbol}${Math.abs(total).toFixed(2)}</td>
+                <td><button class="btn-locked" onclick="showLockedFeature('${encJS(t.ticker || '')}')">🔒 Analyze</button></td>
+                <td>
+                  <select class="form-select" style="padding:6px 10px; width:auto; min-width:140px;"
+                          onchange="onStockAction(${id}, this)">
+                    <option value="">Manage…</option>
+                    <option value="edit">Edit</option>
+                    <option value="edit_fee">Edit fee</option>
+                    <option value="delete">Delete</option>
+                  </select>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        allRowsHtml += companyHeaderHtml + companyRowsHtml;
+      }
+
+      // Headers по типу
+      let headers = '';
+      if (type === 'stocks') {
+        headers = '<th>Date</th><th>Ticker</th><th>Company</th><th>Action</th><th>Quantity</th><th>Price</th><th>Commission</th><th>Total</th><th>Analyze</th><th>Actions</th>';
+      } else if (type === 'options') {
+        headers = '<th>Date</th><th>Ticker</th><th>Type</th><th>Strike</th><th>Expiration</th><th>Action</th><th>Qty</th><th>Premium</th><th>Commission</th><th>Total</th><th>Status</th><th>Analyze</th><th>Actions</th>';
+      } else {
+        headers = '<th>Date</th><th>Ticker</th><th>Action</th><th>Contracts</th><th>Price</th><th>Commission</th><th>Total</th><th>Analyze</th><th>Actions</th>';
+      }
+
+      return `
+        <div class="table-section">
+          <h2 class="section-title">${title}</h2>
+          <div class="table-container">
+            <table>
+              <thead><tr>${headers}</tr></thead>
+              <tbody>${allRowsHtml}</tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ========= MODAL FUNCTIONS ========= */
+    function resetAddTradeForm() {
+      const today = todayLocalISO();  // ✅ Используем локальную дату вместо UTC
+
+      const tradeDate = document.getElementById('tradeDate');
+      const currency = document.getElementById('currency');
+      const instrumentType = document.getElementById('instrumentType');
+      const action = document.getElementById('action');
+
+      if (tradeDate) tradeDate.value = today;
+      if (currency) currency.value = CURRENT_CURRENCY;
+      if (instrumentType) instrumentType.value = 'stock';
+      if (action) action.value = 'BOUGHT';
+
+      const ids = ['ticker', 'quantity', 'price', 'notes', 'strikePrice', 'expirationDate'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+
+      const commission = document.getElementById('commission');
+      if (commission) commission.value = '0';
+
+      const optionType = document.getElementById('optionType');
+      if (optionType) optionType.value = 'CALL';
+
+      // Reset dividend fields
+      const isDividend = document.getElementById('isDividend');
+      const dividendAmount = document.getElementById('dividendAmount');
+      const dividendTax = document.getElementById('dividendTax');
+
+      if (isDividend) isDividend.checked = false;
+      if (dividendAmount) dividendAmount.value = '';
+      if (dividendTax) dividendTax.value = '0';
+
+      updateFormFields();
+    }
+
+    function showAddTradeModal() {
+      resetAddTradeForm();
+      document.getElementById('addTradeModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('addTradeModal').classList.remove('active');
+      resetAddTradeForm();
+    }
+
+    function updateFormFields() {
+      const type = document.getElementById('instrumentType')?.value;
+      const isDivChecked = !!document.getElementById('isDividend')?.checked;
+
+      // Options fields
+      const optBox = document.getElementById('optionsFields');
+      if (optBox) optBox.style.display = (type === 'option') ? 'block' : 'none';
+
+      // Dividend checkbox (show only for stock)
+      const divCheckboxContainer = document.getElementById('dividendCheckboxContainer');
+      if (divCheckboxContainer) divCheckboxContainer.style.display = (type === 'stock') ? 'block' : 'none';
+
+      // Dividend fields
+      const divFields = document.getElementById('dividendFields');
+      const showDivFields = (type === 'stock' && isDivChecked);
+      if (divFields) divFields.style.display = showDivFields ? 'block' : 'none';
+
+      // Hide stock fields (action/qty/price) when dividend is checked
+      const actionGroup = document.getElementById('action')?.closest('.form-row');
+      const priceGroup = document.getElementById('price')?.closest('.form-row');
+
+      if (actionGroup) actionGroup.style.display = showDivFields ? 'none' : 'flex';
+      if (priceGroup) priceGroup.style.display = showDivFields ? 'none' : 'flex';
+    }
+
+    async function saveTrade() {
+      try {
+        const instrumentType = document.getElementById('instrumentType').value;
+        const trade_date = document.getElementById('tradeDate').value;
+        const tickerRaw = document.getElementById('ticker').value;
+        const currency = document.getElementById('currency').value;
+        const notes = document.getElementById('notes').value || null;
+        const ticker = (tickerRaw || '').trim().toUpperCase();
+
+        if (!trade_date) return alert('❌ Please select date');
+        if (!ticker) return alert('❌ Please enter ticker');
+
+        // ✅ DIVIDEND FLOW
+        const isDivChecked = !!document.getElementById('isDividend')?.checked;
+        if (instrumentType === 'stock' && isDivChecked) {
+          const dividendAmount = Number(document.getElementById('dividendAmount').value);
+          const dividendTax = Number(document.getElementById('dividendTax').value || 0);
+
+          if (!Number.isFinite(dividendAmount) || dividendAmount <= 0) return alert('❌ Dividend amount must be > 0');
+          if (!Number.isFinite(dividendTax) || dividendTax < 0) return alert('❌ Withholding tax must be >= 0');
+
+          const tradeData = {
+            trade_date,
+            ticker,
+            currency,
+            instrument_type: 'stock',
+            action: 'DIVIDEND',
+            quantity: 1,
+            price: dividendAmount,
+            commission: dividendTax,
+            notes: notes || '💵 Dividend received'
+          };
+
+          const result = await apiPost('/api/journal/trade', tradeData);
+          const payload = result?.data ?? result;
+          const ok = payload?.success ?? (payload?.id != null);
+
+          if (ok) {
+            closeModal();
+            await loadJournalData();
+            alert(`✅ Dividend added: ${ticker} +${currency}${(dividendAmount - dividendTax).toFixed(2)} net`);
+          } else {
+            alert('Failed to add dividend');
+          }
+          return;
+        }
+
+        // ✅ REGULAR STOCK/OPTION/FUTURE FLOW
+        const action = document.getElementById('action').value;
+        const quantity = Number(document.getElementById('quantity').value);
+        const price = Number(document.getElementById('price').value);
+        const commission = Number(document.getElementById('commission').value || 0);
+
+        if (!Number.isFinite(quantity) || quantity <= 0) return alert('❌ Quantity must be > 0');
+        if (!Number.isFinite(price) || price <= 0) return alert('❌ Price must be > 0');
+        if (!Number.isFinite(commission) || commission < 0) return alert('❌ Commission must be >= 0');
+
+        const tradeData = {
+          trade_date,
+          ticker,
+          currency,
+          instrument_type: instrumentType,
+          action,
+          quantity: Math.trunc(quantity),
+          price,
+          commission,
+          notes
+        };
+
+        if (instrumentType === 'option') {
+          const strike = Number(document.getElementById('strikePrice').value);
+          const exp = document.getElementById('expirationDate').value;
+          const optType = document.getElementById('optionType').value;
+
+          if (!Number.isFinite(strike) || strike <= 0) return alert('❌ Strike price must be > 0');
+          if (!exp) return alert('❌ Please select expiration date');
+
+          tradeData.option_type = optType;
+          tradeData.strike_price = strike;
+          tradeData.expiration_date = exp;
+        }
+
+        const result = await apiPost('/api/journal/trade', tradeData);
+
+        // ✅ Consistency: поддержка разных форматов ответа
+        const payload = result?.data ?? result;
+        const ok = payload?.success ?? (payload?.id != null);
+
+        if (ok) {
+          closeModal();
+          await loadJournalData();
+          showSmartNudge(tradeData);
+          alert(`✅ Trade added successfully in ${tradeData.currency}!`);
+        } else {
+          alert('Failed to add trade');
+        }
+
+      } catch (error) {
+        console.error('Error saving trade:', error);
+        alert(`Failed to save trade: ${error.message}`);
+      }
+    }
+
+    async function deleteTrade(tradeId) {
+      if (!confirm('Delete this trade?')) return;
+
+      try {
+        await apiDelete(`/api/journal/trade/${tradeId}`);
+        await loadJournalData();
+        alert('✅ Trade deleted!');
+      } catch (error) {
+        console.error('Error deleting trade:', error);
+        alert('Failed to delete trade');
+      }
+    }
+
+    /* ========= MILESTONE SYSTEM ========= */
+    async function checkMilestones() {
+      try {
+        const r = await apiGet('/api/journal/check-milestone');
+        const payload = r?.data ?? r;
+
+        if (payload?.show_modal) {
+          showMilestoneModal(payload.milestone);
+        }
+      } catch (error) {
+        console.error('Milestone check error:', error);
+      }
+    }
+
+    function showMilestoneModal(milestone) {
+      const messages = {
+        10: {
+          icon: '🎉',
+          title: '10 Trades Milestone!',
+          message: 'You\'re building great trading habits! Upgrade to Early Bird / Standard / PRO for real-time analysis and advanced tools.'
+        },
+        50: {
+          icon: '🚀',
+          title: '50 Trades Achievement!',
+          message: 'You\'re a serious trader! Unlock Early Bird / Standard / PRO features to maximize your edge in the market.'
+        },
+        100: {
+          icon: '💎',
+          title: '100 Trades - Elite Trader!',
+          message: 'Incredible dedication! Join Early Bird / Standard / PRO and access institutional-grade analytics.'
+        }
+      };
+
+      const data = messages[milestone];
+      if (!data) return;
+
+      document.getElementById('milestoneIcon').textContent = data.icon;
+      document.getElementById('milestoneTitle').textContent = data.title;
+      document.getElementById('milestoneMessage').textContent = data.message;
+      document.getElementById('milestoneModal').classList.add('active');
+    }
+
+    function closeMilestoneModal() {
+      document.getElementById('milestoneModal').classList.remove('active');
+    }
+
+    /* ========= SMART NUDGE SYSTEM ========= */
+    function showSmartNudge(tradeData) {
+      const showNudge = Math.random() < 0.33;
+      if (!showNudge) return;
+
+      let nudgeData;
+      if (tradeData.action === 'SOLD') {
+        nudgeData = {
+          title: '📈 Locked in Profits?',
+          message: 'Great trade! With Early Bird / Standard / PRO, get real-time data.',
+          cta: 'Unlock Early Bird / Standard / PRO Analytics'
+        };
+      } else {
+        nudgeData = {
+          title: '🎯 Validate Your Entry',
+          message: 'Early Bird / Standard / PRO members analyze stocks with Diamond Ratings and AI-powered insights before buying.',
+          cta: 'Upgrade to Early Bird / Standard / PRO'
+        };
+      }
+
+      document.getElementById('nudgeTitle').textContent = nudgeData.title;
+      document.getElementById('nudgeMessage').textContent = nudgeData.message;
+      document.getElementById('nudgeCTA').textContent = nudgeData.cta;
+      document.getElementById('smartNudge').classList.add('active');
+
+      setTimeout(() => closeNudge(), 10000);
+      trackNudge('smart_nudge_trade');
+    }
+
+    function closeNudge() {
+      document.getElementById('smartNudge').classList.remove('active');
+    }
+
+
+    /* ========= LOCKED FEATURE ========= */
+    function showLockedFeature(ticker) {
+      // Декодируем ticker из URL-кодировки
+      try { 
+        ticker = decodeURIComponent(ticker); 
+      } catch (e) {
+        console.error('Failed to decode ticker:', e);
+      }
+
+      alert(
+        `🔒 Stock Analysis is a Early Bird / Standard / PRO Feature!\n\n` +
+        `Upgrade to analyze ${ticker} with:\n` +
+        `• Real-time Diamond Ratings\n` +
+        `• AI-powered Recommendations\n` +
+        `• Intrinsic Value Calculations\n` +
+        `• PE Ownership Risk Detection\n\n` +
+        `Lock in Early Bird: $9.99/month!`
+      );
+
+      trackNudge('locked_analyze_click');
+      setTimeout(() => window.location.href = '/analysis', 2000);
+    }
+
+    function exportJournal() {
+      alert('📥 Export functionality coming soon!');
+    }
+
+    function refreshData() {
+      loadJournalData();
+    }
+
+    /* ========= BOOT SEQUENCE ========= */
+    document.addEventListener('DOMContentLoaded', async () => {
+      while (!window.PP_USER) {
+        await new Promise(r => setTimeout(r, 50));
+      }
+
+      await loadJournalData();
+
+      document.querySelectorAll('.stat-card, .table-section').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          el.style.transition = 'all 0.6s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, i * 100);
+      });
+    });
+  </script>
+
+<div id="pp-footer"></div>
+<script src="/static/js/pp-layout.js" defer></script>
+<script src="/static/js/pp-csrf.js"></script>
+<!-- Floating chat library -->
+<script src="/static/js/profitpal-assistant.js"></script>
+<!-- PDF generation library -->
+<script src="/static/vendor/html2pdf.bundle.min.js" defer></script>
+<!-- ProfitPal API integration -->
+<script src="/static/js/profitpal_integration.js"></script>
+<!-- Auto-inject widget HTML -->
+<script src="/static/js/ai_assistant_snippet.js"></script>
+</body>
+</html>

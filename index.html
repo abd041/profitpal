@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💎 ProfitPal - Smart Stock Analysis Made Simple</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- ProfitPal STYLES -->
+  <!-- <link rel="stylesheet" href="profitpal_reunion_styles.css"> -->
+  <link rel="stylesheet" href="redesign.css">
+  <link rel="stylesheet" href="/static/css/pp-role-badge.css">
+  <link rel="stylesheet" href="/static/css/logo.css">
+</head>
+<body class="pp-glow-bg">
+  <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
+
+<nav class="header-nav">
+    <div class="pp-shell header-inner">
+      <div class="header-logo">
+        <svg class="header-logo-svg" viewBox="0 0 986 179" aria-label="ProfitPal logo">
+          <path d="M883.81 39.78C897.352 40.2843 905.925 43.8228 915.745 52.9383C915.578 49.9847 915.866 44.8066 915.949 41.6885C924.79 41.5724 933.632 41.5745 942.474 41.6939C942.597 46.5914 942.513 51.8351 942.422 56.7499C941.898 84.8856 943.254 113.576 942.322 141.655C933.81 141.362 924.594 141.525 916.027 141.526L915.973 128.798C914.042 130.849 911.22 133.419 909.142 135.43C903.441 140.16 897.682 142.297 890.356 143.073C860.843 146.196 838.511 126.411 835.722 97.1095C834.373 82.6653 838.859 68.2813 848.181 57.166C858.124 45.3915 868.694 40.9746 883.81 39.78ZM894.15 118.386C908.742 115.59 918.317 101.511 915.557 86.9123C912.797 72.3144 898.743 62.7032 884.138 65.4256C869.48 68.1588 859.827 82.2739 862.596 96.9256C865.366 111.576 879.506 121.194 894.15 118.386Z" />
+          <path d="M735.019 9.50898C754.934 9.13158 781.502 8.27682 800.532 11.282C832.593 16.344 842.893 60.5334 823.864 83.9673C815.263 94.5591 805.872 98.5158 792.501 100.188C783.858 101.408 772.048 100.964 763.046 100.835C761.917 112.006 763.194 129.343 762.53 141.616L735.41 141.663C734.398 127.587 734.911 106.227 734.91 91.5238L735.019 9.50898ZM763.005 76.2023C776.148 76.356 789.827 78.2774 800.205 69.4683C807.476 61.0581 809.084 47.9698 800.147 39.9606C791.537 32.244 773.995 33.6471 762.813 33.6428C762.841 47.6075 762.705 62.2699 763.005 76.2023Z" />
+          <path d="M262.577 9.6993C270.832 9.29825 280.937 9.40684 289.358 9.43372C308.467 9.62295 327.675 7.44462 344.207 18.9782C364.381 33.0504 367.737 64.2321 353.089 83.347C344.488 94.5742 333.376 98.8954 319.412 100.643C310.191 101.737 298.14 101.388 288.618 101.379C288.462 114.744 288.602 128.397 288.597 141.785L262.762 141.766L262.697 47.8386C262.715 40.0704 262.656 32.3021 262.517 24.5359C262.455 20.5523 262.136 13.3378 262.577 9.6993ZM330.562 71.9703C339.445 63.6591 340.869 48.8149 332.354 39.9929C322.887 30.1828 302.254 32.7203 289.732 32.8429L288.716 33.3203C288.295 37.3802 288.545 44.9646 288.558 49.2385L288.666 78.2194C302.047 78.0635 319.755 79.9171 330.562 71.9703Z" />
+          <path d="M482.337 39.6983C510.861 37.1393 536.095 58.1067 538.803 86.6187C541.509 115.131 520.672 140.472 492.173 143.326C463.468 146.201 437.901 125.177 435.174 96.4568C432.447 67.7362 453.602 42.2777 482.337 39.6983ZM489.909 119.203C505.217 117.568 516.321 103.866 514.751 88.552C513.181 73.238 499.525 62.0763 484.204 63.5838C468.793 65.0998 457.551 78.8537 459.132 94.2569C460.711 109.661 474.511 120.846 489.909 119.203Z" />
+          <path d="M561.649 21.2222C567.627 -0.677405 591.073 1.02353 608.801 1.4063C609.04 8.57355 609.092 17.8224 608.743 24.9918C592.611 23.8532 584.983 22.678 585.951 41.6616C593.433 41.6347 601.106 41.5197 608.572 41.6229C608.627 49.6364 608.61 57.6498 608.523 65.6632C600.965 65.8782 592.714 65.5428 585.49 65.8611C585.703 89.4175 586.374 118.1 585.547 141.327C579.314 141.467 573.079 141.497 566.845 141.417L559.882 141.645L559.797 95.4289C559.746 87.838 559.262 72.5971 560.325 65.5299C557.421 66.0427 547.546 65.9567 544.109 66.0019C544.272 58.0669 544.354 50.132 544.351 42.196C547.762 41.9648 557.878 42.4852 559.936 41.6251L560.066 40.1649C559.924 31.8128 559.798 29.1732 561.649 21.2222Z" />
+          <path d="M670.803 20.3631C679.321 20.4577 687.889 20.4426 696.395 20.8254C696.937 26.3401 696.662 36.8727 696.671 42.7798C703.901 42.739 712.036 42.7067 719.177 43.4411L719.157 66.0793C711.493 66.2492 703.828 66.3535 696.163 66.3911C696.117 80.0762 695.802 93.8656 696.342 107.529C696.943 122.754 709.027 119.634 719.801 118.392L719.868 128.119L719.873 140.795C706.32 143.627 689.011 145.169 678.341 134.263C675.289 131.093 673.139 127.165 672.115 122.886C670.42 116.076 670.915 105.099 670.966 97.8901L671.233 66.3072L661.994 65.6729C661.668 58.0745 661.808 49.9277 661.818 42.2777C664.708 41.9551 667.841 41.8917 670.762 41.7648C671.091 35.3459 670.849 26.8874 670.803 20.3631Z" />
+          <path d="M960.337 1.10524C967.896 0.721398 977.952 0.81173 985.503 1.10741L985.563 99.091L985.472 127.121C985.458 131.242 985.767 137.014 985.248 140.834L984.38 141.392C976.148 141.453 967.916 141.444 959.684 141.366L959.751 41.6702C959.79 29.127 959.792 16.5354 959.661 3.98679C959.644 2.30411 959.47 1.91917 960.337 1.10524Z" />
+          <path d="M421.766 41.9143C429.05 41.4692 431.078 42.0057 437.452 45.0894C433.96 53.0544 431.696 61.2839 428.096 69.0598C413.186 61.1141 403.387 68.0276 399.632 83.734C397.984 90.6303 398.625 98.862 398.52 105.962C398.345 117.878 398.9 129.909 398.415 141.823L375.652 141.685C374.998 141.589 375.378 141.703 374.592 141.141C374.168 130.173 374.554 116.979 374.596 105.876L374.668 44.5389C381.754 44.2346 389.69 44.4152 396.851 44.4442C397.289 49.4718 397.152 57.8863 397.198 63.1666C403.48 51.6168 407.734 44.6055 421.766 41.9143Z" />
+          <path d="M622.923 41.9433C630.18 41.5509 640.416 41.7681 647.807 41.9423C647.534 64.2794 647.975 86.765 647.824 109.099C647.756 119.24 648.233 131.432 647.621 141.421C639.397 141.621 630.752 141.545 622.491 141.585C622.217 109.186 622.153 74.2863 622.923 41.9433Z" />
+          <path d="M630.878 0.703123C635.871 -0.907519 641.346 0.293468 645.206 3.84914C649.066 7.40373 650.713 12.7615 649.517 17.8708C648.321 22.979 644.467 27.0497 639.431 28.5217C631.792 30.7559 623.775 26.4379 621.436 18.8309C619.097 11.2229 623.303 3.14812 630.878 0.703123Z" />
+          <g class="logo-icon">
+            <path d="M138.851 0.0190285C141.362 -0.291703 147.992 3.28871 150.614 4.51229C162.621 10.1108 172.468 13.3138 181.545 23.4422C191.88 34.9769 204.767 45.6073 214.622 57.5484C206.332 68.9509 192.334 83.2445 182.799 94.29C158.016 123 131.608 150.382 105.896 178.186C101.082 173.342 96.158 167.537 91.5927 162.363C80.7181 150.558 2.09233 64.6705 0 58.2495C0.516094 55.6884 2.38046 53.1595 4.33517 51.3779C17.1214 39.7281 28.5744 25.584 42.1165 14.9449C46.0786 11.8322 54.9285 8.97219 59.6464 6.26808C63.6687 3.96286 69.9877 1.37054 74.5218 0.444802C83.7093 -0.383099 94.5817 1.55549 103.902 1.3684C115.561 1.13509 127.187 0.402873 138.851 0.0190285Z" />
+            <path d="M122.23 73.4272C125.714 72.9703 127.943 73.0402 131.45 73.0886C126.568 89.3896 121.503 106.096 116.798 122.428C113.238 134.785 111.622 146.486 106.733 159.098C106.053 153.695 105.28 149.513 104.209 144.222C100.938 130.113 95.6568 115.241 92.2646 100.933C90.3851 93.0076 85.6059 82.3847 82.8813 74.1702C92.2259 75.7206 112.658 74.5788 122.23 73.4272Z" />
+            <path d="M37.9092 64.6042C48.6482 66.9589 67.8587 71.1693 77.8935 74.0412C85.8199 93.5291 90.6787 114.91 97.1772 134.937C98.9373 140.364 101.138 146.861 102.168 152.4C100.007 151.327 66.9738 102.37 61.7376 97.0267C58.9851 94.2183 39.3607 67.9975 37.9092 64.6042Z" />
+            <path d="M170.916 65.1579L171.833 65.2171C172.048 67.6922 140.785 111.658 136.105 118.55C127.833 130.727 118.882 145.157 111.005 157.723L110.446 157.559C114.2 148.097 116.245 138.888 119.234 129.397C124.977 111.162 129.582 92.2958 135.686 74.2766C136.73 73.4756 137.765 72.6638 138.791 71.8413C148.399 70.2866 161.545 67.5879 170.916 65.1579Z" />
+            <path d="M106.432 32.6816C110.862 37.6275 114.187 43.2777 117.842 48.7935C122.263 55.4726 126.743 62.113 131.281 68.7136C124.923 69.5372 116.058 69.677 109.034 70.3759C100.631 70.5651 92.2237 70.5027 83.8232 70.1866C86.8553 60.0196 100.138 41.5326 106.432 32.6816Z" />
+            <path d="M195.163 55.3424C196.867 56.8939 198.565 58.6347 200.213 60.2615C197.532 64.0548 185.405 76.6109 181.498 81.0912C162.601 102.764 143.368 124.142 123.804 145.217C122.667 146.915 122.748 146.986 120.921 148.078C121.095 147.019 126.042 140.354 127.122 138.679C141.017 117.135 156.051 96.3687 171.059 75.5959C174.262 71.1618 177.628 67.39 180.494 62.6774C185.731 60.369 190.132 58.0197 195.163 55.3424Z" />
+            <path d="M14.0186 60.8894C19.4268 60.3099 25.851 61.5378 31.1206 62.7484C35.0106 66.1589 39.8081 74.3229 43.4176 79.028C55.8608 95.2828 68.0793 111.71 80.0699 128.301C83.5439 133.049 97.7311 151.159 99.0869 155.349C94.6216 152.163 15.8152 65.0408 14.0186 60.8894Z" />
+            <path d="M63.6128 28.883C66.0868 31.914 75.8882 64.3634 77.4957 69.7963C70.6843 68.3674 63.8945 66.8331 57.1304 65.1934C51.0459 63.5419 44.9463 61.9495 38.8306 60.4174C46.6214 52.6642 55.4477 37.7566 63.6128 28.883Z" />
+            <path d="M67.1577 27.7787C77.2581 29.4292 92.5205 31.3914 102.626 32.0602C98.0964 38.3683 93.329 44.7916 89.2583 51.3782C86.0682 56.3929 83.7372 60.4356 80.8966 65.6267C76.2571 54.3081 71.5864 39.6532 67.1577 27.7787Z" />
+            <path d="M144.538 34.2966C151.909 40.3306 163.829 53.5609 171.808 60.9593C168.067 61.6732 164.334 62.4334 160.612 63.2398C152.627 64.6827 144.664 66.2428 136.726 67.919C139.23 56.8219 141.675 45.2733 144.538 34.2966Z" />
+            <path d="M50.66 24.1758C54.577 24.808 56.3026 25.2649 60.1056 26.4476C50.8858 37.9254 44.3336 48.7698 33.9633 60.0378L28.8636 58.5767L17.5193 56.0983C24.607 47.7064 33.4881 40.6166 41.1564 32.7289C44.0745 29.7281 47.3022 26.6605 50.66 24.1758Z" />
+            <path d="M133.725 27.5713C137.485 26.9713 138.198 28.582 140.758 31.0549C138.728 41.7402 134.881 54.2082 133.498 64.7236C131.902 61.8378 130.216 59.4401 128.357 56.7231C122.881 48.8569 116.65 39.5533 111.667 31.4517C117.056 30.0636 127.761 28.597 133.725 27.5713Z" />
+            <path d="M155.803 23.4769C160.207 24.308 165.308 24.98 168.764 27.9636C177.023 35.0954 184.537 43.9303 192.182 51.7792L187.54 54.3522L179.564 58.6476C174.173 49.7632 162.975 29.8743 155.803 23.4769Z" />
+            <path d="M75.5026 12.4099C81.8957 13.7335 96.4893 14.7033 103.101 15.1355C103.664 19.1783 104.184 23.2264 104.662 27.2799C101.977 27.067 99.5504 26.7294 96.8914 26.3659C87.7018 25.4026 76.3843 24.5295 67.53 22.7823C70.3223 17.4235 70.9556 16.3053 75.5026 12.4099Z" />
+            <path d="M133.612 13.1367C136.628 12.2905 147.282 16.7418 150.712 18.0783C141.297 20.1771 131.853 22.1501 122.384 23.9962C117.883 24.7295 112.994 25.9208 108.509 26.9153C108.632 22.65 108.843 19.4234 108.232 15.2097C116.706 14.6968 125.168 14.0055 133.612 13.1367Z" />
+            <path d="M141.428 24.8617C157.379 23.2167 160.217 35.0815 167.522 46.2022C169.952 49.902 172.398 53.2759 174.47 57.224L174.193 57.9885C166.091 52.3824 157.462 40.3058 149.626 33.7375C145.244 30.0635 147.667 30.0151 146.485 27.3013L145.169 28.3873C143.341 27.9174 142.272 26.4939 141.428 24.8617Z" />
+            <path d="M65.9674 17.1773C66.2222 18.8159 65.7642 19.9051 64.9255 21.234C62.4386 22.478 63.2686 22.1071 60.1248 21.8652C60.1473 21.4942 60.1699 21.1233 60.1925 20.7523C62.1493 18.831 63.517 18.3644 65.9674 17.1773Z" />
+          </g>
+        </svg>
+      </div>
+      <div class="header-links">
+        <a href="#demo" class="nav-link nav-link--primary">Get Started</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="/login" class="nav-link">Sign In</a>
+        <!-- СЮДА МОЖНО ДОБАВИТЬ ЕЩЁ ССЫЛКИ, НАПРИМЕР: -->
+        <a href="#introduction" class="nav-link">Introduction</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero pp-section pp-section--hero reveal-up">
+    <div class="pp-shell">
+      <div class="pp-grid pp-grid--2 pp-grid--center hero-layout">
+        <!-- Left: headline and actions -->
+        <div class="hero-content hero-left">
+          <h1 class="pp-hero-title">Find<br>Undervalued<br>Stocks in<br>Minutes</h1>
+          <p class="pp-hero-subtitle">
+            ProfitPal analyzes real market data and key valuation metrics so you can quickly spot quality companies
+            trading below their intrinsic value.
+          </p>
+          <div class="hero-actions">
+            <a href="#demo" class="cta-button pp-btn pp-btn-primary">Register FREE - Get 5 Analyses! 🚀</a>
+            <a href="/login" class="cta-button secondary pp-btn pp-btn-secondary">Already Member? Sign In →</a>
+          </div>
+        </div>
+
+        <!-- Right: product preview card (static) -->
+        <div class="hero-preview hero-right">
+          <div class="pp-card pp-card--highlight hero-preview-card">
+            <div class="pp-card-header">
+              <div>
+                <div class="pp-card-title">Sample Stock Snapshot</div>
+                <div class="pp-card-subtitle">Real data + AI diamond verdict</div>
+              </div>
+              <span class="hero-badge">Live Market Data</span>
+            </div>
+            <div class="hero-preview-body">
+              <div class="hero-preview-price-row">
+                <span class="hero-preview-ticker">AAPL</span>
+                <span class="hero-preview-price">$189.42</span>
+              </div>
+              <div class="hero-preview-meta">
+                <span class="hero-preview-tag hero-preview-tag--diamond">💎 DIAMOND</span>
+                <span class="hero-preview-tag hero-preview-tag--fair">Fair value: $205.00</span>
+              </div>
+              <div class="hero-preview-chart">
+                <div class="hero-preview-chart-line"></div>
+              </div>
+              <div class="hero-preview-footer">
+                <span class="hero-preview-footnote">Illustrative preview. Connect to see your real analysis.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Section -->
+  <div class="pp-section features-section reveal-up" id="features">
+    <div class="pp-shell">
+      <h2 class="pp-section-title">Powerful Stock Analysis Tools</h2>
+      <p class="pp-section-description">
+        Combine AI insights with real market data to understand each company’s value, risk, and long-term potential in seconds.
+      </p>
+      <div class="pp-grid pp-grid--4 feature-grid">
+        <div class="pp-card feature-card">
+          <h3 class="feature-card-title">AI Valuation Engine</h3>
+          <p class="feature-card-text">Digest balance sheets, earnings, and market data to estimate intrinsic value automatically.</p>
+        </div>
+        <div class="pp-card feature-card">
+          <h3 class="feature-card-title">Intrinsic Value Calculator</h3>
+          <p class="feature-card-text">Run discounted cash flow and multiple-based models without spreadsheets.</p>
+        </div>
+        <div class="pp-card feature-card">
+          <h3 class="feature-card-title">Diamond Stock Classification</h3>
+          <p class="feature-card-text">Quickly see which tickers qualify as 💎 “Diamond” versus avoid zones.</p>
+        </div>
+        <div class="pp-card feature-card">
+          <h3 class="feature-card-title">Real Market Data</h3>
+          <p class="feature-card-text">Stay aligned with live prices, fundamentals, and volatility from trusted data partners.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Stats Strip -->
+  <div class="pp-section pp-section--tight hero-stats-section reveal-up">
+    <div class="pp-shell">
+      <div class="hero-stats-header">
+        <h2 class="hero-stats-title">Platform Overview</h2>
+        <p class="hero-stats-subtitle">
+          Built with real market data, transparent analysis, and tools designed for long-term investors.
+        </p>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-card-label">Analyses per user</div>
+          <div class="platform-card-value">5 free · unlimited paid</div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Markets</div>
+          <div class="platform-card-value">US equities focus</div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Built for</div>
+          <div class="platform-card-value">Long-term investors</div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Powered by</div>
+          <div class="platform-card-value">Real market data</div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Data partners</div>
+          <div class="platform-card-value">Yahoo Finance · NASDAQ</div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Signals</div>
+          <div class="platform-card-value">Price, fundamentals, volatility</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration CTA Section -->
+  <div class="pp-shell reveal-up">
+    <div class="pp-section" id="demo">
+      <div class="cta-card registration-cta pp-card">
+        <div class="registration-icon">💎</div>
+
+        <h3 class="platform-title">Get 5 Free Stock Analyses</h3>
+
+        <p class="platform-subtitle">
+          Create your free account and start analyzing stocks with real market data in minutes. No credit card required.
+        </p>
+
+        <div class="trust-chips-row">
+          <span class="trust-chip">5 free analyses</span>
+          <span class="trust-chip">No credit card</span>
+          <span class="trust-chip">Real market data</span>
+        </div>
+
+        <button class="cta-button pp-btn pp-btn-primary registration-cta-btn">
+          Register Free Now
+        </button>
+
+        <p class="cta-secondary">
+          Already registered? <a href="/login">Sign in here</a>
+        </p>
+
+        <div class="cta-divider"></div>
+
+        <p class="cta-disclaimer">
+          For educational purposes only. Always do your own research before investing.
+        </p>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="pp-section" id="how-it-works">
+      <h2 class="pp-section-title">How ProfitPal Works</h2>
+      <div class="process-steps steps-grid reveal-up">
+        <div class="step-flow-line" aria-hidden="true"></div>
+
+        <div class="step step-card pp-card">
+          <div class="step-number">1</div>
+          <div class="step-body">
+            <div class="step-icon">🆓</div>
+            <h3 class="step-title">Register Free</h3>
+            <p class="step-description">
+              Create your account and get 5 free stock analyses instantly.
+            </p>
+          </div>
+        </div>
+        <div class="step step-card pp-card">
+          <div class="step-number">2</div>
+          <div class="step-body">
+            <div class="step-icon">🔓</div>
+            <h3 class="step-title">Unlock Full Access</h3>
+            <p class="step-description">
+              Unlock the full ProfitPal ecosystem with a one-time $29.99 membership.
+            </p>
+          </div>
+        </div>
+        <div class="step step-card pp-card">
+          <div class="step-number">3</div>
+          <div class="step-body">
+            <div class="step-icon">📈</div>
+            <h3 class="step-title">Choose Subscription</h3>
+            <p class="step-description">
+              Start with Early Bird pricing — $9.99/month.
+            </p>
+          </div>
+        </div>
+        <div class="step step-card pp-card">
+          <div class="step-number">4</div>
+          <div class="step-body">
+            <div class="step-icon">🤝</div>
+            <h3 class="step-title">Refer Friends</h3>
+            <p class="step-description">
+              Invite friends and earn free subscription months.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div class="pp-section reveal-up" id="pricing">
+      <h2 class="pp-section-title">Simple ProfitPal Pricing</h2>
+
+      <p class="pricing-flow-text">
+        Start free with 5 stock analyses. Unlock the platform with a one-time membership, then choose a subscription plan.
+      </p>
+
+      <div class="pricing-cards pricing-grid">
+        <!-- Membership (one-time) -->
+        <div class="pricing-card featured pp-card pricing-card--primary pricing-card--membership membership-card">
+          <div class="pricing-tier">ProfitPal Membership</div>
+          <div class="pricing-price">
+            <span class="price">$29.99</span>
+            <span class="price-period">/ one-time</span>
+          </div>
+          <div class="pricing-features">
+            <div class="feature">Join ProfitPal ecosystem</div>
+            <div class="feature">Unlimited stock analysis</div>
+            <div class="feature">Diamond classification</div>
+            <div class="feature">Intrinsic value calculations</div>
+            <div class="feature">Premium metrics</div>
+          </div>
+          <div class="info-text">
+            <h4>💎 Required to access ProfitPal</h4>
+            <p>One-time membership to unlock the ProfitPal platform.</p>
+          </div>
+          <div class="pricing-actions">
+            <button onclick="showQR()" class="cta-button pp-btn pp-btn-primary pricing-cta button-primary">
+              Join with QR or card
+            </button>
+          </div>
+        </div>
+
+        <!-- Early Bird subscription -->
+        <div class="pricing-card featured pp-card popular-plan">
+          <div class="badge-popular">Most Popular</div>
+          <div class="pricing-tier">Early Bird Subscription</div>
+          <div class="pricing-price">
+            <span class="price">$9.99</span>
+            <span class="price-period">/ month</span>
+          </div>
+          <div class="pricing-features">
+            <div class="feature">Real-time market data</div>
+            <div class="feature">Server maintenance included</div>
+            <div class="feature">Access to new features</div>
+            <div class="feature">Referral rewards</div>
+            <div class="feature">Up to 12 free months per account</div>
+          </div>
+          <div class="info-text info-text--note">
+            <p>Save $5/month</p>
+            <p>Until Dec 2026</p>
+            <p>Regular $14.99/month</p>
+          </div>
+          <div class="pricing-actions">
+            <button onclick="goToPayment()" class="cta-button pp-btn pp-btn-primary pricing-cta button-primary">
+              Start Early Bird
+            </button>
+          </div>
+        </div>
+
+        <!-- Standard subscription -->
+        <div class="pricing-card info-only pp-card pricing-card--muted">
+          <div class="pricing-tier pricing-tier--muted">Standard Subscription</div>
+          <div class="pricing-price">
+            <span class="price">$14.99</span>
+            <span class="price-period">/ month</span>
+          </div>
+          <div class="pricing-features">
+            <div class="feature">Real-time market data</div>
+            <div class="feature">Server maintenance</div>
+            <div class="feature">New features access</div>
+            <div class="feature">Referral rewards</div>
+            <div class="feature">Up to 12 free months per account</div>
+          </div>
+
+          <div class="info-text">
+            <h4>📅 Starting January 1, 2027</h4>
+            <p>Standard plan available starting Jan 2027.</p>
+            <p>Same features as Early Bird.</p>
+          </div>
+          <div class="pricing-actions">
+            <div class="pricing-ribbon">
+              Coming Soon
+            </div>
+            <button class="cta-button pp-btn pp-btn-secondary pricing-cta" disabled>
+              Available 2027
+            </button>
+          </div>
+        </div>
+
+        <!-- Pro package -->
+        <div class="pricing-card info-only pp-card pricing-card--muted">
+          <div class="pricing-tier pricing-tier--muted">Pro Package</div>
+          <div class="pricing-price">
+            <span class="price">$49.99</span>
+            <span class="price-period">/ month</span>
+          </div>
+          <div class="pricing-features">
+            <div class="feature">All Standard features</div>
+            <div class="feature">Real-time options analysis</div>
+            <div class="feature">Live Greeks dashboard</div>
+            <div class="feature">Options strategy simulator</div>
+            <div class="feature">Volatility spike alerts</div>
+            <div class="feature">Unusual options activity</div>
+          </div>
+
+          <div class="info-text">
+            <h4>🚀 Advanced Options Trading</h4>
+            <p>Professional-grade tools for serious options traders.</p>
+            <p>Real-time Greeks and volatility tracking.</p>
+            <p>Strategy simulation and advanced signals.</p>
+          </div>
+          <div class="pricing-actions">
+            <div class="pricing-ribbon">
+              Coming Soon
+            </div>
+            <button class="cta-button pp-btn pp-btn-secondary pricing-cta" disabled>
+              Join Pro Waitlist
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-row">
+        <span>✓ Secure payments</span>
+        <span>✓ Cancel anytime</span>
+        <span>✓ Includes 5 free analyses</span>
+      </div>
+    </div>
+
+    <div class="pp-section pp-section--tight final-cta-section reveal-up">
+      <div class="final-cta-card pp-card">
+        <h2 class="final-cta-title">Ready to master stock analysis?</h2>
+        <p class="final-cta-text">
+          Start with 5 free analyses, then grow with ProfitPal’s AI-powered insights and transparent pricing.
+        </p>
+        <div class="final-cta-actions">
+          <a href="#demo" class="cta-button pp-btn pp-btn-primary">Get started free</a>
+          <a href="/login" class="cta-button pp-btn pp-btn-secondary">Already a member? Sign in</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-disclaimer"></div>
+
+  <!-- QR Code Popup -->
+  <div id="qr-overlay" class="qr-overlay" onclick="closeQR(event)">
+    <div class="qr-popup pp-card" onclick="event.stopPropagation()">
+      <button class="qr-close" onclick="closeQR()">&times;</button>
+      <div class="qr-title">💎 Join ProfitPal via Telegram</div>
+      <div class="bot-badge">@AIStockScreenerPro_bot</div>
+
+      <div class="qr-code-container">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://t.me/AIStockScreenerPro_bot?start=landing" 
+             alt="ProfitPal Telegram Bot QR" class="qr-code">
+      </div>
+
+      <div class="qr-instructions">
+        <strong>Scan with your phone camera or Telegram:</strong>
+      </div>
+
+      <div class="qr-steps">
+        <div class="qr-step">📱 1. Open camera or Telegram scanner</div>
+        <div class="qr-step">🤖 2. Scan QR → Opens @AIStockScreenerPro_bot</div>
+        <div class="qr-step">💳 3. Pay $29.99 membership + choose subscription plan</div>
+        <div class="qr-step">🔑 4. Get license key → Enter in Sign In</div>
+        <div class="qr-step">💎 5. Unlimited access forever!</div>
+      </div>
+
+      <div class="qr-bot-link-wrapper">
+        <a href="https://t.me/AIStockScreenerPro_bot?start=landing" target="_blank" class="cta-button pp-btn pp-btn-primary qr-bot-link">
+          Open Bot Directly 🤖
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Scripts -->
+<script>
+    // ============================================================================
+    // PROFITPAL INDEX - PROFESSIONAL VERSION
+    // No fake demo, no fingerprint tricks - just honest registration flow
+    // ============================================================================
+
+    // QR Code Popup
+    function showQR() {
+      document.getElementById('qr-overlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQR(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('qr-overlay').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Escape key closes popup
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeQR();
+    });
+
+    // Payment redirect
+    function goToPayment() {
+      window.location.href = '/analysis';
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll reveal for sections and cards
+    const revealElements = document.querySelectorAll('.reveal-up');
+    if ('IntersectionObserver' in window && revealElements.length) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      revealElements.forEach(el => observer.observe(el));
+    } else {
+      // Fallback: show all immediately
+      revealElements.forEach(el => el.classList.add('is-visible'));
+    }
+
+    // Cursor glow: follow mouse, GPU-friendly (transform only), minimal work
+    (function () {
+      var el = document.getElementById('cursor-glow');
+      if (!el) return;
+      var x = 0, y = 0;
+      var raf = 0;
+      function setPos(e) {
+        x = e.clientX;
+        y = e.clientY;
+        if (!raf) {
+          raf = requestAnimationFrame(function () {
+            el.style.transform = 'translate3d(' + (x - 210) + 'px,' + (y - 210) + 'px,0)';
+            raf = 0;
+          });
+        }
+      }
+      document.addEventListener('mousemove', setPos, { passive: true });
+    })();
+  </script>
+
+<footer id="pp-footer" class="pp-footer">
+  <div class="pp-shell">
+    <div class="pp-footer-grid">
+
+      <div class="pp-footer-brand">
+        <div class="pp-footer-logo">💎 ProfitPal</div>
+        <p class="pp-footer-description">
+          ProfitPal helps investors discover undervalued stocks using real market data,
+          intrinsic value analysis, and AI-powered insights.
+        </p>
+      </div>
+
+      <div class="pp-footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#how-it-works">How it works</a>
+      </div>
+
+      <div class="pp-footer-col">
+        <h4>Company</h4>
+        <a href="#introduction">Introduction</a>
+        <a href="/login">Sign In</a>
+        <a href="#demo">Get Started</a>
+      </div>
+
+      <div class="pp-footer-col">
+        <h4>Legal</h4>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/disclaimer">Disclaimer</a>
+      </div>
+
+    </div>
+
+    <div class="pp-footer-bottom">
+      <span>© 2026 ProfitPal. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/pp-layout.js" defer></script>
+<script src="/static/js/important_information.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ProfitPal</title>
+
+  <!-- ProfitPal AI Assistant CSS -->
+  <link rel="stylesheet" href="/static/css/profitpal-assistant.css">
+
+  <!-- Early Bird Banner -->
+  <link rel="stylesheet" href="/static/css/early_bird_banner.css">
+
+  <!-- Унифицированный header -->
+  <link rel="stylesheet" href="/static/css/pp-header.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1e3a5f 50%, #2c5f2d 100%);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .background-animation {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1;
+    }
+
+    .floating-shape {
+      position: absolute;
+      background: linear-gradient(135deg, rgba(50, 205, 50, 0.1), rgba(255, 215, 0, 0.05));
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(100px, -100px) rotate(90deg); }
+      50% { transform: translate(-50px, -200px) rotate(180deg); }
+      75% { transform: translate(-150px, -50px) rotate(270deg); }
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, rgba(15, 35, 65, 0.9), rgba(30, 58, 95, 0.8));
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(34, 139, 34, 0.3);
+      padding: 0 30px;
+      position: sticky; top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #32cd32, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .user-info { display: flex; align-items: center; gap: 20px; }
+
+    .user-avatar {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .nav-menu { display: flex; gap: 30px; align-items: center; }
+
+    .nav-item {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(50, 205, 50, 0.1);
+      color: #32cd32;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* 🔥 REFERRAL BANNER - LOCKED STATE (trial users) */
+    .referral-banner {
+      background: linear-gradient(135deg, rgba(95, 95, 95, 0.2), rgba(70, 70, 70, 0.15));
+      backdrop-filter: blur(20px);
+      border: 3px solid rgba(150, 150, 150, 0.4);
+      border-radius: 20px;
+      padding: 25px 35px;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    /* ACTIVE STATE (paid users) */
+    .referral-banner.active {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(50, 205, 50, 0.15));
+      border-color: rgba(255, 215, 0, 0.6);
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .referral-banner.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    }
+
+    .referral-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .referral-main { flex: 1; }
+
+    .referral-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #999;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .referral-banner.active .referral-title {
+      color: #ffd700;
+    }
+
+    .referral-link {
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      color: #666;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(150, 150, 150, 0.3);
+      margin: 10px 0;
+      cursor: default;
+      user-select: none;
+    }
+
+    .referral-banner.active .referral-link {
+      color: #87ceeb;
+      border-color: rgba(255, 215, 0, 0.3);
+      cursor: pointer;
+      user-select: text;
+    }
+
+    .referral-banner.active .referral-link:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+
+    .referral-upgrade-hint {
+      font-size: 13px;
+      color: #ffd700;
+      margin-top: 8px;
+    }
+
+    .referral-stats { display: flex; gap: 30px; align-items: center; }
+
+    .referral-stat {
+      text-align: center;
+      padding: 15px;
+      background: rgba(50, 205, 50, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(50, 205, 50, 0.3);
+      min-width: 120px;
+    }
+
+    .stat-number-large {
+      font-size: 28px;
+      font-weight: 900;
+      color: #32cd32;
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label-small {
+      font-size: 12px;
+      color: #87ceeb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 5px;
+    }
+
+    /* 🔥 BOOST DEVELOPMENT BANNER */
+    .boost-banner {
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 193, 7, 0.15));
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 107, 53, 0.5);
+      border-radius: 15px;
+      padding: 20px 25px;
+      margin-bottom: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .boost-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+      border-color: #ff6b35;
+    }
+
+    .boost-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .boost-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ff6b35;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .boost-subtitle {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .boost-expand-hint {
+      font-size: 14px;
+      color: #87ceeb;
+      font-style: italic;
+    }
+
+    .boost-options {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 2px solid rgba(255, 107, 53, 0.3);
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .donation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .donation-btn {
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 193, 7, 0.05));
+      border: 2px solid rgba(255, 107, 53, 0.3);
+      border-radius: 12px;
+      padding: 20px 15px;
+      color: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .donation-btn:hover, .donation-btn.selected {
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 193, 7, 0.1));
+      border-color: #ff6b35;
+      transform: translateY(-2px);
+    }
+
+    .donation-btn .price {
+      display: block;
+      font-size: 20px;
+      color: #ff6b35;
+      margin-top: 5px;
+    }
+
+    .custom-donation {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(44, 62, 80, 0.3);
+      border: 2px solid rgba(255, 107, 53, 0.3);
+      border-radius: 12px;
+      padding: 20px 15px;
+      color: #ffffff;
+      font-weight: 600;
+      justify-content: center;
+    }
+
+    .custom-donation input {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+      width: 80px;
+      text-align: center;
+    }
+
+    .custom-donation input:focus { outline: none; }
+
+    .currency {
+      font-size: 20px;
+      color: #ff6b35;
+    }
+
+    .donation-agreement {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(44, 62, 80, 0.2);
+      border-radius: 8px;
+    }
+
+    .donation-agreement input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: #ff6b35;
+    }
+
+    .donation-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #ff6b35, #e74c3c);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .donation-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+    }
+
+    .donation-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-content { position: relative; z-index: 2; }
+
+    .welcome-title {
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff, #32cd32);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-subtitle {
+      font-size: 18px;
+      color: #bdc3c7;
+      margin-bottom: 20px;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: rgba(44, 62, 80, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(34, 139, 34, 0.2);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 900;
+      color: #32cd32;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #95a5a6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-card {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.4), rgba(15, 35, 65, 0.6));
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(50, 205, 50, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* Quick Analysis */
+    .analysis-input { display: flex; gap: 15px; margin-bottom: 20px; }
+
+    .ticker-input {
+      flex: 1;
+      padding: 15px 20px;
+      background: rgba(44, 62, 80, 0.3);
+      border: 2px solid rgba(34, 139, 34, 0.2);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+
+    .ticker-input:focus { outline: none; border-color: #32cd32; }
+
+    .analyze-btn {
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .analyze-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(50, 205, 50, 0.3);
+    }
+
+    .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Portfolio Table */
+    .portfolio-table { width: 100%; border-collapse: collapse; }
+
+    .portfolio-table th, .portfolio-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(34, 139, 34, 0.2);
+    }
+
+    .portfolio-table th {
+      color: #32cd32;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .portfolio-table td { color: #ecf0f1; }
+
+    .positive { color: #32cd32; }
+    .negative { color: #e74c3c; }
+
+    /* Action Buttons */
+    .action-buttons { display: flex; gap: 15px; margin-top: 20px; }
+
+    .action-btn {
+      padding: 12px 20px;
+      border: 2px solid rgba(34, 139, 34, 0.3);
+      background: rgba(44, 62, 80, 0.3);
+      color: #32cd32;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-align: center;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: rgba(50, 205, 50, 0.1);
+      border-color: #32cd32;
+      transform: translateY(-2px);
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      border-color: #32cd32;
+      color: white;
+    }
+
+    /* Recommendations */
+    .recommendation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: rgba(44, 62, 80, 0.3);
+      border-radius: 10px;
+      border-left: 4px solid #32cd32;
+    }
+
+    .recommendation-content h4 { color: #ffffff; margin-bottom: 5px; }
+    .recommendation-content p { color: #95a5a6; font-size: 14px; }
+
+    .recommendation-badge {
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Copy Success Animation */
+    .copy-success {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #32cd32, #228b22);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      z-index: 1000;
+      animation: copyFeedback 2s ease-out;
+    }
+
+    @keyframes copyFeedback {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .main-container { padding: 20px; }
+      .header-content { padding: 0 20px; }
+      .nav-menu { display: none; }
+      .referral-content { flex-direction: column; gap: 20px; }
+      .referral-stats { flex-direction: row; gap: 15px; justify-content: center; }
+      .referral-stat { min-width: 100px; }
+      .donation-grid { grid-template-columns: 1fr 1fr; }
+      .boost-content { flex-direction: column; gap: 10px; text-align: center; }
+    }
+
+    /* ========= UPGRADE MODAL ========= */
+      .upgrade-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      .upgrade-modal-content {
+        background: linear-gradient(135deg, rgba(30, 58, 95, 0.98), rgba(15, 35, 65, 0.98));
+        backdrop-filter: blur(30px);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        border: 3px solid #ffd700;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        text-align: center;
+        animation: modalSlideIn 0.4s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from { opacity: 0; transform: translateY(-50px) scale(0.9); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .upgrade-icon {
+        font-size: 72px;
+        margin-bottom: 20px;
+        animation: lockPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes lockPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+
+      .upgrade-title {
+        color: #ffd700;
+        font-size: 28px;
+        font-weight: 900;
+        margin-bottom: 15px;
+        text-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+      }
+
+      .upgrade-message {
+        color: #e0e0e0;
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 30px;
+      }
+
+      .upgrade-buttons {
+        display: flex;
+        gap: 15px;
+      }
+
+      .upgrade-btn {
+        flex: 1;
+        padding: 18px;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .upgrade-btn-primary {
+        background: linear-gradient(135deg, #ffd700, #ff6b35);
+        color: #0a0e27;
+      }
+
+      .upgrade-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6);
+      }
+
+      .upgrade-btn-secondary {
+        background: rgba(231, 76, 60, 0.2);
+        color: #e74c3c;
+        border: 2px solid #e74c3c;
+      }
+
+      .upgrade-btn-secondary:hover {
+        background: rgba(231, 76, 60, 0.35);
+        transform: translateY(-2px);
+      }
+
+      .upgrade-header-btn {
+        background: linear-gradient(135deg, #ffd700, #ff6b35);
+        color: #0a0e27;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      }
+
+      .upgrade-header-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+      }
+    </style>
+
+  <!-- ===== SESSION CHECK - PostgreSQL Auth System ===== -->
+  <script>
+    (async function checkSession() {
+      try {
+        const res = await fetch('/api/session/me', { credentials: 'include' });
+
+        if (!res.ok || res.status === 401) {
+          console.log('❌ No valid session');
+          window.location.href = '/login';
+          return;
+        }
+
+        const me = await res.json();
+
+        if (!me || !me.id || !me.email) {
+          console.log('Invalid session data');
+          window.location.href = '/login';
+          return;
+        }
+
+        // ✅ Session valid - save globally
+        window.PP_USER = me;
+        document.documentElement.dataset.isAdmin = me.is_admin ? '1' : '0';
+
+        if (me.is_admin) {
+          document.body.classList.add('admin-mode');
+        }
+
+        console.log('✅ Dashboard loaded for:', me.email);
+
+      } catch (error) {
+        console.error('Session check error:', error);
+        window.location.href = '/login';
+      }
+    })();
+  </script>
+
+
+  <!-- Cookie Consent & Analytics -->
+  <script src="/static/js/pp-consent.js"></script>
+  <script src="/static/js/pp-ga-loader.js"></script>
+
+
+<link rel="stylesheet" href="/static/css/pp-role-badge.css">
+  <link rel="stylesheet" href="/static/css/logo.css">
+</head>
+
+<body data-pp-page="private">
+
+  <!-- 🔥 STICKY EARLY BIRD BANNER -->
+  <div class="early-bird-banner">
+    <span class="banner-text">⚡ EARLY BIRD SPECIAL: Lock in $9.99/month!</span>
+    <div class="countdown-timer" id="countdown">Loading...</div>
+    <a href="/analysis" class="banner-cta">UPGRADE NOW</a>
+  </div>
+
+  <!-- Background Animation -->
+  <div class="background-animation">
+    <div class="floating-shape" style="width: 100px; height: 100px; top: 10%; left: 80%; animation-delay: 0s;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; top: 60%; left: 10%; animation-delay: 5s;"></div>
+    <div class="floating-shape" style="width: 80px; height: 80px; top: 30%; left: 60%; animation-delay: 10s;"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="nav-header">
+    <div class="logo" id="pp-logo" data-pp-logo="1"></div>
+
+    <div class="nav-links">
+      <a href="/dashboard" class="nav-item active">Dashboard</a>
+      <a href="/stock-analysis" class="nav-item">Analysis</a>
+      <a href="/portfolio" class="nav-item">Portfolio</a>
+      <a href="/settings" class="nav-item">Settings</a>
+      <a href="/trading-journal" class="nav-item-special">📊 Trading Journal</a>
+    </div>
+
+    <div class="user-info">
+      <button class="upgrade-btn">⭐ Upgrade to Paid</button>
+      <div id="role-badge-container"></div>
+      <div class="user-avatar" id="user-avatar">U</div>
+      <span id="user-greeting">Welcome!</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- 🔥 REFERRAL BANNER - Dynamic (Locked/Active) -->
+    <div class="referral-banner" id="referralBanner">
+      <div class="referral-content">
+        <div class="referral-main">
+          <div class="referral-title" id="referralTitle">
+            🔒 Referral Program (LOCKED)
+          </div>
+          <div class="referral-link" id="referral-link">
+            Loading your referral code...
+          </div>
+          <div class="referral-upgrade-hint" id="referralUpgradeHint">
+            ⚡ Upgrade to unlock: Earn 1 FREE month for every friend who pays!
+          </div>
+        </div>
+
+        <div class="referral-stats">
+          <div class="referral-stat">
+            <span class="stat-number-large" id="free-months-count">0</span>
+            <span class="stat-label-small">FREE MONTHS</span>
+          </div>
+          <div class="referral-stat">
+            <span class="stat-number-large" id="paid-friends-count">0</span>
+            <span class="stat-label-small">FRIENDS PAID</span>
+          </div>
+          <div class="referral-stat">
+            <span class="stat-number-large" id="money-saved">$0.00</span>
+            <span class="stat-label-small">MONEY SAVED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔥 BOOST DEVELOPMENT BANNER -->
+    <div class="boost-banner" id="boostBanner" onclick="toggleBoostOptions()">
+      <div class="boost-content">
+        <div class="boost-title">
+          ⚡ BOOST DEVELOPMENT
+          <span class="boost-subtitle">Support innovation & get premium features faster</span>
+        </div>
+        <div class="boost-expand-hint">Click to expand options →</div>
+      </div>
+    </div>
+
+    <!-- Expanded Donation Options -->
+    <div class="boost-options" id="boostOptions" style="display:none;">
+      <div class="donation-grid" id="donationTiles">
+        <button type="button" class="donation-btn" data-amount="3" data-type="coffee">
+          ☕ Developer's Coffee<br><span class="price">$3</span>
+        </button>
+
+        <button type="button" class="donation-btn" data-amount="5" data-type="milk">
+          🥛 Coffee with Milk<br><span class="price">$5</span>
+        </button>
+
+        <button type="button" class="donation-btn" data-amount="10" data-type="features">
+          ✨ New Features<br><span class="price">$10</span>
+        </button>
+
+        <div class="custom-donation">
+          ❤️ Custom Amount:
+          <input id="customAmount" type="number" min="1" max="1000" placeholder="0">
+          <span class="currency">$</span>
+        </div>
+      </div>
+
+      <div class="donation-agreement">
+        <input type="checkbox" id="donationConsent" />
+        <label for="donationConsent">I authorize this transaction</label>
+      </div>
+
+      <button class="donation-submit" id="submitDonation" disabled>
+        BOOST NOW
+      </button>
+    </div>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <div class="welcome-content">
+        <h1 class="welcome-title" id="welcome-title">Welcome back, Investor! 💎</h1>
+        <p class="welcome-subtitle">Your AI-powered stock analysis dashboard is ready. Let's find your next winning investment!</p>
+
+        <div class="quick-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="stat-analyzed">0</span>
+            <span class="stat-label">Stocks Analyzed</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="stat-watchlist">0</span>
+            <span class="stat-label">Watchlist Items</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="stat-portfolio">0</span>
+            <span class="stat-label">Holdings</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="stat-value">$0</span>
+            <span class="stat-label">Portfolio Value</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Quick Analysis -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3 class="card-title">Quick Stock Analysis</h3>
+          <div class="card-icon">🚀</div>
+        </div>
+
+        <div class="analysis-input">
+          <input type="text" class="ticker-input" placeholder="Enter ticker (e.g., AAPL)" id="quickTicker" maxlength="5" />
+          <button class="analyze-btn" onclick="quickAnalysis()">Analyze</button>
+        </div>
+
+        <div id="quickResults" style="display: none;"></div>
+
+        <div class="action-buttons">
+          <a href="javascript:goToFullAnalysis()" class="action-btn">Full Analysis</a>
+          <a href="javascript:addToPortfolio()" class="action-btn primary">Add to Portfolio</a>
+        </div>
+      </div>
+
+      <!-- Portfolio Overview -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3 class="card-title">Portfolio Overview</h3>
+          <div class="card-icon">📈</div>
+        </div>
+
+        <table class="portfolio-table">
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Value</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioBody">
+            <tr>
+              <td colspan="3" style="color:#95a5a6;">Loading portfolio…</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="action-buttons">
+          <a href="/portfolio" class="action-btn">View All Holdings</a>
+          <a href="/portfolio" class="action-btn">Manage</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's Recommendations -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3 class="card-title">AI Recommendations</h3>
+        <div class="card-icon">⭐</div>
+      </div>
+
+      <div id="recommendationsList">
+        <div style="color:#95a5a6; padding: 10px 0;">Loading recommendations…</div>
+      </div>
+
+      <div class="action-buttons">
+        <a href="javascript:generateAiRecommendations()" class="action-btn primary">Generate AI Recommendations</a>
+        <a href="javascript:loadDashboardMe()" class="action-btn">Refresh</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    /* ========= API helpers ========= */
+    async function apiGet(url) {
+      const r = await fetch(url, { credentials: 'include' });
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      return r.json();
+    }
+
+    async function apiPost(url, data) {
+      const r = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data || {})
+      });
+      if (!r.ok) {
+        let detail = '';
+        try { detail = (await r.json()).detail || ''; } catch {}
+        throw new Error(`${r.status} ${r.statusText} ${detail}`.trim());
+      }
+      return r.json();
+    }
+
+    /* ========= format helpers ========= */
+    function fmtMoney(v) {
+      const n = Number(v);
+      if (!Number.isFinite(n)) return '—';
+      return `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function fmtPct(v) {
+      const n = Number(v);
+      if (!Number.isFinite(n)) return '—';
+      const sign = n >= 0 ? '+' : '';
+      return `${sign}${n.toFixed(2)}%`;
+    }
+
+    /* ========= REFERRAL BANNER LOGIC ========= */
+    async function loadReferralData() {
+      const banner = document.getElementById('referralBanner');
+      const title = document.getElementById('referralTitle');
+      const linkBox = document.getElementById('referral-link');
+      const hint = document.getElementById('referralUpgradeHint');
+      const freeMonths = document.getElementById('free-months-count');
+      const paidFriends = document.getElementById('paid-friends-count');
+      const moneySaved = document.getElementById('money-saved');
+
+      try {
+        // Get user data from session
+        const user = window.PP_USER;
+        if (!user) return;
+
+        const userType = user.user_type || 'trial';
+        const referralCode = user.referral_code || null;
+
+        // Get referral stats from existing endpoint
+        let balance = null;
+        try {
+          balance = await apiGet('/api/referral-stats/me');
+        } catch (e) {
+          console.log('No referral stats yet:', e);
+        }
+
+        if (userType === 'paid' && referralCode) {
+          // ✅ PAID USER - ACTIVE REFERRAL
+          banner.classList.add('active');
+          title.innerHTML = '🔗 Referral Program <span style="font-size: 13px; color: #32cd32;">ACTIVE</span>';
+
+          // Use ready-made link from API or generate fallback
+          const fullLink = `https://profitpal.org/login?ref=${referralCode}`;
+          linkBox.textContent = referralCode;              // ← показываем только код
+          linkBox.title = `Share link: ${fullLink}`;       // ← полная ссылка в tooltip
+          linkBox.style.cursor = 'pointer';
+          linkBox.onclick = () => copyReferralLink(referralCode);  // ← копируем только код
+
+          if (hint) hint.style.display = 'none';
+
+          // Update stats from balance
+          if (balance) {
+            freeMonths.textContent = balance.free_months_available || 0;
+            paidFriends.textContent = balance.successful_conversions || 0;
+            moneySaved.textContent = fmtMoney((balance.free_months_available || 0) * 14.99);
+          }
+
+        } else {
+          // 🔒 TRIAL USER - LOCKED REFERRAL
+          banner.classList.remove('active');
+          title.textContent = '🔒 Referral Program (LOCKED)';
+
+          if (referralCode) {
+            // Show partial code if exists
+            const shortCode = referralCode.includes('PP-REF-') 
+              ? referralCode 
+              : `PP-REF-${referralCode.split('-').pop() || 'XXXXX'}`;
+            linkBox.textContent = `${shortCode} (Locked)`;
+          } else {
+            linkBox.textContent = 'Your referral code will be generated after upgrade';
+          }
+
+          linkBox.style.cursor = 'default';
+          linkBox.onclick = () => {
+            showCopySuccess('⚡ Upgrade to paid plan to unlock referral system!');
+          };
+
+          if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = '⚡ Upgrade to unlock: Earn 1 FREE month for every friend who pays!';
+          }
+
+          // Stats remain 0 for trial users
+          freeMonths.textContent = '0';
+          paidFriends.textContent = '0';
+          moneySaved.textContent = '$0.00';
+        }
+
+      } catch (e) {
+        console.error('Referral data load failed:', e);
+        linkBox.textContent = 'Error loading referral data';
+      }
+    }
+
+    function copyReferralLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        showCopySuccess('💎 Referral link copied to clipboard!');
+      }).catch(err => {
+        console.error('Copy failed:', err);
+        showCopySuccess('❌ Failed to copy link');
+      });
+    }
+
+    function showCopySuccess(message) {
+      const el = document.createElement('div');
+      el.className = 'copy-success';
+      el.textContent = message;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2000);
+    }
+
+    /* ========= UPGRADE MODAL LOGIC ========= */
+    function checkTrialStatus() {
+      const user = window.PP_USER;
+      if (!user) return;
+
+      const userType = user.user_type || 'trial';
+      const viewsRemaining = user.trial_views_remaining ?? 5;
+
+      // Show header button for trial users
+      const upgradeBtn = document.getElementById('upgradeHeaderBtn');
+      if (upgradeBtn && userType === 'trial') {
+        upgradeBtn.style.display = 'block';
+      }
+
+      // Show modal if trial user with 0 views
+      if (userType === 'trial' && viewsRemaining === 0) {
+        // Delay modal slightly for better UX
+        setTimeout(() => showUpgradeModal(), 1000);
+      }
+    }
+
+    function showUpgradeModal() {
+      const modal = document.getElementById('upgradeModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeUpgradeModal() {
+      const modal = document.getElementById('upgradeModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function goToPayment() {
+      // ✅ Проверяем cookie consent
+      const consentData = localStorage.getItem('pp_cookie_consent');
+      const hasConsent = consentData && JSON.parse(consentData).timestamp;
+      
+      if (!hasConsent) {
+        // ❌ Consent нет → показываем modal
+        window.location.href = '/cookie-consent?redirect=stripe';
+        return;
+      }
+      
+      // ✅ Consent есть → сразу на Stripe
+      try {
+        const user = window.PP_USER;
+        if (!user) {
+          alert('Please login first');
+          window.location.href = '/login';
+          return;
+        }
+        
+        const response = await fetch('/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            email: user.email,
+            full_name: user.full_name,
+            referral_code: user.referral_code || '',
+            consent_logged: true
+          })
+        });
+        
+        if (!response.ok) throw new Error('Checkout failed');
+        
+        const data = await response.json();
+        if (data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          throw new Error('No checkout URL');
+        }
+        
+      } catch (err) {
+        console.error('Payment error:', err);
+        alert('Payment system error. Please try again.');
+      }
+    }
+
+    /* ========= UI: welcome stats ========= */
+    function renderStats(stats) {
+      if (!stats) return;
+
+      const $analyzed   = document.getElementById('stat-analyzed');
+      const $watchlist  = document.getElementById('stat-watchlist');
+      const $portfolio  = document.getElementById('stat-portfolio');
+      const $value      = document.getElementById('stat-value');
+
+      if ($analyzed)  $analyzed.textContent  = stats.total_analyses || 0;
+      if ($watchlist) $watchlist.textContent = stats.watchlist_count || 0;
+      if ($portfolio) $portfolio.textContent = stats.portfolio_count || 0;
+      if ($value)     $value.textContent     = fmtMoney(stats.portfolio_value || 0);
+    }
+
+    /* ========= UI: portfolio table ========= */
+    function renderPortfolio(rows) {
+      const body = document.getElementById('portfolioBody');
+      if (!body) return;
+
+      if (!rows || !rows.length) {
+        body.innerHTML = `<tr><td colspan="3" style="color:#95a5a6;">No holdings yet</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = rows.slice(0, 6).map(r => {
+        const ticker = (r.ticker || '').toUpperCase();
+        const value = fmtMoney(r.current_value ?? (Number(r.shares || 0) * Number(r.current_price || 0)));
+
+        let pct = null;
+        const invested = Number(r.total_invested);
+        const pnl = Number(r.unrealized_pnl);
+        if (Number.isFinite(invested) && invested > 0 && Number.isFinite(pnl)) {
+          pct = (pnl / invested) * 100;
+        }
+
+        const cls = (pct ?? 0) >= 0 ? 'positive' : 'negative';
+        const change = pct === null ? '—' : fmtPct(pct);
+
+        return `
+          <tr>
+            <td>${ticker}</td>
+            <td>${value}</td>
+            <td class="${cls}">${change}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* ========= UI: recommendations ========= */
+    function renderRecommendations(items) {
+      const box = document.getElementById('recommendationsList');
+      if (!box) return;
+
+      if (!items || !items.length) {
+        box.innerHTML = `
+          <div style="color:#95a5a6; padding: 10px 0;">
+            No recommendations yet. Click "Generate AI Recommendations".
+          </div>
+        `;
+        return;
+      }
+
+      box.innerHTML = items.slice(0, 5).map(it => {
+        const title = it.title || it.ticker || 'Recommendation';
+        const reason = it.reason || it.text || '';
+        const badge = (it.badge || it.type || 'AI').toUpperCase();
+
+        return `
+          <div class="recommendation-item">
+            <div class="recommendation-content">
+              <h4>${title}</h4>
+              <p>${reason}</p>
+            </div>
+            <div class="recommendation-badge">${badge}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* ========= LOAD DASHBOARD DATA ========= */
+    async function loadDashboardMe() {
+      try {
+        const data = await apiGet('/api/dashboard/me');
+        if (!data?.success) {
+          console.warn('Dashboard API returned unsuccessful response');
+          return;
+        }
+
+        // Update stats
+        renderStats(data.stats || {});
+
+        // Update portfolio
+        renderPortfolio(data.portfolio || []);
+
+        // Update recommendations
+        if (data.recommendations && data.recommendations.length) {
+          const mapped = data.recommendations.map(r => ({
+            title: `${(r.ticker || '—').toUpperCase()} — ${String(r.recommendation_type || 'AI').toUpperCase()}`,
+            reason: r.reason || '',
+            badge: String(r.recommendation_type || 'AI').toUpperCase()
+          }));
+          renderRecommendations(mapped);
+        } else {
+          renderRecommendations([]);
+        }
+
+      } catch (e) {
+        console.error('Dashboard data load failed:', e);
+
+        // Show error state
+        renderStats({});
+        renderPortfolio([]);
+        renderRecommendations([{
+          title: "Dashboard API Error",
+          reason: "Failed to load data from server. Please refresh the page.",
+          badge: "ERROR"
+        }]);
+      }
+    }
+
+    /* ========= GENERATE AI RECOMMENDATIONS ========= */
+    async function generateAiRecommendations() {
+      const box = document.getElementById('recommendationsList');
+      if (box) box.innerHTML = `<div style="color:#87ceeb; padding: 10px 0;">🤖 Generating AI recommendations…</div>`;
+
+      try {
+        const snap = await apiGet('/api/dashboard/me');
+
+        const portfolioTickers = (snap.portfolio || [])
+          .map(x => (x.ticker || '').toUpperCase())
+          .filter(Boolean);
+
+        const watchTickers = (snap.watchlist || [])
+          .map(x => (x.ticker || '').toUpperCase())
+          .filter(Boolean);
+
+        const recent = (snap.recent_analyses || []).slice(0, 5).map(a => ({
+          ticker: (a.ticker || '').toUpperCase(),
+          verdict: a.verdict,
+          rating: a.rating,
+          score: a.score,
+          intrinsic_value: a.intrinsic_value,
+          current_price: a.current_price
+        }));
+
+        const prompt = `
+You are ProfitPal's AI assistant. Generate 3 short stock recommendations for my dashboard.
+
+Context:
+- Portfolio tickers: ${portfolioTickers.join(', ') || 'none'}
+- Watchlist tickers: ${watchTickers.join(', ') || 'none'}
+- Recent analyses: ${JSON.stringify(recent)}
+
+Return STRICT JSON only (no markdown, no backticks), format:
+[
+  {"ticker":"AAPL","badge":"BUY","title":"Apple Inc - Strong Buy","reason":"Tech leader with solid fundamentals"}
+]
+Keep each reason <= 160 chars.
+`;
+
+        const r = await apiPost('/api/ai/chat', { prompt });
+
+        let items = null;
+        try {
+          // Try to parse as JSON
+          const cleaned = r.text.replace(/```json|```/g, '').trim();
+          items = JSON.parse(cleaned);
+        } catch {
+          // If not JSON, show raw text
+          renderRecommendations([{
+            title: "AI Response",
+            reason: r.text.substring(0, 200),
+            badge: "AI"
+          }]);
+          return;
+        }
+
+        if (!Array.isArray(items)) {
+          renderRecommendations([{
+            title: "AI Output",
+            reason: typeof items === 'string' ? items : JSON.stringify(items),
+            badge: "AI"
+          }]);
+          return;
+        }
+
+        renderRecommendations(items);
+
+      } catch (e) {
+        console.error('AI recommendations failed:', e);
+        renderRecommendations([{
+          title: "AI Recommendations Failed",
+          reason: e.message || 'Unknown error',
+          badge: "ERROR"
+        }]);
+      }
+    }
+
+    /* ========= QUICK ANALYSIS ========= */
+    async function quickAnalysis() {
+      const ticker = document.getElementById('quickTicker')?.value.toUpperCase().trim();
+      if (!ticker) {
+        alert('Please enter a ticker symbol');
+        return;
+      }
+
+      const btn = document.querySelector('.analyze-btn');
+      const res = document.getElementById('quickResults');
+
+      btn.textContent = 'Analyzing...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch(`/api/company/${ticker}/full`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Analysis failed');
+        }
+
+        const analysis = await response.json();
+
+        // Show REAL data
+        res.innerHTML = `
+          <div style="padding: 20px; background: rgba(50, 205, 50, 0.1); border-radius: 10px; border-left: 4px solid #32cd32;">
+            <h4 style="color: #32cd32; margin-bottom: 10px;">${analysis.rating || '💎'} Analysis Complete!</h4>
+            <p style="color: #ecf0f1; margin-bottom: 5px;">Current Price: ${fmtMoney(analysis.current_price)}</p>
+            <p style="color: #ecf0f1; margin-bottom: 5px;">Intrinsic Value: ${analysis.intrinsic_value > 0 ? fmtMoney(analysis.intrinsic_value) : 'Insufficient data'}</p>
+            <p style="color: #32cd32; font-weight: 600;">Verdict: ${analysis.verdict || 'Analysis complete'}</p>
+          </div>
+        `;
+        res.style.display = 'block';
+        res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      } catch (error) {
+        console.error('Analysis error:', error);
+        res.innerHTML = `
+          <div style="padding: 20px; background: rgba(231, 76, 60, 0.1); border-radius: 10px; border-left: 4px solid #e74c3c;">
+            <h4 style="color: #e74c3c; margin-bottom: 10px;">Analysis Failed</h4>
+            <p style="color: #ecf0f1;">${error.message}</p>
+          </div>
+        `;
+        res.style.display = 'block';
+      } finally {
+        btn.textContent = 'Analyze';
+        btn.disabled = false;
+      }
+    }
+
+    /* ========= NAVIGATION ========= */
+    function goToFullAnalysis() {
+      const ticker = document.getElementById('quickTicker')?.value.toUpperCase().trim();
+      if (!ticker) {
+        alert('Please enter a ticker symbol first');
+        return;
+      }
+
+      if (!/^[A-Z]{1,5}$/.test(ticker)) {
+        alert('Invalid ticker symbol. Please enter 1-5 letters only.');
+        return;
+      }
+
+      window.location.href = `/stock-analysis?ticker=${ticker}`;
+    }
+
+    function addToPortfolio() {
+      const ticker = document.getElementById('quickTicker')?.value.toUpperCase().trim();
+      if (!ticker) {
+        alert('Please enter a ticker symbol first');
+        return;
+      }
+
+      window.location.href = `/portfolio?add=${ticker}`;
+    }
+
+    /* ========= DONATIONS ========= */
+    let selectedDonationAmount = 0;
+    let selectedDonationType = '';
+
+    function toggleBoostOptions() {
+      const options = document.getElementById('boostOptions');
+      const banner = document.getElementById('boostBanner');
+      if (!options || !banner) return;
+
+      const open = options.style.display !== 'block';
+      options.style.display = open ? 'block' : 'none';
+      banner.querySelector('.boost-expand-hint').textContent =
+        open ? 'Click to collapse ↑' : 'Click to expand options →';
+    }
+
+    function toggleSubmitButton() {
+      const consent = document.getElementById('donationConsent')?.checked;
+      const hasAmount = selectedDonationAmount > 0;
+      const btn = document.getElementById('submitDonation');
+      if (btn) btn.disabled = !(consent && hasAmount);
+    }
+
+    async function processDonation() {
+      if (selectedDonationAmount <= 0) {
+        alert('Please select a donation amount');
+        return;
+      }
+
+      const consent = document.getElementById('donationConsent');
+      if (!consent?.checked) {
+        alert('Please check "I authorize this transaction"');
+        return;
+      }
+
+      const btn = document.getElementById('submitDonation');
+      if (btn) {
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+      }
+
+      try {
+        await apiPost('/api/process-donation', {
+          amount: selectedDonationAmount,
+          type: selectedDonationType,
+          authorized: true
+        });
+
+        showDonationSuccess();
+        toggleBoostOptions();
+        resetDonationForm();
+
+      } catch (e) {
+        console.error('Donation error:', e);
+        alert('Donation failed. Please try again.');
+      } finally {
+        if (btn) {
+          btn.textContent = 'BOOST NOW';
+          btn.disabled = false;
+        }
+      }
+    }
+
+    function showDonationSuccess() {
+      const el = document.createElement('div');
+      el.className = 'copy-success';
+      let msg = '💎 Thank you for supporting ProfitPal! ';
+
+      if (selectedDonationType === 'coffee') msg += 'I love black coffee, thank you! ☕';
+      else if (selectedDonationType === 'milk') msg += 'Black coffee with milk — wow! 🥛';
+      else if (selectedDonationType === 'features') msg += 'Features are coming! 🚀';
+      else msg += 'Huge thanks for recognizing my work! 💝';
+
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }
+
+    function resetDonationForm() {
+      selectedDonationAmount = 0;
+      selectedDonationType = '';
+
+      const custom = document.getElementById('customAmount');
+      if (custom) custom.value = '';
+
+      const consent = document.getElementById('donationConsent');
+      if (consent) consent.checked = false;
+
+      document.querySelectorAll('.donation-btn').forEach(btn => btn.classList.remove('selected'));
+
+      toggleSubmitButton();
+    }
+
+    function initDonationUI() {
+      // Donation tile selection
+      document.getElementById('donationTiles')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.donation-btn');
+        if (!btn) return;
+
+        const amount = Number(btn.dataset.amount);
+        const type = btn.dataset.type;
+
+        if (!amount || amount <= 0) return;
+
+        selectedDonationAmount = amount;
+        selectedDonationType = type;
+
+        document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        const custom = document.getElementById('customAmount');
+        if (custom) custom.value = '';
+
+        toggleSubmitButton();
+      });
+
+      // Custom amount input
+      const custom = document.getElementById('customAmount');
+      if (custom) {
+        custom.addEventListener('input', () => {
+          const val = parseInt(custom.value, 10);
+          if (val > 0) {
+            selectedDonationAmount = val;
+            selectedDonationType = 'custom';
+            document.querySelectorAll('.donation-btn').forEach(b => b.classList.remove('selected'));
+          } else {
+            selectedDonationAmount = 0;
+            selectedDonationType = '';
+          }
+          toggleSubmitButton();
+        });
+      }
+
+      // Consent checkbox
+      const consent = document.getElementById('donationConsent');
+      if (consent) {
+        consent.addEventListener('change', toggleSubmitButton);
+      }
+
+      // Submit button
+      const submit = document.getElementById('submitDonation');
+      if (submit) {
+        submit.addEventListener('click', processDonation);
+      }
+
+      toggleSubmitButton();
+    }
+
+    /* ========= UI UPDATES ========= */
+    function updateGreeting(firstName = 'Investor') {
+      const hour = new Date().getHours();
+      const welcomeTitle = document.getElementById('welcome-title');
+      if (!welcomeTitle) return;
+
+      const time = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+
+      if (window.PP_USER?.is_admin) {
+        welcomeTitle.innerHTML = `${time}, <span style="color:#ffd700;">Admin</span>! 👑💎`;
+      } else {
+        welcomeTitle.textContent = `${time}, ${firstName}! 💎`;
+      }
+    }
+
+    function updateUserAvatar() {
+      if (!window.PP_USER) return;
+
+      const email = window.PP_USER.email || '';
+      const fullName = window.PP_USER.full_name || window.PP_USER.email || 'User';
+      const firstName = fullName.split(' ')[0] || 'User';
+
+      // Update avatar
+      const avatar = document.getElementById('user-avatar');
+      if (avatar) {
+        if (window.PP_USER.is_admin) {
+          avatar.textContent = '👑';
+          avatar.style.background = 'linear-gradient(135deg, #ffd700, #ff6b35)';
+        } else {
+          const initials = fullName.split(' ')
+            .filter(Boolean)
+            .map(s => s[0])
+            .join('')
+            .toUpperCase()
+            .substring(0, 2);
+          avatar.textContent = initials || '🙂';
+        }
+      }
+
+      // Update greeting
+      const greeting = document.getElementById('user-greeting');
+      if (greeting) {
+        greeting.textContent = `Welcome back, ${firstName}!`;
+      }
+
+      updateGreeting(firstName);
+    }
+
+    /* ========= AUTO-TRIGGER PAYMENT ========= */
+    function checkAutoPayment() {
+      const shouldTrigger = localStorage.getItem('pp_trigger_payment');
+      if (shouldTrigger === 'true') {
+        localStorage.removeItem('pp_trigger_payment');
+        console.log('🔥 Auto-triggering payment after cookie consent');
+        setTimeout(() => {
+          goToPayment();
+        }, 500);
+      }
+    }
+
+    /* ========= BOOT SEQUENCE ========= */
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Wait for session (already checked in <head>)
+      while (!window.PP_USER) {
+        await new Promise(r => setTimeout(r, 50));
+      }
+
+      // Update UI with user info
+      updateUserAvatar();
+
+      // ✅ Check trial status and show upgrade modal if needed
+      checkTrialStatus();
+
+      // Initialize donation UI
+      initDonationUI();
+
+      // Load referral data FIRST
+      await loadReferralData();
+
+      // Load real dashboard data
+      await loadDashboardMe();
+
+      // Smooth appear animation
+      document.querySelectorAll('.dashboard-card, .referral-banner, .boost-banner').forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, i * 200);
+      });
+    });
+
+    // Auto-refresh dashboard data every 5 minutes
+    setInterval(loadDashboardMe, 300000);
+  </script>
+
+  <!-- ========= UPGRADE MODAL ========= -->
+  <div class="upgrade-modal" id="upgradeModal">
+    <div class="upgrade-modal-content">
+      <div class="upgrade-icon">🔒</div>
+      <h2 class="upgrade-title">Trial Limit Reached</h2>
+      <p class="upgrade-message">
+        You've used all <strong>5 free analyses</strong>! 🎯<br><br>
+        Upgrade now to unlock <strong>unlimited stock analysis</strong>, AI recommendations, 
+        SEC ownership tracking, and full access to the ProfitPal ecosystem.<br><br>
+        💎 <strong>Only $29.99 lifetime + $9.99/month</strong>
+      </p>
+      <div class="upgrade-buttons">
+        <button class="upgrade-btn upgrade-btn-secondary" onclick="closeUpgradeModal()">
+          Maybe Later
+        </button>
+        <button class="upgrade-btn upgrade-btn-primary" onclick="goToPayment()">
+          💎 Upgrade Now
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/static/js/donation-fix.js"></script>
+<!-- =========================
+       ProfitPal Cookie Consent Banner (Granular)
+       ========================= -->
+  <div id="ppConsent" style="
+    display:none; position:fixed; left:16px; right:16px; bottom:16px;
+    background:#0b1220; color:#fff; padding:16px; z-index:99999;
+    border:1px solid rgba(255,255,255,0.12); border-radius:14px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.55);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  ">
+    <div style="display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;">
+      <div style="max-width:740px;">
+        <div style="font-weight:700; font-size:16px;">🍪 Cookies & Privacy</div>
+        <div style="opacity:0.85; margin-top:6px; font-size:13px;">
+          We use <b>strictly necessary</b> cookies for authentication and security.
+          Optional cookies help us improve the product (analytics) and marketing (optional).
+          <a href="/cookie-policy" target="_blank" style="color:#93c5fd; text-decoration:underline;">Cookie Policy</a>
+        </div>
+
+        <div style="margin-top:12px; display:grid; gap:10px;">
+          <label style="display:flex; align-items:center; gap:10px; opacity:0.95;">
+            <input type="checkbox" checked disabled />
+            <span><b>Necessary</b> (required)</span>
+          </label>
+
+          <label style="display:flex; align-items:center; gap:10px;">
+            <input id="ppConsentAnalytics" type="checkbox" />
+            <span><b>Analytics</b> (Google Analytics, product metrics)</span>
+          </label>
+
+          <label style="display:flex; align-items:center; gap:10px;">
+            <input id="ppConsentMarketing" type="checkbox" />
+            <span><b>Marketing</b> (ads/pixels — optional)</span>
+          </label>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button id="ppConsentReject" style="
+          background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.18);
+          padding:10px 12px; border-radius:12px; cursor:pointer;
+        ">Reject optional</button>
+
+        <button id="ppConsentSave" style="
+          background:#2563eb; color:#fff; border:0;
+          padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700;
+        ">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const KEY = "pp_consent_v1";
+    const el = document.getElementById("ppConsent");
+    const a = document.getElementById("ppConsentAnalytics");
+    const m = document.getElementById("ppConsentMarketing");
+    const btnSave = document.getElementById("ppConsentSave");
+    const btnReject = document.getElementById("ppConsentReject");
+
+    function readLocal() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(e){ return null; }
+    }
+
+    function writeLocal(obj) {
+      localStorage.setItem(KEY, JSON.stringify(obj));
+    }
+
+    async function postConsent(obj) {
+      try {
+        await fetch("/api/consent/set", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          credentials: "include",
+          body: JSON.stringify({ analytics: !!obj.analytics, marketing: !!obj.marketing, source: "web" })
+        });
+      } catch(e) {
+        console.log("consent save failed", e);
+      }
+    }
+
+    function applyGoogleConsentMode(obj) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = window.gtag || gtag;
+
+      gtag('consent', 'default', {
+        'analytics_storage': obj.analytics ? 'granted' : 'denied',
+        'ad_storage': obj.marketing ? 'granted' : 'denied',
+        'ad_user_data': obj.marketing ? 'granted' : 'denied',
+        'ad_personalization': obj.marketing ? 'granted' : 'denied'
+      });
+    }
+
+    function shouldShowBanner() {
+      const local = readLocal();
+      return !local || typeof local.analytics !== "boolean" || typeof local.marketing !== "boolean";
+    }
+
+    // init
+    const local = readLocal();
+    if (local) {
+      a.checked = !!local.analytics;
+      m.checked = !!local.marketing;
+      applyGoogleConsentMode(local);
+    } else {
+      applyGoogleConsentMode({analytics:false, marketing:false});
+    }
+
+    if (shouldShowBanner()) {
+      el.style.display = "block";
+    }
+
+    btnReject.onclick = async function(){
+      const obj = {analytics:false, marketing:false, ts: Date.now()};
+      writeLocal(obj);
+      applyGoogleConsentMode(obj);
+      await postConsent(obj);
+      el.style.display = "none";
+    };
+
+    btnSave.onclick = async function(){
+      const obj = {analytics: !!a.checked, marketing: !!m.checked, ts: Date.now()};
+      writeLocal(obj);
+      applyGoogleConsentMode(obj);
+      await postConsent(obj);
+      el.style.display = "none";
+    };
+  })();
+  </script>
+
+
+<div id="pp-footer"></div>
+<script src="/static/js/pp-layout.js" defer></script>
+<script src="/static/js/pp-csrf.js"></script>
+<!-- Floating chat library -->
+<script src="/static/js/profitpal-assistant.js"></script>
+<!-- PDF generation library -->
+<script src="/static/vendor/html2pdf.bundle.min.js" defer></script>
+<!-- ProfitPal API integration -->
+<script src="/static/js/profitpal_integration.js"></script>
+<!-- Auto-inject widget HTML -->
+<script src="/static/js/ai_assistant_snippet.js"></script>
+  
+</body>
+</html>
