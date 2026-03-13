@@ -108,6 +108,40 @@
     </div>
   </div>
 
+  <!-- Introduction Section -->
+  <div class="pp-section reveal-up" id="introduction">
+    <div class="pp-shell">
+      <h2 class="pp-section-title">Introduction</h2>
+      <p class="pp-section-description">
+        Learn how ProfitPal helps investors analyze stocks and track trading performance.
+      </p>
+      <div class="pp-card video-placeholder">
+        <div class="intro-video-wrapper">
+          <div class="intro-video-card">
+            <img 
+              src="https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg"
+              alt="ProfitPal introduction video"
+              class="intro-video-thumbnail"
+            />
+
+            <button class="intro-video-play">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="introVideoModal" class="video-modal">
+    <div class="video-modal-content">
+      <button class="video-modal-close" aria-label="Close video">&times;</button>
+      <video controls autoplay>
+        <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
   <!-- Feature Section -->
   <div class="pp-section features-section reveal-up" id="features">
     <div class="pp-shell">
@@ -117,20 +151,34 @@
       </p>
       <div class="pp-grid pp-grid--4 feature-grid">
         <div class="pp-card feature-card">
-          <h3 class="feature-card-title">AI Valuation Engine</h3>
-          <p class="feature-card-text">Digest balance sheets, earnings, and market data to estimate intrinsic value automatically.</p>
+          <h3 class="feature-card-title">AI Stock Analysis</h3>
+          <p class="feature-card-text">
+            AI-powered analysis to help identify undervalued stocks and market opportunities.
+          </p>
         </div>
         <div class="pp-card feature-card">
-          <h3 class="feature-card-title">Intrinsic Value Calculator</h3>
-          <p class="feature-card-text">Run discounted cash flow and multiple-based models without spreadsheets.</p>
+          <h3 class="feature-card-title">Ownership Structure Insights</h3>
+          <p class="feature-card-text">
+            See how institutions, insiders, and major shareholders are positioned.
+          </p>
         </div>
         <div class="pp-card feature-card">
-          <h3 class="feature-card-title">Diamond Stock Classification</h3>
-          <p class="feature-card-text">Quickly see which tickers qualify as 💎 “Diamond” versus avoid zones.</p>
+          <h3 class="feature-card-title">Insider Activity Tracking</h3>
+          <p class="feature-card-text">
+            Monitor insider buying and selling activity based on public SEC filings.
+          </p>
         </div>
         <div class="pp-card feature-card">
-          <h3 class="feature-card-title">Real Market Data</h3>
-          <p class="feature-card-text">Stay aligned with live prices, fundamentals, and volatility from trusted data partners.</p>
+          <h3 class="feature-card-title">Smart Money Signals</h3>
+          <p class="feature-card-text">
+            Identify unusual institutional activity and capital movements.
+          </p>
+        </div>
+        <div class="pp-card feature-card">
+          <h3 class="feature-card-title">Trading Journal</h3>
+          <p class="feature-card-text">
+            Add trades from your brokerage accounts (stocks, options, futures) and track your trading performance and results.
+          </p>
         </div>
       </div>
     </div>
@@ -142,7 +190,7 @@
       <div class="hero-stats-header">
         <h2 class="hero-stats-title">Platform Overview</h2>
         <p class="hero-stats-subtitle">
-          Built with real market data, transparent analysis, and tools designed for long-term investors.
+          Built using publicly available financial filings and advanced analytics.
         </p>
       </div>
       <div class="platform-grid">
@@ -160,15 +208,34 @@
         </div>
         <div class="platform-card">
           <div class="platform-card-label">Powered by</div>
-          <div class="platform-card-value">Real market data</div>
+          <div class="platform-card-value">Real market data & filings</div>
         </div>
         <div class="platform-card">
-          <div class="platform-card-label">Data partners</div>
-          <div class="platform-card-value">Yahoo Finance · NASDAQ</div>
+          <div class="platform-card-label">Financial Filings</div>
+          <div class="platform-card-value">Public SEC Filings</div>
+          <p class="platform-card-description">
+            Data derived from publicly available filings submitted to the United States Securities and Exchange Commission (SEC).
+          </p>
         </div>
         <div class="platform-card">
           <div class="platform-card-label">Signals</div>
-          <div class="platform-card-value">Price, fundamentals, volatility</div>
+          <div class="platform-card-value">
+            <ul class="platform-signals-list">
+              <li>Price</li>
+              <li>Fundamentals</li>
+              <li>Volatility</li>
+              <li>Ownership Structure</li>
+              <li>Insider Activity</li>
+              <li>Smart Money Movements</li>
+            </ul>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-label">Trading Journal</div>
+          <div class="platform-card-value">Free lifetime access</div>
+          <p class="platform-card-description">
+            Log trades from brokerage accounts and track performance over time.
+          </p>
         </div>
       </div>
     </div>
@@ -240,7 +307,7 @@
             <div class="step-icon">📈</div>
             <h3 class="step-title">Choose Subscription</h3>
             <p class="step-description">
-              Start with Early Bird pricing — $9.99/month.
+              Early Bird pricing — $9.99/month (valid until Dec 31, 2026).
             </p>
           </div>
         </div>
@@ -263,6 +330,7 @@
 
       <p class="pricing-flow-text">
         Start free with 5 stock analyses. Unlock the platform with a one-time membership, then choose a subscription plan.
+        Early Bird pricing — $9.99/month (valid until Dec 31, 2026).
       </p>
 
       <div class="pricing-cards pricing-grid">
@@ -275,18 +343,19 @@
           </div>
           <div class="pricing-features">
             <div class="feature">Join ProfitPal ecosystem</div>
-            <div class="feature">Unlimited stock analysis</div>
-            <div class="feature">Diamond classification</div>
-            <div class="feature">Intrinsic value calculations</div>
-            <div class="feature">Premium metrics</div>
+            <div class="feature">AI-powered stock analysis</div>
+            <div class="feature">Ownership structure insights</div>
+            <div class="feature">Insider activity tracking</div>
+            <div class="feature">Smart money movement signals</div>
+            <div class="feature">Free lifetime trading journal</div>
           </div>
           <div class="info-text">
             <h4>💎 Required to access ProfitPal</h4>
             <p>One-time membership to unlock the ProfitPal platform.</p>
           </div>
           <div class="pricing-actions">
-            <button onclick="showQR()" class="cta-button pp-btn pp-btn-primary pricing-cta button-primary">
-              Join with QR or card
+            <button class="cta-button pp-btn pp-btn-primary pricing-cta button-primary">
+              Unlock Membership
             </button>
           </div>
         </div>
@@ -401,63 +470,25 @@
       </div>
     </div>
 
-    <div class="footer-disclaimer"></div>
-
-  <!-- QR Code Popup -->
-  <div id="qr-overlay" class="qr-overlay" onclick="closeQR(event)">
-    <div class="qr-popup pp-card" onclick="event.stopPropagation()">
-      <button class="qr-close" onclick="closeQR()">&times;</button>
-      <div class="qr-title">💎 Join ProfitPal via Telegram</div>
-      <div class="bot-badge">@AIStockScreenerPro_bot</div>
-
-      <div class="qr-code-container">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://t.me/AIStockScreenerPro_bot?start=landing" 
-             alt="ProfitPal Telegram Bot QR" class="qr-code">
-      </div>
-
-      <div class="qr-instructions">
-        <strong>Scan with your phone camera or Telegram:</strong>
-      </div>
-
-      <div class="qr-steps">
-        <div class="qr-step">📱 1. Open camera or Telegram scanner</div>
-        <div class="qr-step">🤖 2. Scan QR → Opens @AIStockScreenerPro_bot</div>
-        <div class="qr-step">💳 3. Pay $29.99 membership + choose subscription plan</div>
-        <div class="qr-step">🔑 4. Get license key → Enter in Sign In</div>
-        <div class="qr-step">💎 5. Unlimited access forever!</div>
-      </div>
-
-      <div class="qr-bot-link-wrapper">
-        <a href="https://t.me/AIStockScreenerPro_bot?start=landing" target="_blank" class="cta-button pp-btn pp-btn-primary qr-bot-link">
-          Open Bot Directly 🤖
-        </a>
+    <div class="pp-section pp-section--tight">
+      <div class="pp-shell">
+        <div class="pp-card pp-card--warning sec-disclaimer">
+          <p>
+            ProfitPal is not affiliated with or endorsed by the United States Securities and Exchange Commission (SEC).
+            All data is derived from publicly available filings.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
+
+    <div class="footer-disclaimer"></div>
 
   <!-- Dynamic Scripts -->
-<script>
+  <script>
     // ============================================================================
     // PROFITPAL INDEX - PROFESSIONAL VERSION
     // No fake demo, no fingerprint tricks - just honest registration flow
     // ============================================================================
-
-    // QR Code Popup
-    function showQR() {
-      document.getElementById('qr-overlay').style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeQR(event) {
-      if (event && event.target !== event.currentTarget) return;
-      document.getElementById('qr-overlay').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-
-    // Escape key closes popup
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeQR();
-    });
 
     // Payment redirect
     function goToPayment() {
@@ -510,6 +541,32 @@
         }
       }
       document.addEventListener('mousemove', setPos, { passive: true });
+    })();
+
+    // Introduction video modal
+    (function () {
+      var introCard = document.querySelector('.intro-video-card');
+      var modal = document.getElementById('introVideoModal');
+      if (!introCard || !modal) return;
+
+      var closeBtn = modal.querySelector('.video-modal-close');
+
+      introCard.addEventListener('click', function () {
+        modal.style.display = 'flex';
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          modal.style.display = 'none';
+        });
+      }
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
     })();
   </script>
 
