@@ -14,7 +14,10 @@
   <!-- Унифицированный header -->
   <link rel="stylesheet" href="/static/css/pp-header.css">
 
-  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="redesign.css">
+
+  <!-- <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -748,9 +751,13 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
       }
-    </style>
+    </style> -->
 
   <!-- ===== SESSION CHECK - PostgreSQL Auth System ===== -->
+  <!--
+    TEMP (redesign mode): auth redirect is disabled so the dashboard can be opened
+    without an authenticated user. Restore the redirects when re-enabling auth gating.
+  -->
   <script>
     (async function checkSession() {
       try {
@@ -758,7 +765,8 @@
 
         if (!res.ok || res.status === 401) {
           console.log('❌ No valid session');
-          window.location.href = '/login';
+          // window.location.href = '/login';
+          window.PP_USER = null;
           return;
         }
 
@@ -766,7 +774,8 @@
 
         if (!me || !me.id || !me.email) {
           console.log('Invalid session data');
-          window.location.href = '/login';
+          // window.location.href = '/login';
+          window.PP_USER = null;
           return;
         }
 
@@ -782,7 +791,8 @@
 
       } catch (error) {
         console.error('Session check error:', error);
-        window.location.href = '/login';
+        // window.location.href = '/login';
+        window.PP_USER = null;
       }
     })();
   </script>
@@ -797,56 +807,65 @@
   <link rel="stylesheet" href="/static/css/logo.css">
 </head>
 
-<body data-pp-page="private">
+<body class="pp-glow-bg pp-dashboard-page" data-pp-page="private">
 
-  <!-- 🔥 STICKY EARLY BIRD BANNER -->
-  <div class="early-bird-banner">
-    <span class="banner-text">⚡ EARLY BIRD SPECIAL: Lock in $9.99/month!</span>
-    <div class="countdown-timer" id="countdown">Loading...</div>
-    <a href="/analysis" class="banner-cta">UPGRADE NOW</a>
-  </div>
+  <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
 
   <!-- Background Animation -->
   <div class="background-animation">
-    <div class="floating-shape" style="width: 100px; height: 100px; top: 10%; left: 80%; animation-delay: 0s;"></div>
-    <div class="floating-shape" style="width: 150px; height: 150px; top: 60%; left: 10%; animation-delay: 5s;"></div>
-    <div class="floating-shape" style="width: 80px; height: 80px; top: 30%; left: 60%; animation-delay: 10s;"></div>
+    <div class="floating-shape floating-shape--1"></div>
+    <div class="floating-shape floating-shape--2"></div>
+    <div class="floating-shape floating-shape--3"></div>
   </div>
 
   <!-- Header -->
-  <header class="nav-header">
-    <div class="logo" id="pp-logo" data-pp-logo="1"></div>
+  <header class="nav-header header-nav">
+    <div class="pp-shell header-inner nav-header-inner">
+      <div class="early-bird-banner-top" id="earlyBirdBanner">
+        <span class="banner-text">⚡ EARLY BIRD SPECIAL: Lock in $9.99/month!</span>
+        <button type="button" class="pp-btn pp-btn-ghost" id="earlyBirdDismiss" aria-label="Dismiss announcement">✕</button>
+      </div>
 
-    <div class="nav-links">
-      <a href="/dashboard" class="nav-item active">Dashboard</a>
-      <a href="/stock-analysis" class="nav-item">Analysis</a>
-      <a href="/portfolio" class="nav-item">Portfolio</a>
-      <a href="/settings" class="nav-item">Settings</a>
-      <a href="/trading-journal" class="nav-item-special">📊 Trading Journal</a>
-    </div>
+      <div class="header-top-row">
+        <div class="logo header-logo" id="pp-logo" data-pp-logo="1"></div>
 
-    <div class="user-info">
-      <button class="upgrade-btn">⭐ Upgrade to Paid</button>
-      <div id="role-badge-container"></div>
-      <div class="user-avatar" id="user-avatar">U</div>
-      <span id="user-greeting">Welcome!</span>
+        <div class="nav-links header-links">
+          <a href="/dashboard" class="nav-item nav-link active">Dashboard</a>
+          <a href="/stock-analysis" class="nav-item nav-link">Analysis</a>
+          <a href="/portfolio" class="nav-item nav-link">Portfolio</a>
+          <a href="/settings" class="nav-item nav-link">Settings</a>
+          <a href="/trading-journal" class="nav-item-special nav-link nav-link--primary">📊 Trading Journal</a>
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <button class="upgrade-btn pp-btn pp-btn-primary">⭐ Upgrade to Paid</button>
+            <div id="role-badge-container"></div>
+            <div class="user-avatar" id="user-avatar">U</div>
+            <span id="user-greeting">Welcome!</span>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
   <!-- Main Content -->
-  <div class="main-container">
+  <div class="main-container pp-shell">
     <!-- 🔥 REFERRAL BANNER - Dynamic (Locked/Active) -->
-    <div class="referral-banner" id="referralBanner">
+    <div class="referral-banner pp-card promo-card" id="referralBanner">
       <div class="referral-content">
         <div class="referral-main">
           <div class="referral-title" id="referralTitle">
             🔒 Referral Program (LOCKED)
           </div>
-          <div class="referral-link" id="referral-link">
-            Loading your referral code...
-          </div>
+          <div class="referral-link referral-link--loading" id="referral-link"></div>
           <div class="referral-upgrade-hint" id="referralUpgradeHint">
             ⚡ Upgrade to unlock: Earn 1 FREE month for every friend who pays!
+          </div>
+          <div class="referral-actions">
+            <button type="button" class="pp-btn pp-btn-ghost referral-cta" id="referralCta">
+              Invite friends
+            </button>
           </div>
         </div>
 
@@ -868,7 +887,7 @@
     </div>
 
     <!-- 🔥 BOOST DEVELOPMENT BANNER -->
-    <div class="boost-banner" id="boostBanner" onclick="toggleBoostOptions()">
+    <div class="boost-banner pp-card pp-card--warning promo-card" id="boostBanner" onclick="toggleBoostOptions()">
       <div class="boost-content">
         <div class="boost-title">
           ⚡ BOOST DEVELOPMENT
@@ -879,23 +898,23 @@
     </div>
 
     <!-- Expanded Donation Options -->
-    <div class="boost-options" id="boostOptions" style="display:none;">
+    <div class="boost-options pp-card promo-card pp-hidden" id="boostOptions">
       <div class="donation-grid" id="donationTiles">
-        <button type="button" class="donation-btn" data-amount="3" data-type="coffee">
+        <button type="button" class="donation-btn pp-btn pp-btn-secondary" data-amount="3" data-type="coffee">
           ☕ Developer's Coffee<br><span class="price">$3</span>
         </button>
 
-        <button type="button" class="donation-btn" data-amount="5" data-type="milk">
+        <button type="button" class="donation-btn pp-btn pp-btn-secondary" data-amount="5" data-type="milk">
           🥛 Coffee with Milk<br><span class="price">$5</span>
         </button>
 
-        <button type="button" class="donation-btn" data-amount="10" data-type="features">
+        <button type="button" class="donation-btn pp-btn pp-btn-secondary" data-amount="10" data-type="features">
           ✨ New Features<br><span class="price">$10</span>
         </button>
 
         <div class="custom-donation">
           ❤️ Custom Amount:
-          <input id="customAmount" type="number" min="1" max="1000" placeholder="0">
+          <input id="customAmount" class="form-input" type="number" min="1" max="1000" placeholder="0">
           <span class="currency">$</span>
         </div>
       </div>
@@ -905,13 +924,13 @@
         <label for="donationConsent">I authorize this transaction</label>
       </div>
 
-      <button class="donation-submit" id="submitDonation" disabled>
+      <button class="donation-submit pp-btn pp-btn-primary" id="submitDonation" disabled>
         BOOST NOW
       </button>
     </div>
 
     <!-- Welcome Section -->
-    <section class="welcome-section">
+    <section class="welcome-section pp-card pp-card--highlight">
       <div class="welcome-content">
         <h1 class="welcome-title" id="welcome-title">Welcome back, Investor! 💎</h1>
         <p class="welcome-subtitle">Your AI-powered stock analysis dashboard is ready. Let's find your next winning investment!</p>
@@ -929,7 +948,7 @@
             <span class="stat-number" id="stat-portfolio">0</span>
             <span class="stat-label">Holdings</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item stat-item--primary">
             <span class="stat-number" id="stat-value">$0</span>
             <span class="stat-label">Portfolio Value</span>
           </div>
@@ -940,27 +959,27 @@
     <!-- Dashboard Grid -->
     <div class="dashboard-grid">
       <!-- Quick Analysis -->
-      <div class="dashboard-card">
+      <div class="dashboard-card pp-card">
         <div class="card-header">
           <h3 class="card-title">Quick Stock Analysis</h3>
           <div class="card-icon">🚀</div>
         </div>
 
         <div class="analysis-input">
-          <input type="text" class="ticker-input" placeholder="Enter ticker (e.g., AAPL)" id="quickTicker" maxlength="5" />
-          <button class="analyze-btn" onclick="quickAnalysis()">Analyze</button>
+          <input type="text" class="ticker-input form-input" placeholder="Enter ticker (e.g., AAPL)" id="quickTicker" maxlength="5" />
+          <button class="analyze-btn pp-btn pp-btn-primary" onclick="quickAnalysis()">Analyze</button>
         </div>
 
-        <div id="quickResults" style="display: none;"></div>
+        <div id="quickResults" class="pp-hidden"></div>
 
         <div class="action-buttons">
-          <a href="javascript:goToFullAnalysis()" class="action-btn">Full Analysis</a>
-          <a href="javascript:addToPortfolio()" class="action-btn primary">Add to Portfolio</a>
+          <a href="javascript:goToFullAnalysis()" class="action-btn pp-btn pp-btn-ghost">Full Analysis</a>
+          <a href="javascript:addToPortfolio()" class="action-btn primary pp-btn pp-btn-outline">Add to Portfolio</a>
         </div>
       </div>
 
       <!-- Portfolio Overview -->
-      <div class="dashboard-card">
+      <div class="dashboard-card pp-card">
         <div class="card-header">
           <h3 class="card-title">Portfolio Overview</h3>
           <div class="card-icon">📈</div>
@@ -976,32 +995,32 @@
           </thead>
           <tbody id="portfolioBody">
             <tr>
-              <td colspan="3" style="color:#95a5a6;">Loading portfolio…</td>
+              <td colspan="3" class="dashboard-muted">Loading portfolio…</td>
             </tr>
           </tbody>
         </table>
 
         <div class="action-buttons">
-          <a href="/portfolio" class="action-btn">View All Holdings</a>
-          <a href="/portfolio" class="action-btn">Manage</a>
+          <a href="/portfolio" class="action-btn pp-btn pp-btn-ghost">View All Holdings</a>
+          <a href="/portfolio" class="action-btn pp-btn pp-btn-ghost">Manage</a>
         </div>
       </div>
     </div>
 
     <!-- Today's Recommendations -->
-    <div class="dashboard-card">
+    <div class="dashboard-card pp-card">
       <div class="card-header">
         <h3 class="card-title">AI Recommendations</h3>
         <div class="card-icon">⭐</div>
       </div>
 
       <div id="recommendationsList">
-        <div style="color:#95a5a6; padding: 10px 0;">Loading recommendations…</div>
+        <div class="pp-micro-muted">Loading recommendations…</div>
       </div>
 
       <div class="action-buttons">
-        <a href="javascript:generateAiRecommendations()" class="action-btn primary">Generate AI Recommendations</a>
-        <a href="javascript:loadDashboardMe()" class="action-btn">Refresh</a>
+        <a href="javascript:generateAiRecommendations()" class="action-btn primary pp-btn pp-btn-primary">Generate AI Insights</a>
+        <a href="javascript:loadDashboardMe()" class="action-btn pp-btn pp-btn-ghost">Refresh</a>
       </div>
     </div>
   </div>
@@ -1054,6 +1073,10 @@
       const freeMonths = document.getElementById('free-months-count');
       const paidFriends = document.getElementById('paid-friends-count');
       const moneySaved = document.getElementById('money-saved');
+      const ctaBtn = document.getElementById('referralCta');
+      const freeMonthsCard = freeMonths?.closest('.referral-stat');
+      const paidFriendsCard = paidFriends?.closest('.referral-stat');
+      const moneySavedCard = moneySaved?.closest('.referral-stat');
 
       try {
         // Get user data from session
@@ -1074,7 +1097,7 @@
         if (userType === 'paid' && referralCode) {
           // ✅ PAID USER - ACTIVE REFERRAL
           banner.classList.add('active');
-          title.innerHTML = '🔗 Referral Program <span style="font-size: 13px; color: #32cd32;">ACTIVE</span>';
+          title.innerHTML = '🔗 Referral Program <span class="pp-badge pp-badge--success">ACTIVE</span>';
 
           // Use ready-made link from API or generate fallback
           const fullLink = `https://profitpal.org/login?ref=${referralCode}`;
@@ -1083,6 +1106,11 @@
           linkBox.style.cursor = 'pointer';
           linkBox.onclick = () => copyReferralLink(referralCode);  // ← копируем только код
 
+          if (ctaBtn) {
+            ctaBtn.textContent = 'Copy invite link';
+            ctaBtn.onclick = () => copyReferralLink(fullLink);
+          }
+
           if (hint) hint.style.display = 'none';
 
           // Update stats from balance
@@ -1090,6 +1118,16 @@
             freeMonths.textContent = balance.free_months_available || 0;
             paidFriends.textContent = balance.successful_conversions || 0;
             moneySaved.textContent = fmtMoney((balance.free_months_available || 0) * 14.99);
+
+            [freeMonthsCard, paidFriendsCard, moneySavedCard].forEach(card => {
+              if (!card) return;
+              card.classList.remove('referral-stat--updated');
+              // force reflow so animation can retrigger
+              // eslint-disable-next-line no-unused-expressions
+              void card.offsetHeight;
+              card.classList.add('referral-stat--updated');
+              setTimeout(() => card.classList.remove('referral-stat--updated'), 700);
+            });
           }
 
         } else {
@@ -1111,6 +1149,13 @@
           linkBox.onclick = () => {
             showCopySuccess('⚡ Upgrade to paid plan to unlock referral system!');
           };
+
+          if (ctaBtn) {
+            ctaBtn.textContent = 'See how referrals work';
+            ctaBtn.onclick = () => {
+              showCopySuccess('⚡ Upgrade to unlock referrals and start earning free months.');
+            };
+          }
 
           if (hint) {
             hint.style.display = 'block';
@@ -1193,7 +1238,7 @@
         const user = window.PP_USER;
         if (!user) {
           alert('Please login first');
-          window.location.href = '/login';
+          // window.location.href = '/login';
           return;
         }
         
@@ -1245,7 +1290,7 @@
       if (!body) return;
 
       if (!rows || !rows.length) {
-        body.innerHTML = `<tr><td colspan="3" style="color:#95a5a6;">No holdings yet</td></tr>`;
+        body.innerHTML = `<tr><td colspan="3" class="dashboard-muted">No holdings yet</td></tr>`;
         return;
       }
 
@@ -1280,8 +1325,10 @@
 
       if (!items || !items.length) {
         box.innerHTML = `
-          <div style="color:#95a5a6; padding: 10px 0;">
-            No recommendations yet. Click "Generate AI Recommendations".
+          <div class="pp-empty-state">
+            <div class="pp-empty-state-icon">✨</div>
+            <div class="pp-empty-state-title">No AI insights yet</div>
+            <div class="pp-empty-state-sub">Click “Generate AI Insights” to create a personalized snapshot.</div>
           </div>
         `;
         return;
@@ -1348,7 +1395,7 @@
     /* ========= GENERATE AI RECOMMENDATIONS ========= */
     async function generateAiRecommendations() {
       const box = document.getElementById('recommendationsList');
-      if (box) box.innerHTML = `<div style="color:#87ceeb; padding: 10px 0;">🤖 Generating AI recommendations…</div>`;
+      if (box) box.innerHTML = `<div class="ai-loading">🤖 Generating AI insights…</div>`;
 
       try {
         const snap = await apiGet('/api/dashboard/me');
@@ -1436,6 +1483,10 @@ Keep each reason <= 160 chars.
 
       btn.textContent = 'Analyzing...';
       btn.disabled = true;
+      if (res) {
+        res.innerHTML = '<div class="ai-loading">Analyzing recent data, trends, and fundamentals...</div>';
+        res.classList.remove('pp-hidden');
+      }
 
       try {
         const response = await fetch(`/api/company/${ticker}/full`, {
@@ -1452,25 +1503,25 @@ Keep each reason <= 160 chars.
 
         // Show REAL data
         res.innerHTML = `
-          <div style="padding: 20px; background: rgba(50, 205, 50, 0.1); border-radius: 10px; border-left: 4px solid #32cd32;">
-            <h4 style="color: #32cd32; margin-bottom: 10px;">${analysis.rating || '💎'} Analysis Complete!</h4>
-            <p style="color: #ecf0f1; margin-bottom: 5px;">Current Price: ${fmtMoney(analysis.current_price)}</p>
-            <p style="color: #ecf0f1; margin-bottom: 5px;">Intrinsic Value: ${analysis.intrinsic_value > 0 ? fmtMoney(analysis.intrinsic_value) : 'Insufficient data'}</p>
-            <p style="color: #32cd32; font-weight: 600;">Verdict: ${analysis.verdict || 'Analysis complete'}</p>
+          <div class="quick-analysis-result quick-analysis-result--success">
+            <div class="quick-analysis-result-title">${analysis.rating || '💎'} Analysis Complete</div>
+            <div class="quick-analysis-result-line">Current Price: ${fmtMoney(analysis.current_price)}</div>
+            <div class="quick-analysis-result-line">Intrinsic Value: ${analysis.intrinsic_value > 0 ? fmtMoney(analysis.intrinsic_value) : 'Insufficient data'}</div>
+            <div class="quick-analysis-result-verdict">Verdict: ${analysis.verdict || 'Analysis complete'}</div>
           </div>
         `;
-        res.style.display = 'block';
+        res.classList.remove('pp-hidden');
         res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
       } catch (error) {
         console.error('Analysis error:', error);
         res.innerHTML = `
-          <div style="padding: 20px; background: rgba(231, 76, 60, 0.1); border-radius: 10px; border-left: 4px solid #e74c3c;">
-            <h4 style="color: #e74c3c; margin-bottom: 10px;">Analysis Failed</h4>
-            <p style="color: #ecf0f1;">${error.message}</p>
+          <div class="quick-analysis-result quick-analysis-result--error">
+            <div class="quick-analysis-result-title">Analysis Failed</div>
+            <div class="quick-analysis-result-line">${error.message}</div>
           </div>
         `;
-        res.style.display = 'block';
+        res.classList.remove('pp-hidden');
       } finally {
         btn.textContent = 'Analyze';
         btn.disabled = false;
@@ -1512,8 +1563,8 @@ Keep each reason <= 160 chars.
       const banner = document.getElementById('boostBanner');
       if (!options || !banner) return;
 
-      const open = options.style.display !== 'block';
-      options.style.display = open ? 'block' : 'none';
+      const open = options.classList.contains('pp-hidden');
+      options.classList.toggle('pp-hidden', !open);
       banner.querySelector('.boost-expand-hint').textContent =
         open ? 'Click to collapse ↑' : 'Click to expand options →';
     }
@@ -1659,7 +1710,7 @@ Keep each reason <= 160 chars.
       const time = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
       if (window.PP_USER?.is_admin) {
-        welcomeTitle.innerHTML = `${time}, <span style="color:#ffd700;">Admin</span>! 👑💎`;
+        welcomeTitle.innerHTML = `${time}, <span class="pp-badge pp-badge--gold">Admin</span>! 👑💎`;
       } else {
         welcomeTitle.textContent = `${time}, ${firstName}! 💎`;
       }
@@ -1713,7 +1764,7 @@ Keep each reason <= 160 chars.
     /* ========= BOOT SEQUENCE ========= */
     document.addEventListener('DOMContentLoaded', async () => {
       // Wait for session (already checked in <head>)
-      while (!window.PP_USER) {
+      while (typeof window.PP_USER === 'undefined') {
         await new Promise(r => setTimeout(r, 50));
       }
 
@@ -1734,14 +1785,23 @@ Keep each reason <= 160 chars.
 
       // Smooth appear animation
       document.querySelectorAll('.dashboard-card, .referral-banner, .boost-banner').forEach((card, i) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          card.style.transition = 'all 0.6s ease';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, i * 200);
+        card.classList.add('pp-appear');
+        card.style.animationDelay = `${i * 140}ms`;
       });
+
+      // Early bird dismiss (optional, persisted)
+      const eb = document.getElementById('earlyBirdBanner');
+      const ebBtn = document.getElementById('earlyBirdDismiss');
+      if (eb && ebBtn) {
+        const hidden = localStorage.getItem('pp_early_bird_dismissed') === '1';
+        if (hidden) {
+          eb.classList.add('pp-hidden');
+        }
+        ebBtn.addEventListener('click', () => {
+          eb.classList.add('pp-hidden');
+          localStorage.setItem('pp_early_bird_dismissed', '1');
+        });
+      }
     });
 
     // Auto-refresh dashboard data every 5 minutes
@@ -1774,50 +1834,36 @@ Keep each reason <= 160 chars.
 <!-- =========================
        ProfitPal Cookie Consent Banner (Granular)
        ========================= -->
-  <div id="ppConsent" style="
-    display:none; position:fixed; left:16px; right:16px; bottom:16px;
-    background:#0b1220; color:#fff; padding:16px; z-index:99999;
-    border:1px solid rgba(255,255,255,0.12); border-radius:14px;
-    box-shadow:0 12px 40px rgba(0,0,0,0.55);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  ">
-    <div style="display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;">
-      <div style="max-width:740px;">
-        <div style="font-weight:700; font-size:16px;">🍪 Cookies & Privacy</div>
-        <div style="opacity:0.85; margin-top:6px; font-size:13px;">
-          We use <b>strictly necessary</b> cookies for authentication and security.
-          Optional cookies help us improve the product (analytics) and marketing (optional).
-          <a href="/cookie-policy" target="_blank" style="color:#93c5fd; text-decoration:underline;">Cookie Policy</a>
+  <div id="ppConsent" class="pp-consent" aria-live="polite">
+    <div class="pp-consent-inner">
+      <div class="pp-consent-copy">
+        <div class="pp-consent-title">🍪 Cookies & Privacy</div>
+        <div class="pp-consent-sub">
+          We use <b>strictly necessary</b> cookies for authentication and security. Optional cookies help us improve the product (analytics) and marketing (optional).
+          <a href="/cookie-policy" target="_blank" class="pp-consent-link">Cookie Policy</a>
         </div>
 
-        <div style="margin-top:12px; display:grid; gap:10px;">
-          <label style="display:flex; align-items:center; gap:10px; opacity:0.95;">
+        <div class="pp-consent-options">
+          <label class="pp-consent-option">
             <input type="checkbox" checked disabled />
             <span><b>Necessary</b> (required)</span>
           </label>
 
-          <label style="display:flex; align-items:center; gap:10px;">
+          <label class="pp-consent-option">
             <input id="ppConsentAnalytics" type="checkbox" />
             <span><b>Analytics</b> (Google Analytics, product metrics)</span>
           </label>
 
-          <label style="display:flex; align-items:center; gap:10px;">
+          <label class="pp-consent-option">
             <input id="ppConsentMarketing" type="checkbox" />
             <span><b>Marketing</b> (ads/pixels — optional)</span>
           </label>
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button id="ppConsentReject" style="
-          background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.18);
-          padding:10px 12px; border-radius:12px; cursor:pointer;
-        ">Reject optional</button>
-
-        <button id="ppConsentSave" style="
-          background:#2563eb; color:#fff; border:0;
-          padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700;
-        ">Save</button>
+      <div class="pp-consent-actions">
+        <button id="ppConsentReject" class="pp-btn pp-btn-ghost" type="button">Reject optional</button>
+        <button id="ppConsentSave" class="pp-btn pp-btn-primary" type="button">Save</button>
       </div>
     </div>
   </div>

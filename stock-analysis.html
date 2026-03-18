@@ -5,49 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProfitPal - Diamond Analysis</title>
 
-    <!-- ЕДИНЫЙ CSS (все стили в одном файле) -->
-    <link rel="stylesheet" href="/static/css/profitpal_reunion_styles.css">
-
     <!-- ProfitPal AI Assistant -->
     <link rel="stylesheet" href="/static/css/profitpal-assistant.css">
-
-    <!-- Роли и логотип -->
+    <!-- Early Bird Banner (unified with dashboard/journal) -->
+    <link rel="stylesheet" href="/static/css/early_bird_banner.css">
+    <!-- Unified navigation/header -->
+    <link rel="stylesheet" href="/static/css/pp-header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Global design system -->
+    <link rel="stylesheet" href="redesign.css">
     <link rel="stylesheet" href="/static/css/pp-role-badge.css">
     <link rel="stylesheet" href="/static/css/logo.css">
 </head>
 
-<body data-pp-page="private">
+<body class="pp-glow-bg pp-analysis-page" data-pp-page="private">
 
-  <div class="portfolio-bg"></div>
+  <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
 
-  <!-- НАЧАЛО КОНТЕЙНЕРА -->
-  <div class="container">
+  <!-- Background animation (same as dashboard / trading-journal) -->
+  <div class="background-animation">
+    <div class="floating-shape floating-shape--1"></div>
+    <div class="floating-shape floating-shape--2"></div>
+    <div class="floating-shape floating-shape--3"></div>
+  </div>
 
-    <!-- Header -->
-    <header class="nav-header">
-      <div class="logo" id="pp-logo" data-pp-logo="1"></div>
-
-      <div class="nav-links">
-        <a href="/dashboard" class="nav-item active">Dashboard</a>
-        <a href="/stock-analysis" class="nav-item">Analysis</a>
-        <a href="/portfolio" class="nav-item">Portfolio</a>
-        <a href="/settings" class="nav-item">Settings</a>
-        <a href="/trading-journal" class="nav-item-special">📊 Trading Journal</a>
+  <!-- Unified header (same structure as dashboard / trading-journal) -->
+  <header class="nav-header header-nav">
+    <div class="pp-shell header-inner nav-header-inner">
+      <div class="early-bird-banner-top" id="earlyBirdBanner">
+        <span class="banner-text">⚡ EARLY BIRD SPECIAL: Lock in $9.99/month!</span>
+        <button type="button" class="pp-btn pp-btn-ghost" id="earlyBirdDismiss" aria-label="Dismiss announcement">✕</button>
       </div>
 
-      <div class="user-info">
-        <button class="upgrade-btn">⭐ Upgrade to Paid</button>
-        <div id="role-badge-container"></div>
-        <div class="user-avatar" id="user-avatar">U</div>
-        <span id="user-greeting">Welcome!</span>
+      <div class="header-top-row">
+        <div class="logo header-logo" id="pp-logo" data-pp-logo="1"></div>
+
+        <div class="nav-links header-links">
+          <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
+          <a href="/stock-analysis" class="nav-item nav-link active">Analysis</a>
+          <a href="/portfolio" class="nav-item nav-link">Portfolio</a>
+          <a href="/settings" class="nav-item nav-link">Settings</a>
+          <a href="/trading-journal" class="nav-item nav-link nav-link--primary">📊 Trading Journal</a>
+        </div>
+
+        <div class="header-right">
+          <div class="user-info">
+            <button class="upgrade-btn pp-btn pp-btn-primary">⭐ Upgrade to Paid</button>
+            <div id="role-badge-container"></div>
+            <div class="user-avatar" id="user-avatar">U</div>
+            <span id="user-greeting">Welcome!</span>
+          </div>
+        </div>
       </div>
-    </header>
+    </div>
+  </header>
+
+  <!-- Main content (same wrapper pattern as dashboard / trading-journal) -->
+  <div class="main-container pp-shell pp-analysis-main">
 
     <!-- TICKER INPUT -->
-    <div class="ticker-input-section">
-      <div class="ticker-input-group">
-        <input type="text" class="ticker-input" id="tickerInput" placeholder="Enter Ticker (e.g. AAPL)" maxlength="10">
-        <button class="analyze-btn" id="analyzeBtn">Analyze</button>
+    <div class="ticker-input-section pp-card pp-card--highlight">
+      <div class="ticker-input-group analysis-input">
+        <input type="text" class="ticker-input form-input" id="tickerInput" placeholder="Enter Ticker (e.g. AAPL)" maxlength="10">
+        <button class="analyze-btn pp-btn pp-btn-primary" id="analyzeBtn">Analyze</button>
       </div>
     </div>
 
@@ -55,13 +75,13 @@
     <div id="analysisResults">
 
       <!-- COMPANY HEADER -->
-      <div class="company-header" id="companyPanel" style="display: none;">
+      <div class="company-header pp-hidden pp-card" id="companyPanel">
         <h1 class="company-name" id="companyName">--</h1>
         <p class="company-meta" id="companyMeta">--</p>
       </div>
 
       <!-- DIAMOND SCORE -->
-      <div class="score-hero" id="diamondSection" style="display: none;">
+      <div class="score-hero pp-hidden pp-card pp-card--highlight" id="diamondSection">
         <div class="score-display">--/50</div>
         <div class="score-verdict">Investment Grade</div>
 
@@ -80,7 +100,7 @@
       <div class="quick-summary">
 
         <!-- Current Price Card -->
-        <div class="summary-card current-price-card">
+        <div class="summary-card current-price-card pp-card">
           <div class="cp-header">
             <div class="summary-label">Current Price</div>
             <div class="cp-ticker" id="cpTicker"></div>
@@ -139,21 +159,21 @@
         </div>
 
         <!-- Fair Value Card -->
-        <div class="summary-card highlight">
+        <div class="summary-card highlight pp-card pp-card--highlight">
           <div class="summary-label">Fair Value (Blended)</div>
           <div class="summary-value" id="fairValue">--</div>
           <div class="summary-change positive" id="valuationGap">--</div>
         </div>
 
         <!-- PE Ownership -->
-        <div class="summary-card">
+        <div class="summary-card pp-card">
           <div class="summary-label">PE Ownership Risk</div>
           <div class="summary-value" id="peOwnership">--</div>
           <div class="summary-status safe" id="peStatus">✅ Safe</div>
         </div>
 
         <!-- Free Cash Flow -->
-        <div class="summary-card">
+        <div class="summary-card pp-card">
           <div class="summary-label">Free Cash Flow</div>
           <div class="summary-value" id="freeCashFlow">--</div>
         </div>
@@ -162,7 +182,7 @@
 
 
       <!-- DETAILED SCORING BREAKDOWN — coming soon -->
-      <div class="collapsible-section coming-soon-section">
+      <div class="collapsible-section coming-soon-section pp-card pp-card--muted">
         <div class="section-header" onclick="toggleSection('scoring')">
           <div class="section-title">
             <span class="section-icon">⭐</span>
@@ -179,45 +199,101 @@
               </div>
             </div>
             <div class="scoring-grid blurred">
-              <div class="score-category-card">
-                <div class="score-category-icon">💰</div>
-                <div class="score-category-label">Financial Health</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">💰</span>
+                    <span class="score-category-label">Financial Health</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">📈</div>
-                <div class="score-category-label">Growth Potential</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">📈</span>
+                    <span class="score-category-label">Growth Potential</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">💎</div>
-                <div class="score-category-label">Value Score</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">💎</span>
+                    <span class="score-category-label">Value Score</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">⚠️</div>
-                <div class="score-category-label">Risk Assessment</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">⚠️</span>
+                    <span class="score-category-label">Risk Assessment</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">👔</div>
-                <div class="score-category-label">Management Quality</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">👔</span>
+                    <span class="score-category-label">Management Quality</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">🎯</div>
-                <div class="score-category-label">Market Position</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">🎯</span>
+                    <span class="score-category-label">Market Position</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">🏆</div>
-                <div class="score-category-label">Competitive Advantage</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">🏆</span>
+                    <span class="score-category-label">Competitive Advantage</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
-              <div class="score-category-card">
-                <div class="score-category-icon">🔮</div>
-                <div class="score-category-label">Future Outlook</div>
-                <div class="score-category-value">--</div>
+              <div class="score-category-card score-category-collapsible" data-expanded="false">
+                <div class="score-category-header" onclick="toggleScoreCategory(this)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleScoreCategory(this)">
+                  <div class="score-category-header-left">
+                    <span class="score-category-icon">🔮</span>
+                    <span class="score-category-label">Future Outlook</span>
+                  </div>
+                  <span class="score-category-toggle" aria-hidden="true">▼</span>
+                </div>
+                <div class="score-category-body">
+                  <div class="score-category-value">--</div>
+                </div>
               </div>
             </div>
           </div>
@@ -225,7 +301,7 @@
       </div>
 
       <!-- CHARTS -->
-      <div class="collapsible-section" id="chartsSection">
+      <div class="collapsible-section pp-card" id="chartsSection">
         <div class="section-header" onclick="toggleSection('charts')">
           <div class="section-title">
             <span class="section-icon">📈</span>
@@ -292,7 +368,7 @@
 
 
       <!-- FINANCIAL OVERVIEW -->
-      <div class="collapsible-section" id="financialSection">
+      <div class="collapsible-section pp-card" id="financialSection">
         <div class="section-header" onclick="toggleSection('financial')">
           <div class="section-title">
             <span class="section-icon">📊</span>
@@ -312,36 +388,36 @@
             </div>
             <div id="revenue-metric" class="metric-content">
               <div class="metric-title" id="revenue-metric-title">REVENUE</div>
-              <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
+              <div class="chart-container"><div id="revenueChart" style="height: 300px;"></div></div>
               <div class="year-data" id="revenue-year-data"></div>
               <div class="data-source" id="ds-1"></div>
             </div>
-            <div id="netincome-metric" class="metric-content" style="display:none;">
+            <div id="netincome-metric" class="metric-content pp-hidden">
               <div class="metric-title" id="netincome-metric-title">NET INCOME</div>
               <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
               <div class="year-data" id="netincome-year-data"></div>
               <div class="data-source" id="ds-2"></div>
             </div>
-            <div id="assets-metric" class="metric-content" style="display:none;">
+            <div id="assets-metric" class="metric-content pp-hidden">
               <div class="metric-title" id="assets-metric-title">TOTAL ASSETS</div>
               <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
               <div class="year-data" id="assets-year-data"></div>
               <div class="data-source" id="ds-3"></div>
             </div>
-            <div id="equity-metric" class="metric-content" style="display:none;">
+            <div id="equity-metric" class="metric-content pp-hidden">
               <div class="metric-title" id="equity-metric-title">TOTAL EQUITY</div>
               <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
               <div class="year-data" id="equity-year-data"></div>
               <div class="data-source" id="ds-4"></div>
             </div>
-            <div id="debt-metric" class="metric-content" style="display:none;">
+            <div id="debt-metric" class="metric-content pp-hidden">
               <div class="metric-title" id="debt-metric-title">TOTAL DEBT</div>
-              <div class="valuation-grid" id="debt-cards" style="margin-bottom:30px;"></div>
+              <div class="valuation-grid" id="debt-cards"></div>
               <div class="chart-container"><div class="chart-placeholder">[Debt chart will be rendered here]</div></div>
               <div class="year-data" id="debt-year-data"></div>
               <div class="data-source" id="ds-5"></div>
             </div>
-            <div id="shares-metric" class="metric-content" style="display:none;">
+            <div id="shares-metric" class="metric-content pp-hidden">
               <div class="metric-title" id="shares-metric-title">OUTSTANDING SHARES</div>
               <div class="chart-container"><div class="chart-placeholder">[Line chart will be rendered here]</div></div>
               <div class="year-data" id="shares-year-data"></div>
@@ -353,7 +429,7 @@
 
 
       <!-- KEY METRICS -->
-      <div class="collapsible-section" id="metricsSection">
+      <div class="collapsible-section pp-card" id="metricsSection">
         <div class="section-header" onclick="toggleSection('keymetrics')">
           <div class="section-title">
             <span class="section-icon">📈</span>
@@ -432,7 +508,7 @@
 
 
       <!-- WACC BREAKDOWN -->
-      <div class="collapsible-section" id="waccSection">
+      <div class="collapsible-section pp-card" id="waccSection">
         <div class="section-header" onclick="toggleSection('wacc')">
           <div class="section-title">
             <span class="section-icon">📐</span>
@@ -480,7 +556,7 @@
             </div>
 
             <!-- Cost of Debt -->
-            <div id="costofdebt-wacc" class="metric-content" style="display:none;">
+            <div id="costofdebt-wacc" class="metric-content pp-hidden">
               <div class="metric-title">COST OF DEBT (Rd)</div>
               <div class="valuation-grid">
                 <div class="valuation-card">
@@ -508,7 +584,7 @@
             </div>
 
             <!-- Tax Rate -->
-            <div id="taxrate-wacc" class="metric-content" style="display:none;">
+            <div id="taxrate-wacc" class="metric-content pp-hidden">
               <div class="metric-title">TAX RATE</div>
               <div class="valuation-grid">
                 <div class="valuation-card">
@@ -536,7 +612,7 @@
             </div>
 
             <!-- Equity/Debt Weights -->
-            <div id="weights-wacc" class="metric-content" style="display:none;">
+            <div id="weights-wacc" class="metric-content pp-hidden">
               <div class="metric-title">CAPITAL STRUCTURE WEIGHTS</div>
               <div class="valuation-grid">
                 <div class="valuation-card">
@@ -576,7 +652,7 @@
             </div>
 
             <!-- Final WACC -->
-            <div id="finalwacc-wacc" class="metric-content" style="display:none;">
+            <div id="finalwacc-wacc" class="metric-content pp-hidden">
               <div class="metric-title">WEIGHTED AVERAGE COST OF CAPITAL</div>
               <div class="valuation-grid">
                 <div class="valuation-card">
@@ -602,7 +678,7 @@
               </div>
               <div class="verdict-box">
                 <div class="verdict-text" id="waccVerdict">—</div>
-                <div style="font-size:14px; color:var(--pp-text-muted); margin-top:10px;">
+                <div class="pp-micro-muted">
                   <span id="waccFormula">—</span>
                 </div>
               </div>
@@ -615,7 +691,7 @@
 
 
       <!-- INTRINSIC VALUE ANALYSIS -->
-      <div class="collapsible-section" id="intrinsicSection">
+      <div class="collapsible-section pp-card" id="intrinsicSection">
         <div class="section-header" onclick="toggleSection('intrinsic')">
           <div class="section-title">
             <span class="section-icon">💎</span>
@@ -703,7 +779,7 @@
             </div>
 
             <!-- Verdict -->
-            <div class="verdict-box" style="margin-top:16px;">
+            <div class="verdict-box pp-mt-4">
               <div class="verdict-text" id="valueAssessment">—</div>
             </div>
 
@@ -720,7 +796,7 @@
         ============================================================ -->
 
       <!-- OWNERSHIP STRUCTURE -->
-      <div class="collapsible-section" id="ownershipSection">
+      <div class="collapsible-section pp-card" id="ownershipSection">
         <div class="section-header" onclick="toggleSection('ownership')">
           <div class="section-title">
             <span class="section-icon">👥</span>
@@ -788,7 +864,7 @@
             </div>
 
             <!-- LBO EXPLAINER (collapsible, shows only if PE detected) -->
-            <div id="lboExplainerWrap" class="lbo-explainer-wrap" style="display:none">
+            <div id="lboExplainerWrap" class="lbo-explainer-wrap pp-hidden">
               <div class="lbo-explainer-toggle" onclick="toggleLboExplainer()">
                 <span>⚠️ What PE ownership has historically meant for investors</span>
                 <span id="lboToggleArrow" class="lbo-toggle-arrow">▼</span>
@@ -868,7 +944,7 @@
            API: /api/ownership/{ticker}/insiders
            Данные: insider_holdings, insider_activity, recent_trades
       ============================================================ -->
-      <div class="collapsible-section" id="insiderSection">
+      <div class="collapsible-section pp-card" id="insiderSection">
         <div class="section-header" onclick="toggleSection('insider')">
           <div class="section-title">
             <span class="section-icon">🔒</span>
@@ -938,7 +1014,7 @@
             </div>
 
             <!-- HOLDINGS TABLE -->
-            <div class="insider-trades-header" style="margin-top:20px">
+            <div class="insider-trades-header pp-mt-5">
               <span class="insider-trades-title">Current Insider Holdings</span>
               <span class="insider-trades-sub">Latest known position per insider</span>
             </div>
@@ -969,7 +1045,7 @@
            API: /api/ownership/{ticker}/institutional
            Данные: institutional_summary, holdings_by_fund, quarterly_trend
            ============================================================ -->
-      <div class="collapsible-section" id="institutionalSection">
+      <div class="collapsible-section pp-card" id="institutionalSection">
         <div class="section-header" onclick="toggleSection('institutional')">
           <div class="section-title">
             <span class="section-icon">🏛</span>
@@ -1029,7 +1105,7 @@
             </div>
 
             <!-- QUARTERLY TREND: мини-таблица по кварталам -->
-            <div class="ownership-table-header" style="margin-top:20px">
+            <div class="ownership-table-header pp-mt-5">
               <span class="ownership-table-title">Quarterly Trend — Top Institutions</span>
               <span class="ownership-table-sub">Shares held per quarter (000s)</span>
             </div>
@@ -1054,7 +1130,7 @@
 
 
       <!-- CASH FLOW ANALYSIS -->
-      <div class="collapsible-section" id="cashFlowSection">
+      <div class="collapsible-section pp-card" id="cashFlowSection">
         <div class="section-header" onclick="toggleSection('cashflow')">
           <div class="section-title">
             <span class="section-icon">💵</span>
@@ -1072,7 +1148,7 @@
             <div class="metric-content">
               <div class="metric-title">OPERATING CASH FLOW (2020-2025)</div>
               <div class="chart-container">
-                <div class="chart-placeholder">[Chart will be rendered here]</div>
+                <div id="cashFlowChart" style="height: 320px;"></div>
               </div>
               <div class="year-data"></div>
               <div class="data-source" id="ds-16"></div>
@@ -1083,7 +1159,7 @@
 
 
       <!-- DIVIDEND ANALYSIS -->
-      <div class="collapsible-section" id="dividendsSection">
+      <div class="collapsible-section pp-card" id="dividendsSection">
         <div class="section-header" onclick="toggleSection('dividends')">
           <div class="section-title">
             <span class="section-icon">💰</span>
@@ -1111,7 +1187,7 @@
 
     </div><!-- /analysisResults -->
 
-  </div><!-- /container -->
+  </div><!-- /main-container -->
 
 
   <!-- Analyze button handler -->
@@ -1123,7 +1199,7 @@
   </script>
 
   <!-- Fallback и debug -->
-  <div id="pp-fallback" class="hidden" style="max-width:1200px;margin:24px auto;color:#eaeaea"></div>
+  <div id="pp-fallback" class="hidden pp-fallback"></div>
   <div id="provenance"></div>
 
   <script>
@@ -1150,25 +1226,164 @@
 
         c.classList.remove('hidden');
         c.innerHTML = `
-          <div style="padding:16px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);">
-            <h3 style="margin:0 0 10px;">Quick Snapshot (fallback)</h3>
-            <div style="overflow-x:auto">
-              <table style="width:100%;border-collapse:collapse">
-                <tbody style="font-size:14px;line-height:1.45">
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Ticker</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(data?.ticker)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Current Price</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(data?.current_price)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Period</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.fiscal_year)} / ${fmt(s.quarter)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.revenue)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">Net Income</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.net_income)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">OCF</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.operating_cash_flow)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">FCF</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.free_cash_flow)}</td></tr>
-                  <tr><td style="padding:6px 10px;border-bottom:1px solid #233">CapEx</td><td style="padding:6px 10px;border-bottom:1px solid #233">${fmt(s.capex)}</td></tr>
+          <div class="pp-fallback-card">
+            <h3 class="pp-fallback-title">Quick Snapshot (fallback)</h3>
+            <div class="pp-fallback-table-wrap">
+              <table class="pp-fallback-table">
+                <tbody class="pp-fallback-tbody">
+                  <tr><td class="pp-fallback-td">Ticker</td><td class="pp-fallback-td">${fmt(data?.ticker)}</td></tr>
+                  <tr><td class="pp-fallback-td">Current Price</td><td class="pp-fallback-td">${fmt(data?.current_price)}</td></tr>
+                  <tr><td class="pp-fallback-td">Period</td><td class="pp-fallback-td">${fmt(s.fiscal_year)} / ${fmt(s.quarter)}</td></tr>
+                  <tr><td class="pp-fallback-td">Revenue</td><td class="pp-fallback-td">${fmt(s.revenue)}</td></tr>
+                  <tr><td class="pp-fallback-td">Net Income</td><td class="pp-fallback-td">${fmt(s.net_income)}</td></tr>
+                  <tr><td class="pp-fallback-td">OCF</td><td class="pp-fallback-td">${fmt(s.operating_cash_flow)}</td></tr>
+                  <tr><td class="pp-fallback-td">FCF</td><td class="pp-fallback-td">${fmt(s.free_cash_flow)}</td></tr>
+                  <tr><td class="pp-fallback-td">CapEx</td><td class="pp-fallback-td">${fmt(s.capex)}</td></tr>
                 </tbody>
               </table>
             </div>
-            <div style="margin-top:8px;color:#888;">Fallback view shown due to data error. Try reloading later.</div>
+            <div class="pp-fallback-note">Fallback view shown due to a data error. Please try again later.</div>
           </div>`;
       };
+    });
+  </script>
+
+  <!-- Revenue chart (ECharts) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chartEl = document.getElementById('revenueChart');
+      if (!chartEl) return;
+      if (typeof echarts === 'undefined') return;
+
+      const chart = echarts.init(chartEl);
+
+      const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#111827',
+          borderColor: '#374151',
+          textStyle: { color: '#fff' }
+        },
+        grid: {
+          left: '3%',
+          right: '3%',
+          bottom: '5%',
+          top: '10%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: ['2019', '2020', '2021', '2022', '2023', '2024'],
+          axisLine: { lineStyle: { color: '#6b7280' } },
+          axisLabel: { color: '#9ca3af' }
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: { show: false },
+          splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } },
+          axisLabel: { color: '#9ca3af' }
+        },
+        series: [
+          {
+            name: 'Revenue',
+            type: 'line',
+            smooth: true,
+            data: [45, 52, 61, 80, 95, 120],
+            lineStyle: {
+              width: 3,
+              color: '#22c55e'
+            },
+            itemStyle: {
+              color: '#22c55e'
+            },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(34,197,94,0.4)' },
+                { offset: 1, color: 'rgba(34,197,94,0.05)' }
+              ])
+            },
+            symbol: 'circle',
+            symbolSize: 6
+          }
+        ]
+      };
+
+      chart.setOption(option);
+
+      window.addEventListener('resize', () => {
+        chart.resize();
+      });
+    });
+  </script>
+
+  <!-- Cash Flow chart (ECharts) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('cashFlowChart');
+      if (!el) return;
+      if (typeof echarts === 'undefined') return;
+
+      const chart = echarts.init(el);
+
+      const option = {
+        backgroundColor: 'transparent',
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#0f172a',
+          borderColor: '#334155',
+          textStyle: { color: '#fff' }
+        },
+        grid: {
+          left: '3%',
+          right: '3%',
+          bottom: '5%',
+          top: '10%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: ['2020', '2021', '2022', '2023', '2024', '2025'],
+          axisLine: { lineStyle: { color: '#475569' } },
+          axisLabel: { color: '#94a3b8' }
+        },
+        yAxis: {
+          type: 'value',
+          splitLine: {
+            lineStyle: { color: 'rgba(255,255,255,0.05)' }
+          },
+          axisLabel: { color: '#94a3b8' }
+        },
+        series: [
+          {
+            name: 'Operating Cash Flow',
+            type: 'line',
+            smooth: true,
+            data: [18, 25, 32, 28, 40, 55],
+            lineStyle: {
+              width: 3,
+              color: '#22c55e'
+            },
+            itemStyle: {
+              color: '#22c55e'
+            },
+            symbol: 'circle',
+            symbolSize: 6,
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(34,197,94,0.4)' },
+                { offset: 1, color: 'rgba(34,197,94,0.05)' }
+              ])
+            }
+          }
+        ]
+      };
+
+      chart.setOption(option);
+
+      window.addEventListener('resize', () => {
+        chart.resize();
+      });
     });
   </script>
 
@@ -1179,17 +1394,39 @@
 
     console.log('[ProfitPal] Initializing year/quarter controls...');
 
+    // ===== SCORE CATEGORY COLLAPSIBLE (arrow click) =====
+    window.toggleScoreCategory = function(headerEl) {
+      const card = headerEl.closest('.score-category-collapsible');
+      if (!card) return;
+      const body = card.querySelector('.score-category-body');
+      const toggle = card.querySelector('.score-category-toggle');
+      const isExpanded = card.getAttribute('data-expanded') === 'true';
+      if (isExpanded) {
+        card.setAttribute('data-expanded', 'false');
+        if (body) body.classList.remove('expanded');
+        if (toggle) toggle.classList.remove('expanded');
+      } else {
+        card.setAttribute('data-expanded', 'true');
+        if (body) body.classList.add('expanded');
+        if (toggle) toggle.classList.add('expanded');
+      }
+    };
+
     // ===== COLLAPSIBLE SECTIONS =====
     window.toggleSection = function(sectionId) {
+      const allContents = document.querySelectorAll('.section-content');
+      const allHeaders = document.querySelectorAll('.section-header');
+
       const content = document.getElementById(sectionId + '-content');
       if (!content) return;
       const header = content.previousElementSibling;
 
       const isOpen = content.classList.contains('expanded');
-      if (isOpen) {
-        content.classList.remove('expanded');
-        if (header) header.classList.remove('active');
-      } else {
+
+      allContents.forEach(c => c.classList.remove('expanded'));
+      allHeaders.forEach(h => h.classList.remove('active'));
+
+      if (!isOpen) {
         content.classList.add('expanded');
         if (header) header.classList.add('active');
 
@@ -1252,7 +1489,7 @@
     // ===== fmtMoneyOrNA =====
     window.fmtMoneyOrNA = function(value) {
       if (value === null || value === undefined || value === '' || Number.isNaN(Number(value))) {
-        return '<span style="color:#888;font-style:italic;">No Data Available</span>';
+        return '<span class="pp-na">No Data Available</span>';
       }
       const n = Number(value);
       const a = Math.abs(n);
