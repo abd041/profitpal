@@ -374,12 +374,17 @@ body.pp-analysis-page .ticker-input-section {
 body.pp-analysis-page .ticker-input-group.analysis-input {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--pp-space-4);
+  gap: var(--pp-space-5);
   align-items: center;
 }
 
 body.pp-analysis-page #tickerInput.form-input {
   min-height: 48px;
+  background: rgba(2, 6, 23, 0.28);
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  border-radius: var(--pp-radius-md);
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.06);
+  padding: 0 var(--pp-space-4);
 }
 
 body.pp-analysis-page #analyzeBtn.pp-btn {
@@ -558,11 +563,11 @@ body.pp-analysis-page .quick-summary {
 }
 
 body.pp-analysis-page .summary-card.pp-card {
-  padding: var(--pp-space-6);
+  padding: var(--pp-space-5);
 }
 
 body.pp-analysis-page .summary-label {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.9);
@@ -571,7 +576,7 @@ body.pp-analysis-page .summary-label {
 
 body.pp-analysis-page .summary-value {
   margin-top: 8px;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 950;
   letter-spacing: -0.02em;
   color: rgba(255, 255, 255, 0.94);
@@ -1614,12 +1619,38 @@ body.pp-dashboard-page .boost-options.pp-card {
 
 /* Make Boost banner look like an inline, secondary control */
 body.pp-dashboard-page .boost-banner.pp-card {
-  padding: 10px 14px;
+  padding: 14px 16px;
   max-width: 1000px;
   margin: 0 auto var(--pp-space-4);
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.30) 0%,
+      rgba(249, 115, 22, 0.22) 55%,
+      rgba(59, 130, 246, 0.10) 100%
+    );
+  border-color: rgba(124, 58, 237, 0.40);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.18),
+    0 18px 50px rgba(0, 0, 0, 0.35),
+    0 0 28px rgba(124, 58, 237, 0.22),
+    0 0 24px rgba(249, 115, 22, 0.16);
+}
+
+body.pp-dashboard-page .boost-banner.pp-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 45%, rgba(249, 115, 22, 0.30), transparent 55%);
+  opacity: 0.9;
+  filter: blur(10px);
+  z-index: -1;
 }
 
 body.pp-dashboard-page .boost-title {
@@ -1642,6 +1673,17 @@ body.pp-dashboard-page .boost-options.pp-card:hover {
   transform: translateY(-6px);
   border-color: rgba(148, 163, 184, 0.5);
   box-shadow: 0 20px 52px rgba(0, 0, 0, 0.45);
+}
+
+/* Premium hover for Boost banner only */
+body.pp-dashboard-page .boost-banner.pp-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(249, 115, 22, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(249, 115, 22, 0.20),
+    0 26px 70px rgba(0, 0, 0, 0.48),
+    0 0 38px rgba(124, 58, 237, 0.28),
+    0 0 30px rgba(249, 115, 22, 0.22);
 }
 
 .card-header {
@@ -5812,22 +5854,29 @@ body.pp-analysis-page .mm-section-header {
   margin-top: var(--pp-space-5);
 }
 
-/* AdSense container (dark theme, responsive, SaaS-style) */
-.pp-ad-container {
-  margin: 20px 0;
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  text-align: center;
+/* Login page: improve topbar spacing + logo visibility */
+body.pp-auth-page .pp-public-topbar {
+  padding-top: 18px;
+  padding-bottom: 10px;
 }
 
-.pp-ad-container::before {
-  content: "Sponsored";
-  display: block;
-  font-size: 11px;
-  color: rgba(148, 163, 184, 0.6);
-  margin-bottom: 6px;
-  letter-spacing: 0.08em;
+body.pp-auth-page .pp-public-topbar #pp-logo {
+  transform: scale(1.08);
+  transform-origin: left center;
+  display: inline-block;
+}
+
+/* Floating AI assistant mount (future chat UI) */
+#ai-assistant {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: calc(100vw - 40px);
+  pointer-events: none; /* empty mount should not block clicks */
+}
+
+#ai-assistant > * {
+  pointer-events: auto;
 }
 

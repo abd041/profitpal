@@ -124,10 +124,6 @@
 
           <div class="cp-range-block">
             <div class="cp-range-title">Day range</div>
-            <div class="cp-range-bar">
-              <div class="cp-range-fill" id="cpDayRangeFill"></div>
-              <div class="cp-range-indicator" id="cpDayRangeIndicator"></div>
-            </div>
             <div class="cp-range-labels">
               <span id="cpDayLow">--</span>
               <span>Low</span>
@@ -139,10 +135,6 @@
 
           <div class="cp-range-block" id="cp52Block">
             <div class="cp-range-title">52 week range</div>
-            <div class="cp-range-bar">
-              <div class="cp-range-fill" id="cp52RangeFill"></div>
-              <div class="cp-range-indicator" id="cp52RangeIndicator"></div>
-            </div>
             <div class="cp-range-labels">
               <span id="cp52Low">--</span>
               <span>Low</span>
@@ -312,6 +304,11 @@
 
         <div class="section-content" id="charts-content">
           <div class="section-inner">
+
+            <!-- Coming Soon: Chart.js integration mount -->
+            <div class="pp-hidden" aria-hidden="true">
+              <canvas id="financialChart"></canvas>
+            </div>
 
             <!-- Chart 1 -->
             <div class="pp-chart-card">
@@ -1504,6 +1501,32 @@
   })();
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const banner = document.getElementById('earlyBirdBanner');
+      if (!banner) return;
+
+      const ebBtn = document.getElementById('earlyBirdDismiss');
+      const hidden = localStorage.getItem('pp_early_bird_dismissed') === '1';
+      if (hidden) {
+        banner.classList.add('pp-hidden');
+      }
+      if (ebBtn) {
+        ebBtn.addEventListener('click', () => {
+          banner.classList.add('pp-hidden');
+          localStorage.setItem('pp_early_bird_dismissed', '1');
+        });
+      }
+
+      const isPaidUser = false;
+      if (isPaidUser) {
+        banner.style.display = 'none';
+      } else {
+        banner.style.display = '';
+      }
+    });
+  </script>
+
   <!-- CDN libs (no build) -->
   <script defer src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -1514,6 +1537,7 @@
   <script defer src="/static/js/pp-charts.js"></script>
 
   <div id="pp-footer"></div>
+  <div id="ai-assistant"></div>
   <script src="/static/js/pp-layout.js" defer></script>
   <script src="/static/js/profitpal-assistant.js"></script>
   <script src="/static/vendor/html2pdf.bundle.min.js" defer></script>

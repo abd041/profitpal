@@ -1802,6 +1802,16 @@ Keep each reason <= 160 chars.
           localStorage.setItem('pp_early_bird_dismissed', '1');
         });
       }
+
+      // Paid / non-paid banner toggle (placeholder)
+      const isPaidUser = false;
+      if (eb) {
+        if (isPaidUser) {
+          eb.style.display = 'none';
+        } else {
+          eb.style.display = '';
+        }
+      }
     });
 
     // Auto-refresh dashboard data every 5 minutes
@@ -1950,6 +1960,7 @@ Keep each reason <= 160 chars.
 
 
 <div id="pp-footer"></div>
+<div id="ai-assistant"></div>
 <script src="/static/js/pp-layout.js" defer></script>
 <script src="/static/js/pp-csrf.js"></script>
 <!-- Floating chat library -->

@@ -1837,7 +1837,34 @@
     });
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const banner = document.getElementById('earlyBirdBanner');
+      if (!banner) return;
+
+      const ebBtn = document.getElementById('earlyBirdDismiss');
+      const hidden = localStorage.getItem('pp_early_bird_dismissed') === '1';
+      if (hidden) {
+        banner.classList.add('pp-hidden');
+      }
+      if (ebBtn) {
+        ebBtn.addEventListener('click', () => {
+          banner.classList.add('pp-hidden');
+          localStorage.setItem('pp_early_bird_dismissed', '1');
+        });
+      }
+
+      const isPaidUser = false;
+      if (isPaidUser) {
+        banner.style.display = 'none';
+      } else {
+        banner.style.display = '';
+      }
+    });
+  </script>
+
 <div id="pp-footer"></div>
+<div id="ai-assistant"></div>
 <script src="/static/js/pp-layout.js" defer></script>
 <script src="/static/js/pp-csrf.js"></script>
 <!-- Floating chat library -->
